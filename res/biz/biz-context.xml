@@ -12,17 +12,13 @@
 	<context:property-placeholder location="classpath*:*.properties" />
 
 	<context:annotation-config />
-	<context:component-scan base-package="com.zjdd.report.*" use-default-filters="false">
-		<context:include-filter type="regex" expression="com.zjdd.report.*" />
+	<context:component-scan base-package="com.meibo.web.*" use-default-filters="false">
+		<context:include-filter type="regex" expression="com.meibo.web.*" />
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
-	<import resource="classpath:db/datasource_cms.xml" />
-	<import resource="classpath:db/datasource_data.xml"/>
-	<import resource="classpath:db/datasource_online.xml"/>
+	<import resource="classpath:db/datasource.xml" />
 
-	<import resource="classpath:db/mybatis_spring_cms.xml" />
-	<import resource="classpath:db/mybatis_spring_data.xml" />
-	<import resource="classpath:db/mybatis_spring_online.xml" />
+	<import resource="classpath:db/mybatis_spring.xml" />
 
 </beans>

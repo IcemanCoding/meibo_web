@@ -11,7 +11,7 @@
 </head>
 <body>
 
-	welcome to nonobank-api
+	welcome to meibo_api
 
 </body>
 </html>

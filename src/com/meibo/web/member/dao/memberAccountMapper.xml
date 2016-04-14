@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.member.dao.MemberAccountDAO">
+	
+    <select id="selectMemberAccountByCondition" parameterType="java.util.Map" resultType="memberAccount">
+    	select
+    		available_balance		availableBalance,
+    		total_recharge_amount	totalRechargeAmount,
+    		total_consume_amount	totalConsumeAmount,
+    		invoice_amount			invoiceAmount
+    	from
+    		member_account
+    	where
+    		status = #{status}
+    	and
+    		account_type = #{accountType}
+    	and
+    		member_id = #{memberId}
+    	limit 1
+    </select>
+   
+</mapper>

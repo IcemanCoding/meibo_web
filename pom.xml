@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.zjdd</groupId>
+	<groupId>com.meibo</groupId>
 	  
 	<version>0.1</version>
 	
 	<packaging>war</packaging>
-	<name>zjdd-report</name>
+	<name>mb_web</name>
 	<properties>
 		<spring.version>4.1.4.RELEASE</spring.version>	
 		<env_mode>dev</env_mode>	
@@ -577,5 +577,5 @@
 		    <version>4.4</version>
 		</dependency>
 	</dependencies>
-	<artifactId>zjdd-report</artifactId>
+	<artifactId>mb_web</artifactId>
 </project>

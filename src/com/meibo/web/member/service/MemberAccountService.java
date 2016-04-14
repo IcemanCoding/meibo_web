@@ -1,0 +1,9 @@
+package com.meibo.web.member.service;
+
+import com.meibo.web.member.dto.MemberAccountDTO;
+
+public interface MemberAccountService {
+	
+	MemberAccountDTO getMemberAccount( Integer memberId ) throws Exception;
+
+}
