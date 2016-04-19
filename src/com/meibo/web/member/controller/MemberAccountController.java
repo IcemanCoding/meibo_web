@@ -21,7 +21,6 @@ import com.meibo.web.common.utils.MD5Utils;
 import com.meibo.web.common.utils.ParseUtils;
 import com.meibo.web.common.viewmodel.BaseViewModel;
 import com.meibo.web.member.dto.MemberAccountDTO;
-import com.meibo.web.member.entity.MemberInfoEntity;
 import com.meibo.web.member.service.MemberAccountService;
 
 @RequestMapping ( "/member" )

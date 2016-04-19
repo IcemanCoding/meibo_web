@@ -19,8 +19,10 @@
     </settings>
 
     <typeAliases>
-    	<typeAlias type="com.meibo.web.member.entity.MemberInfoEntity" alias="memberInfo" />
+    	<typeAlias type="com.meibo.web.member.dto.MemberInfoDTO" alias="memberDto" />
     	<typeAlias type="com.meibo.web.member.dto.MemberAccountDTO" alias="memberAccount" />
+    	<typeAlias type="com.meibo.web.member.entity.MemberInfoEntity" alias="memberInfo"/>
+    	<typeAlias type="com.meibo.web.member.entity.MemberAccountEntity" alias="accountEntity"/>
     </typeAliases>
 
     <mappers>

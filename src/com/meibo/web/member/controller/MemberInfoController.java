@@ -20,7 +20,7 @@ import com.meibo.web.common.service.SessionService;
 import com.meibo.web.common.utils.ContainerUtils;
 import com.meibo.web.common.utils.MD5Utils;
 import com.meibo.web.common.utils.ParseUtils;
-import com.meibo.web.member.entity.MemberInfoEntity;
+import com.meibo.web.member.dto.MemberInfoDTO;
 import com.meibo.web.member.service.MemberInfoService;
 
 @RequestMapping ( "/member" )
@@ -56,7 +56,7 @@ public class MemberInfoController extends BaseController {
 			return ContainerUtils.buildResFailMap( "请输入登录密码!" );
 		}
 		
-		MemberInfoEntity memberInfo = null;
+		MemberInfoDTO memberInfo = null;
 		try {
 			memberInfo = memberInfoService.login( loginName, loginPwd );
 		} catch ( Exception e ) {

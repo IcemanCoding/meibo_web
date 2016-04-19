@@ -1,26 +1,24 @@
-package com.meibo.web.member.entity;
+package com.meibo.web.member.dto;
 
-public class MemberInfoEntity {
+public class MemberInfoDTO {
 	
 	private Integer memberId;
 	private String loginName;
-	private String loginPwd;
 	private String mobileNum;
 	private Integer memberType;
 	private Integer roleId;
-	private Integer status;
 	
+	public Integer getMemberId() {
+		return memberId;
+	}
+	public void setMemberId(Integer memberId) {
+		this.memberId = memberId;
+	}
 	public String getLoginName() {
 		return loginName;
 	}
 	public void setLoginName(String loginName) {
 		this.loginName = loginName;
-	}
-	public String getLoginPwd() {
-		return loginPwd;
-	}
-	public void setLoginPwd(String loginPwd) {
-		this.loginPwd = loginPwd;
 	}
 	public String getMobileNum() {
 		return mobileNum;
@@ -39,18 +37,6 @@ public class MemberInfoEntity {
 	}
 	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
-	}
-	public Integer getStatus() {
-		return status;
-	}
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-	public Integer getMemberId() {
-		return memberId;
-	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
 	}
 	
 }

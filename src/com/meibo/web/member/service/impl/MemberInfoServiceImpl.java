@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.meibo.web.common.utils.MD5Utils;
 import com.meibo.web.member.dao.MemberInfoDAO;
+import com.meibo.web.member.dto.MemberInfoDTO;
 import com.meibo.web.member.entity.MemberInfoEntity;
 import com.meibo.web.member.service.MemberInfoService;
 
@@ -16,13 +17,13 @@ public class MemberInfoServiceImpl implements MemberInfoService {
 	private MemberInfoDAO memberInfoDao;
 	
 	@Override
-	public MemberInfoEntity login( String loginName, String loginPwd ) throws Exception {
+	public MemberInfoDTO login( String loginName, String loginPwd ) throws Exception {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put( "loginName", loginName );
 		params.put( "loginPwd", MD5Utils.encode( loginPwd ) );
 		
-		MemberInfoEntity memberInfo = memberInfoDao.selectMemberInfoByConditions( params );
+		MemberInfoDTO memberInfo = memberInfoDao.selectMemberInfoByConditions( params );
 		params = null;
 		
 		if ( memberInfo == null ) {
@@ -30,6 +31,15 @@ public class MemberInfoServiceImpl implements MemberInfoService {
 		}
 		
 		return memberInfo;
+		
+	}
+
+	@Override
+	public Integer addMemberInfo( MemberInfoEntity memberInfo ) throws Exception {
+		
+		memberInfoDao.insertMemberInfo( memberInfo );
+		
+		return memberInfo.getMemberId();
 		
 	}
 

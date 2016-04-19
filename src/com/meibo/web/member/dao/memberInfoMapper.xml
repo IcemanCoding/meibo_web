@@ -3,7 +3,7 @@
 
 <mapper namespace="com.meibo.web.member.dao.MemberInfoDAO">
 	
-    <select id="selectMemberInfoByConditions" parameterType="java.util.Map" resultType="memberInfo">
+    <select id="selectMemberInfoByConditions" parameterType="java.util.Map" resultType="memberDto">
     	select
     		member_id 		memberId,
     		login_name 		loginName,
@@ -14,11 +14,27 @@
     		member_info
     	where
     		status = 1
+    	<if test="loginName != null and '' != loginName">
     	and
     		login_name = #{loginName}
+    	</if>
+    	<if test="loginPwd != null and '' != loginPwd">
     	and
     		login_pwd = #{loginPwd}
+    	</if>
+    	<if test="mobileNum != null and '' != mobileNum">
+    	and
+    		mobile_num = #{mobileNum}
+    	</if>
     	limit 1
     </select>
+    
+    <insert id="insertMemberInfo" parameterType="memberInfo" useGeneratedKeys="true" keyProperty="memberId">
+    	insert into
+    		member_info
+    	( login_name, login_pwd, mobile_num, member_type, role_id, status )
+    	values
+    		( #{loginName}, #{loginPwd}, #{mobileNum}, #{memberType}, #{roleId}, #{status} )
+    </insert>
    
 </mapper>

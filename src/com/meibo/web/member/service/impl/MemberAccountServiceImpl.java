@@ -1,5 +1,6 @@
 package com.meibo.web.member.service.impl;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.meibo.web.member.dao.MemberAccountDAO;
 import com.meibo.web.member.dto.MemberAccountDTO;
+import com.meibo.web.member.entity.MemberAccountEntity;
 import com.meibo.web.member.service.MemberAccountService;
 
 public class MemberAccountServiceImpl implements MemberAccountService {
@@ -29,6 +31,23 @@ public class MemberAccountServiceImpl implements MemberAccountService {
 		}
 		
 		return accountDto;
+		
+	}
+
+	@Override
+	public void addMemberAccount( Integer memberId, Integer accountType ) throws Exception {
+		
+		MemberAccountEntity accountEntity = new MemberAccountEntity();
+		accountEntity.setAccountType( 1 );
+		accountEntity.setAvailableBalance( BigDecimal.ZERO );
+		accountEntity.setInvoiceAmount( BigDecimal.ZERO );
+		accountEntity.setMemberId( memberId );
+		accountEntity.setStatus( 1 );
+		accountEntity.setTotalConsumeAmount( BigDecimal.ZERO );
+		accountEntity.setTotalRechargeAmount( BigDecimal.ZERO );
+		accountEntity.setLockBalance( BigDecimal.ZERO );
+		accountEntity.setTotalBalance( BigDecimal.ZERO );
+		memberAccountDao.insertMemberAccount( accountEntity );
 		
 	}
 

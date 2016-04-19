@@ -19,5 +19,16 @@
     		member_id = #{memberId}
     	limit 1
     </select>
+    
+    <insert id="insertMemberAccount" parameterType="accountEntity">
+    	insert into
+    		member_account
+    	( member_id, account_type, available_balance, lock_balance, total_balance, 
+    		total_recharge_amount, total_consume_amount, invoice_amount, status )
+    	values
+    		( #{memberId}, #{accountType}, #{availableBalance}, #{lockBalance}, 
+    			#{totalBalance}, #{totalRechargeAmount}, #{totalConsumeAmount}, 
+    			#{invoiceAmount}, #{status} )
+    </insert>
    
 </mapper>
