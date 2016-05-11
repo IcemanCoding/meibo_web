@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.media.dao.WechatMediaChannelDAO">
+	
+	<select id="selectWechatMediaChannelId" parameterType="String" resultType="Integer">
+		select
+			channel_id
+		from
+			media_wechat_channel
+		where
+			account = #{wechatAccount}
+	</select>
+	
+	<select id="selectWechatMediaChannelById" parameterType="Integer" resultType="wechatMediaChannel">
+		select
+			channel_id				channelId,
+			nickname				nickName,
+			account					account,
+			qr_code					qrCode,
+			desc					desc,
+			authentication			authentication,
+			type_id					typeId
+			status					status
+		from
+			media_wechat_channel
+		where
+			channel_id = #{channelId}
+	</select>
+	
+	<select id="selectWechatMediaChannelByName" parameterType="String" resultType="wechatMediaChannel">
+		select
+			channel_id				channelId,
+			nickname				nickName,
+			account					account,
+			qr_code					qrCode,
+			desc					desc,
+			authentication			authentication,
+			type_id					typeId
+			status					status
+		from
+			media_wechat_channel
+		where
+			account = #{channelName}
+	</select>
+	
+	<update id="updateWechatMediaChannelStatus" parameterType="wechatMediaChannel">
+		update
+			media_wechat_channel
+		set
+			status = #{status}
+		where
+			channel_id = #{channelId}
+	</update>
+	
+	<insert id="insertWechatMediaChannel" parameterType="wechatMediaChannel" useGeneratedKeys="true" keyProperty="channelId">
+		insert into
+			media_wechat_channel
+		( fans_count, head_image, nickname, account, qr_code, desc, authentication, type_id, status )
+		values
+			( #{fansCount}, #{headImage}, #{nickName}, #{account}, #{qrCode}, #{desc}, #{authentication}, #{typeId}, #{status} )
+	</insert>
+	
+</mapper>

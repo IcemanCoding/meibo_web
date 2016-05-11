@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.media.dao.BlogMediaTypeDAO">
+	
+	<select id="selectBlogMediaTypeList" resultType="java.util.Map">
+		select
+			id 				typeId,
+			name			typeName,
+			sort_index		sortIndex
+		from
+			media_blog_type
+		where
+			status = 1
+		order by
+			sort_index
+	</select>
+	
+	<select id="selectBlogMediaTypeId" parameterType="String" resultType="Integer">
+		select
+			id
+		from
+			media_blog_type
+		where
+			name = #{blogMediaTypeName}
+	</select>
+	
+	<select id="selectMaxSortIndex" resultType="Integer">
+		select
+			max( sort_index )
+		from
+			media_blog_type
+	</select>
+	
+	<insert id="insertBlogMediaType" parameterType="newsMediaType">
+		insert into
+			media_blog_type
+		( name, status, sort_index )
+		values
+		( #{name}, #{status}, #{sortIndex} )
+	</insert>
+	
+	<select id="selectBlogMediaTypeById" parameterType="Integer" resultType="newsMediaType">
+		select
+			id 				typeId,
+			name			typeName,
+			sort_index		sortIndex,
+			status			status
+		from
+			media_blog_type
+		where
+			id = #{typeId}
+	</select>
+	
+	<update id="updateBlogMediaTypeStatus" parameterType="newsMediaType">
+		update
+			media_blog_type
+		set
+			status = #{status}
+		where
+			id = #{typeId}
+	</update>
+	
+</mapper>

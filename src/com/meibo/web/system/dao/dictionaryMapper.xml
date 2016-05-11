@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.system.dao.DictionaryDAO">
+	
+    <select id="selectSystemAreaList" resultType="areaDto">
+    	select
+    		area_id				areaId,
+    		area_name			areaName,
+    		initial_letters		initialLetters,
+    		is_hot				isHot
+    	from
+    		system_area_info
+    	where
+    		status = 1
+    </select>
+   
+</mapper>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.media.dao.WechatMediaDAO">
+	
+	<insert id="insertWechatMediaInfo" parameterType="wechatMediaInfo">
+		insert into
+			media_wechat_info
+		( channel_id, area_id, first_price, second_price, other_price,
+			remark, audit_status, status, created_user )
+		values
+		( #{channelId}, #{areaId}, #{firstPrice}, #{secondPrice}, #{otherPrice},
+			#{remark}, #{auditStatus}, #{status}, #{createdUser} )
+	</insert>
+	
+	<select id="selectWechatMediaInfoById" parameterType="Integer" resultType="wechatMediaInfo">
+		select
+			wechat_media_id				wechatMediaId,
+			channel_id					channelId,
+			area_id						areaId,
+			first_price					firstPrice,
+			second_price				secondPrice,
+			other_price					otherPrice,
+			remark						remark,
+			audit_user					auditUser,
+			audit_status				auditStatus,
+			audit_date					auditDate,
+			status						status
+		from
+			media_wechat_info
+		where
+			wechat_media_id = #{wechatMediaId}
+	</select>
+	
+	<select id="selectWechatMediaAreaList" resultType="java.util.Map">
+		SELECT
+			t.area_id areaId,
+			a.area_name areaName
+		FROM
+			media_wechat_info t
+		INNER JOIN system_area_info a ON a.area_id = t.area_id
+		WHERE
+			t.audit_status = 1
+		GROUP BY
+			t.area_id
+	</select>
+	
+	<update id="auditWechatMediaInfo" parameterType="wechatMediaInfo">
+		update
+			media_wechat_info
+		set
+			audit_status = #{auditStatus},
+			audit_user = #{auditUser},
+			audit_date = #{auditDate}
+		where
+			wechat_media_id = #{wechatMediaId}
+	</update>
+	
+	<select id="selectWechatMediaListByAdmin" parameterType="adminWechatMediaQuery" resultType="adminWechatMediaListDto">
+		select
+			a.wechat_media_id			wechatMediaId,
+			a.first_price				firstPrice,
+			a.second_price				secondPrice,
+			a.other_price				otherPrice,
+			a.remark					remark,
+			a.audit_status				auditStatus,
+			a.created_user				createdUser,
+			b.nickname					nickname,
+			b.account					account,
+			b.qr_code					qrCode,
+			b.head_image				headImage,
+			b.desc						desc,
+			b.authentication			authentication,
+			b.fans_count				fansCount,
+			c.name						typeName
+		from
+			media_wechat_info a
+		inner join
+			media_wechat_channel b
+		on
+			a.channel_id = b.channel_id
+		inner join
+			media_wechat_type c
+		on
+			b.type_id = c.id
+		<if test="createdUser != null and '' != createdUser">
+		where
+			a.created_user = #{createdUser}
+		</if>
+		order by 
+			a.audit_status, a.created_date desc
+		<if test="isLimit != null and isLimit == 1">
+			limit #{beginLimit}, #{endLimit}
+		</if>
+	</select>
+	
+	<select id="selectWechatMediaListByAdminCount" parameterType="adminWechatMediaQuery" resultType="Integer">
+		select
+			count(a.wechat_media_id)
+		from
+			media_wechat_info a
+		inner join
+			media_wechat_channel b
+		on
+			a.channel_id = b.channel_id
+		inner join
+			media_wechat_type c
+		on
+			b.type_id = c.id
+		<if test="createdUser != null and '' != createdUser">
+		where
+			a.created_user = #{createdUser}
+		</if>
+	</select>
+	
+	<select id="selectWechatMediaListByMember" parameterType="memberWechatMediaQuery" resultType="baseWechatMediaListDto">
+		SELECT
+			g.*, 
+			b.nickname 				nickname,
+			b.account				account,
+			b.qr_code				qrCode,
+			b.head_image			headImage,
+			c.name 					typeName,
+			b.desc					desc,
+			b.authentication		authentication,
+			b.fans_count			fansCount,
+			d.area_name				areaName
+		FROM
+			(
+				SELECT
+					a.channel_id 				channelId,
+					a.wechat_media_id 			wechatMediaId,
+					a.first_price 				firstPrice,
+					a.second_price				secondPrice,
+					a.other_price				otherPrice,
+					a.area_id 					areaId,
+					a.remark 					remark
+				FROM
+					media_wechat_info a
+				LEFT JOIN media_wechat_info f ON a.channel_id = f.channel_id
+<![CDATA[ 			AND a.first_price < f.first_price	]]>	
+				WHERE
+					a.audit_status = 1
+				GROUP BY
+					a.channel_id
+			) g,
+			media_wechat_channel b,
+			media_wechat_type c,
+			system_area_info d
+		WHERE
+			g.channelId = b.channel_id
+		AND b.type_id = c.id
+		AND d.area_id = g.areaId
+		<if test="areaIds != null and areaIds != ''">
+		and
+			g.areaId in ( #{areaIds} )
+		</if>
+		<if test="mediaName != null and mediaName != ''">
+		and
+			b.nickname like '%#{mediaName}%'
+		</if>
+		<if test="minPrice != null and maxPrice != null">
+<![CDATA[
+		and
+			g.firstPrice > #{minPrice}
+		and
+			g.firstPrice < #{maxPrice}
+]]>	
+		</if>
+		<if test="minFansCount != null and maxFansCount != null">
+<![CDATA[	
+		and
+			b.fansCount > #{minFansCount}
+		and
+			b.fansCount < #{maxFansCount}
+]]>		
+		</if>
+		<if test="typeIds != null and typeIds != ''">
+		and
+			b.type_id in ( #{typeIds} )
+		</if>
+		ORDER BY g.createdate desc
+		<if test="isLimit != null and isLimit == 1">
+			limit #{beginLimit}, #{endLimit}
+		</if>
+	</select>
+	
+	<select id="selectWechatMediaListByMemberCount" parameterType="memberWechatMediaQuery" resultType="Integer">
+		SELECT
+			count( g.wechatMediaId )
+		FROM
+			(
+				SELECT
+					a.channel_id 				channelId,
+					a.wechat_media_id 			wechatMediaId,
+					a.first_price 				firstPrice,
+					a.second_price				secondPrice,
+					a.other_price				otherPrice,
+					a.area_id 					areaId,
+					a.remark 					remark
+				FROM
+					media_wechat_info a
+				LEFT JOIN media_wechat_info f ON a.channel_id = f.channel_id
+<![CDATA[ 			AND a.first_price < f.first_price	]]>	
+				WHERE
+					a.audit_status = 1
+				GROUP BY
+					a.channel_id
+			) g,
+			media_wechat_channel b,
+			media_wechat_type c,
+			system_area_info d
+		WHERE
+			g.channelId = b.channel_id
+		AND b.type_id = c.id
+		AND d.area_id = g.areaId
+		<if test="areaIds != null and areaIds != ''">
+		and
+			g.areaId in ( #{areaIds} )
+		</if>
+		<if test="mediaName != null and mediaName != ''">
+		and
+			b.nickname like '%#{mediaName}%'
+		</if>
+		<if test="minPrice != null and maxPrice != null">
+<![CDATA[
+		and
+			g.firstPrice > #{minPrice}
+		and
+			g.firstPrice < #{maxPrice}
+]]>	
+		</if>
+		<if test="minFansCount != null and maxFansCount != null">
+<![CDATA[	
+		and
+			b.fansCount > #{minFansCount}
+		and
+			b.fansCount < #{maxFansCount}
+]]>		
+		</if>
+		<if test="typeIds != null and typeIds != ''">
+		and
+			b.type_id in ( #{typeIds} )
+		</if>
+	</select>
+	
+	<update id="updateWechatMediaInfo" parameterType="wechatMediaUpdate">
+		update
+			media_wechat_info
+		<set>
+			<if test="channelId != null">channel_id = #{channelId},</if>
+			<if test="areaId != null">area_id = #{areaId},</if>
+			<if test="firstPrice != null">first_price = #{firstPrice},</if>
+			<if test="secondPrice != null">second_price = #{secondPrice},</if>
+			<if test="otherPrice != null">other_price = #{otherPrice},</if>
+			<if test="remark != null">remark = #{remark}</if>
+		</set>
+		where
+			wechat_media_id = #{wechatMediaId}
+	</update>
+   
+</mapper>

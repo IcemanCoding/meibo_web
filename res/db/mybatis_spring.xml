@@ -35,5 +35,56 @@
 		<property name="mapperInterface" value="com.meibo.web.member.dao.MemberAccountDAO" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
+	
+	<!-- media -->
+	<bean id="newsMediaDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.NewsMediaDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="newsMediaTypeDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.NewsMediaTypeDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="newsMediaChannelDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.NewsMediaChannelDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="newsMediaColumnDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.NewsMediaColumnDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="wechatMediaDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.WechatMediaDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="wechatMediaChannelDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.WechatMediaChannelDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="wechatMediaTypeDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.WechatMediaTypeDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="blogMediaDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.BlogMediaDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="blogMediaTypeDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.BlogMediaTypeDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="blogMediaChannelDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.BlogMediaChannelDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
 
 </beans>

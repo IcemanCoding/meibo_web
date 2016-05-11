@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.media.dao.NewsMediaColumnDAO">
+	
+	<select id="selectNewsMediaColumnId" parameterType="newsMediaColumn" resultType="Integer">
+		select
+			news_column_id
+		from
+			media_news_column
+		where
+			news_column_name = #{newsColumnName}
+	</select>
+	
+	<select id="selectNewsMediaColumnById" parameterType="Integer" resultType="newsMediaColumn">
+		select
+			news_column_id			newsColumnId,
+			news_column_name		newsColumnName,
+			status					status
+		from
+			media_news_column
+		where
+			news_column_id = #{newsColumnId}
+	</select>
+	
+	<update id="updateNewsMediaColumnStatus" parameterType="newsMediaColumn">
+		update
+			media_news_column
+		set
+			status = #{status}
+		where
+			news_column_id = #{newsColumnId}
+	</update>
+	
+	<insert id="insertNewsMediaColumnId" parameterType="newsMediaColumn" useGeneratedKeys="true" keyProperty="newsColumnId">
+		insert into
+			media_news_column
+		( news_column_name, status )
+			values
+			( #{newsColumnName}, #{status} )
+	</insert>
+   
+</mapper>

@@ -29,6 +29,7 @@ public class BaseController {
 		
 		viewModel.setMemberId( userInfo.getInteger( "memberId" ) );
 		viewModel.setRequest( request );
+		viewModel.setSessionId( request.getHeader( "sessionId" ) );
 		
 		return viewModel;
 		

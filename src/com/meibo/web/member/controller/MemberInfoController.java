@@ -19,7 +19,7 @@ import com.meibo.web.common.controller.BaseController;
 import com.meibo.web.common.service.SessionService;
 import com.meibo.web.common.utils.ContainerUtils;
 import com.meibo.web.common.utils.MD5Utils;
-import com.meibo.web.common.utils.ParseUtils;
+import com.meibo.web.common.utils.RequestParseUtils;
 import com.meibo.web.member.dto.MemberInfoDTO;
 import com.meibo.web.member.service.MemberInfoService;
 
@@ -41,7 +41,7 @@ public class MemberInfoController extends BaseController {
 
 		Map<String, Object> resData = new HashMap<String, Object>();
 		
-		JSONObject reqJson = ParseUtils.loadPostRequest( request );
+		JSONObject reqJson = RequestParseUtils.loadPostRequest( request );
 		
 		String loginName = reqJson.getString( "loginName" );
 		String loginPwd = reqJson.getString( "loginPwd" );

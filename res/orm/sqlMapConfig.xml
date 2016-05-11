@@ -23,11 +23,53 @@
     	<typeAlias type="com.meibo.web.member.dto.MemberAccountDTO" alias="memberAccount" />
     	<typeAlias type="com.meibo.web.member.entity.MemberInfoEntity" alias="memberInfo"/>
     	<typeAlias type="com.meibo.web.member.entity.MemberAccountEntity" alias="accountEntity"/>
+    	
+    	<typeAlias type="com.meibo.web.media.entity.NewsMediaChannelEntity" alias="newsMediaChannel"/>
+    	<typeAlias type="com.meibo.web.media.entity.NewsMediaEntity" alias="newsMedia"/>
+    	<typeAlias type="com.meibo.web.media.entity.NewsMediaTypeEntity" alias="newsMediaType"/>
+    	<typeAlias type="com.meibo.web.media.entity.NewsMediaColumnEntity" alias="newsMediaColumn"/>
+    	<typeAlias type="com.meibo.web.media.dto.AdminNewsMediaListDTO" alias="adminNewsListDto"/>
+    	<typeAlias type="com.meibo.web.media.dto.BaseNewsMediaListDTO" alias="baseNewsListDto"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.NewsMediaListQueryParams" alias="newsMediaQuery"/>
+    	
+    	<typeAlias type="com.meibo.web.media.entity.WechatMediaChannelEntity" alias="wechatMediaChannel"/>
+    	<typeAlias type="com.meibo.web.media.entity.WechatMediaInfoEntity" alias="wechatMediaInfo"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.AdminWechatMediaListQueryViewmodel" alias="adminWechatMediaQuery"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.MemberWechatMediaListQueryViewmodel" alias="memberWechatMediaQuery"/>
+    	<typeAlias type="com.meibo.web.media.dto.AdminWechatMediaListDTO" alias="adminWechatMediaListDto"/>
+    	<typeAlias type="com.meibo.web.media.dto.BaseWechatMediaListDTO" alias="baseWechatMediaListDto"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.WechatMediaUpdateViewmodel" alias="wechatMediaUpdate"/>
+    	
+    	<typeAlias type="com.meibo.web.media.entity.BlogMediaChannelEntity" alias="blogMediaChannel"/>
+    	<typeAlias type="com.meibo.web.media.entity.BlogMediaInfoEntity" alias="blogMediaInfo"/>
+    	<typeAlias type="com.meibo.web.media.dto.AdminBlogMediaListDTO" alias="adminBlogMediaListDto"/>
+    	<typeAlias type="com.meibo.web.media.dto.BaseBlogMediaListDTO" alias="baseBlogMediaListDto"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.AdminBlogMediaListQueryViewmodel" alias="adminBlogMediaQuery"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.MemberBlogMediaListQueryViewmodel" alias="memberBlogMediaQuery"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.BlogMediaUpdateViewmodel" alias="blogMediaUpdate"/>
+    	
+    	<typeAlias type="com.meibo.web.system.dto.SystemAreaInfoDTO" alias="areaDto"/>
+    	
     </typeAliases>
 
     <mappers>
     	<mapper resource="com/meibo/web/member/dao/memberInfoMapper.xml"/>
     	<mapper resource="com/meibo/web/member/dao/memberAccountMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/media/dao/newsMediaMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/newsMediaChannelMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/newsMediaTypeMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/newsMediaColumnMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/media/dao/wechatMediaMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/wechatMediaChannelMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/wechatMediaTypeMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/media/dao/blogMediaMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/blogMediaChannelMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/blogMediaTypeMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/system/dao/dictionaryMapper.xml"/>
     </mappers>
 
 </configuration> 

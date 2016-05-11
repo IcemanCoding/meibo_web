@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.media.dao.NewsMediaChannelDAO">
+	
+	<select id="selectNewsMediaChannel" resultType="newsMediaChannel">
+		select
+			channel_id			channelId,
+			channel_name		channelName,
+			news_type			newsTypeId,
+			b.name				newsTypeName,
+			pic_url				picUrl,
+			link_url			linkUrl
+		from
+			media_news_channel a
+		inner join
+			media_news_type b
+		on
+			a.news_type = b.id
+		where
+			a.status = 1
+	</select>
+	
+	<select id="selectNewsMediaChannelById" resultType="newsMediaChannel" parameterType="Integer">
+		select
+			channel_id				channelId,
+			channel_name			channelName,
+			news_type				newsTypeId,
+			link_url				linkUrl,
+			pic_url					picUrl,
+			status					status
+		from
+			media_news_channel
+		where
+			channel_id = #{channelId}
+	</select>
+	
+	<update id="updateNewsMediaChannelStatus" parameterType="newsMediaChannel">
+		update
+			media_news_channel
+		set
+			status = #{status}
+		where
+			channel_id = #{channelId}
+	</update>
+	
+	<select id="selectNewsMediaChannelId" parameterType="newsMediaChannel" resultType="Integer">
+		select
+			channel_id
+		from
+			media_news_channel
+		where
+			channel_name = #{channelName}
+		and
+			news_type = #{newsTypeId}
+		and
+			link_url = #{linkUrl}
+	</select>
+	
+	<insert id="insertNewsMediaChannel" parameterType="newsMediaChannel" useGeneratedKeys="true" keyProperty="channelId">
+		insert into
+			media_news_channel
+		( channel_name, link_url, pic_url, status, news_type )
+		values
+			( #{channelName}, #{linkUrl}, #{picUrl}, #{status}, #{newsTypeId} )
+	</insert>
+	
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.media.dao.WechatMediaTypeDAO">
+	
+	<select id="selectWechatMediaTypeList" resultType="java.util.Map">
+		select
+			id 				typeId,
+			name			typeName,
+			sort_index		sortIndex
+		from
+			media_wechat_type
+		where
+			status = 1
+		order by
+			sort_index
+	</select>
+	
+	<insert id="insertWechatMediaType" parameterType="newsMediaType" useGeneratedKeys="true" keyProperty="id">
+    	insert into
+    		media_wechat_type
+    	( name, status, sort_index )
+    	values
+    		( #{name}, #{status}, #{sortIndex} )
+    </insert>
+    
+    <select id="selectWechatMediaTypeById" parameterType="Integer" resultType="newsMediaType">
+    	select
+			id 				typeId,
+			name			typeName,
+			sort_index		sortIndex,
+			status			status
+		from
+			media_wechat_type
+		where
+			id = #{typeId}
+    </select>
+    
+    <update id="updateWechatMediaTypeStatus" parameterType="newsMediaType">
+    	update
+    		media_wechat_type
+    	set
+    		status = #{status}
+    	where
+    		id = #{typeId}
+    </update>
+	
+	<select id="selectWechatMediaTypeId" parameterType="java.util.Map" resultType="Integer">
+		select
+			id
+		from
+			media_wechat_type
+		where
+			1 = 1
+		<if test="status != null and '' != status">
+		and
+			status = #{status}
+		</if>
+		<if test="typeName != null and '' != typeName">
+		and
+			name = #{typeName}
+		</if>
+	</select>
+	
+	<select id="selectMaxSortIndex" resultType="Integer">
+		select
+			max( sort_index )
+		from
+			media_wechat_type
+	</select>
+	
+</mapper>

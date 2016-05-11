@@ -26,6 +26,10 @@
     	and
     		mobile_num = #{mobileNum}
     	</if>
+    	<if test="memberId != null and '' != memberId">
+    	and
+    		member_id = #{memberId}
+    	</if>
     	limit 1
     </select>
     
