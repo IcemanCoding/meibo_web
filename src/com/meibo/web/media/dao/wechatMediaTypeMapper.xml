@@ -6,8 +6,7 @@
 	<select id="selectWechatMediaTypeList" resultType="java.util.Map">
 		select
 			id 				typeId,
-			name			typeName,
-			sort_index		sortIndex
+			name			typeName
 		from
 			media_wechat_type
 		where
@@ -26,14 +25,14 @@
     
     <select id="selectWechatMediaTypeById" parameterType="Integer" resultType="newsMediaType">
     	select
-			id 				typeId,
-			name			typeName,
+			id 				id,
+			name			name,
 			sort_index		sortIndex,
 			status			status
 		from
 			media_wechat_type
 		where
-			id = #{typeId}
+			id = #{id}
     </select>
     
     <update id="updateWechatMediaTypeStatus" parameterType="newsMediaType">
@@ -42,24 +41,16 @@
     	set
     		status = #{status}
     	where
-    		id = #{typeId}
+    		id = #{id}
     </update>
 	
-	<select id="selectWechatMediaTypeId" parameterType="java.util.Map" resultType="Integer">
+	<select id="selectWechatMediaTypeId" parameterType="String" resultType="Integer">
 		select
 			id
 		from
 			media_wechat_type
 		where
-			1 = 1
-		<if test="status != null and '' != status">
-		and
-			status = #{status}
-		</if>
-		<if test="typeName != null and '' != typeName">
-		and
-			name = #{typeName}
-		</if>
+			name = #{name}
 	</select>
 	
 	<select id="selectMaxSortIndex" resultType="Integer">

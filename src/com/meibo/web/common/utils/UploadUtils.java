@@ -36,6 +36,15 @@ public class UploadUtils {
 			} else if ( fileType == ConstantsForUpload.BLOG_QRCODE_IMAGE_TYPE ) {
 				dirPath += ConstantsForUpload.BLOGQRCODE_IMAGE_DIR;
 				saveFilePath = ConstantsForUpload.BLOGQRCODE_IMAGE_DIR;
+			} else if ( fileType == ConstantsForUpload.ORDER_BLOG_UPLOAD_TYPE ) {
+				dirPath += ConstantsForUpload.ORDER_BLOG_UPLOAD_DIR;
+				saveFilePath = ConstantsForUpload.ORDER_BLOG_UPLOAD_DIR;
+			} else if ( fileType == ConstantsForUpload.ORDER_NEWS_UPLOAD_TYPE ) {
+				dirPath += ConstantsForUpload.ORDER_NEWS_UPLOAD_DIR;
+				saveFilePath = ConstantsForUpload.ORDER_NEWS_UPLOAD_DIR;
+			} else if ( fileType == ConstantsForUpload.ORDER_WECHAT_UPLOAD_TYPE ) {
+				dirPath += ConstantsForUpload.ORDER_WECHAT_UPLOAD_DIR;
+				saveFilePath = ConstantsForUpload.ORDER_WECHAT_UPLOAD_DIR;
 			}
 
 			// 拼接保存的上传文件的目录
@@ -84,6 +93,22 @@ public class UploadUtils {
 				if ( filterType.contains( contentType.toUpperCase() ) ) {
 					return true;
 				}
+			} else if ( fileType == ConstantsForUpload.WECHAT_QRCODE_IMAGE_TYPE ) {
+				String filterType = ConstantsForUpload.MEDIA_IMAGE_FILTER;
+				String contentType = fileName.split( "\\." )[1];
+				if ( filterType.contains( contentType.toUpperCase() ) ) {
+					return true;
+				}
+			} else if ( fileType == ConstantsForUpload.BLOG_QRCODE_IMAGE_TYPE ) {
+				String filterType = ConstantsForUpload.MEDIA_IMAGE_FILTER;
+				String contentType = fileName.split( "\\." )[1];
+				if ( filterType.contains( contentType.toUpperCase() ) ) {
+					return true;
+				}
+			} else if ( fileType == ConstantsForUpload.ORDER_BLOG_UPLOAD_TYPE
+					|| fileType == ConstantsForUpload.ORDER_WECHAT_UPLOAD_TYPE 
+					|| fileType == ConstantsForUpload.ORDER_NEWS_UPLOAD_TYPE ) {
+				return true;
 			}
 		} catch ( Exception e ) {
 			return false;

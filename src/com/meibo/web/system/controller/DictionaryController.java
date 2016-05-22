@@ -71,7 +71,7 @@ public class DictionaryController {
 
 	}
 	
-	@RequestMapping ( value = "/area", method = RequestMethod.POST )
+	@RequestMapping ( value = "/areaList", method = RequestMethod.POST )
 	@ResponseBody
 	public Map<String, Object> area( BaseViewModel viewModel ) {
 

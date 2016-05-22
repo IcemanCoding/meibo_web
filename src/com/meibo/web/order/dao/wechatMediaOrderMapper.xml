@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.order.dao.WechatMediaOrderDAO">
+	
+	<insert id="insertOrderWechatInfo" parameterType="orderInfo" useGeneratedKeys="true" keyProperty="orderId">
+		insert into
+			order_wechat_info
+		( order_code, member_id, trans_amount, order_status, trans_type, order_date, created_date )
+		values
+			( #{orderCode}, #{memberId}, #{transAmount}, #{orderStatus}, #{transType}, #{orderDate}, #{createDate} )
+	</insert>
+   
+   	<insert id="insertWechatBlogSplit" parameterType="wechatOrderSplit">
+   		insert into
+			order_wechat_split
+		( order_id, wechat_media_id, media_member_id, price_type, trans_amount, order_status, created_date )
+		values
+			( #{orderId}, #{wechatMediaId}, #{mediaMemberId}, #{priceType}, #{transAmount}, #{orderStatus}, #{createDate} )
+   	</insert>
+   	
+   	<insert id="insertOrderWechatDetail" parameterType="wechatOrderDetail">
+   		insert into
+			order_wechat_detail
+		( order_id, execute_date, text_content, resource_link, file_url, remark, created_date, original_link, title )
+		values
+		( #{orderId}, #{executeDate}, #{textContent}, #{resourceLink}, #{fileUrl}, #{remark}, #{createDate}, #{originalLink}, #{title} )
+   	</insert>
+   	
+   	<update id="updateOrderWechatInfoStatus" parameterType="orderInfo">
+   		update
+			order_wechat_info
+		set
+			pay_date = #{payDate},
+			order_status = #{orderStatus}
+		where
+			order_id = #{orderId}
+   	</update>
+   	
+   	<update id="updateOrderWechatSplitStatus" parameterType="java.util.Map">
+   		update
+			order_wechat_split
+		set
+			order_status = #{orderStatus}
+		where
+			order_id = #{orderId}
+   	</update>
+   	
+   	<select id="selectOrderListByAdmin" parameterType="baseMediaOrderListViewmodel" resultType="baseMediaOrderListDto">
+   		select
+			a.order_id			orderId,
+			a.order_code		orderCode,
+			a.order_date		orderDate,
+			a.trans_amount		transAmount,
+			a.order_status		orderStatus,
+			b.execute_date		executeDate,
+			c.login_name		memberName
+		from
+			order_wechat_info a,
+			order_wechat_detail b,
+			member_info c
+		where
+			a.order_id = b.order_id
+		and
+			a.member_id = c.member_id
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+		order by a.created_date desc
+		<if test="isLimit != null and isLimit == 1">
+			limit #{beginLimit}, #{endLimit}
+		</if>
+   	</select>
+   	
+   	<select id="selectOrderListByAdminCount" parameterType="baseMediaOrderListViewmodel" resultType="Integer">
+   		select
+			count( a.order_id )
+		from
+			order_wechat_info a
+		where
+			1 = 1
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+   	</select>
+   	
+   	<select id="selectOrderSplitMediaId" parameterType="java.util.Map" resultType="String">
+   		select
+			c.nickname channelName
+		from
+			order_wechat_split a,
+			media_wechat_info b,
+			media_wechat_channel c
+		where
+			a.wechat_media_id = b.wechat_media_id
+		and
+			b.channel_id = c.channel_id
+		<if test="orderId != null">
+		and
+			a.order_id = #{orderId}
+		</if>
+		<if test="memberId != null">
+		and
+			a.member_id = #{memberId}
+		</if>
+   	</select>
+   	
+   	<select id="selectOrderListBySupplier" parameterType="baseMediaOrderListViewmodel" resultType="baseMediaOrderListDto">
+   		select
+			a.order_id			orderId,
+			a.order_code		orderCode,
+			a.order_date		orderDate,
+			a.order_status		orderStatus,
+			b.execute_date		executeDate,
+			c.login_name		memberName
+		from
+			order_wechat_info a
+		inner join
+			order_wechat_detail b
+		on
+			a.order_id = b.order_id
+		inner join
+			member_info c
+		on
+			a.member_id = c.member_id
+		inner join
+			order_wechat_split d
+		on
+			d.order_id = a.order_id
+		where
+			d.media_member_id = #{memberId}
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+		GROUP BY a.order_id
+		order by a.created_date desc
+		<if test="isLimit != null and isLimit == 1">
+			limit #{beginLimit}, #{endLimit}
+		</if>
+   	</select>
+   	
+   	<select id="selectOrderListBySupplierCount" parameterType="baseMediaOrderListViewmodel" resultType="Integer">
+   		select
+			count( distinct( a.order_id ) )
+		from
+			order_wechat_info a,
+			order_wechat_split b
+		where
+			a.order_id = b.order_id
+		and
+			b.media_member_id = #{memberId}
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+   	</select>
+   	
+   	<select id="selectOrderListByMember" parameterType="baseMediaOrderListViewmodel" resultType="baseMediaOrderListDto">
+   		select
+			a.order_id			orderId,
+			a.order_code		orderCode,
+			a.order_date		orderDate,
+			a.trans_amount		transAmount,
+			a.order_status		orderStatus,
+			b.execute_date		executeDate
+		from
+			order_wechat_info a
+		left join
+			order_wechat_detail b
+		on
+			a.order_id = b.order_id
+		where
+			a.member_id = #{memberId}
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+		order by a.created_date desc
+		<if test="isLimit != null and isLimit == 1">
+			limit #{beginLimit}, #{endLimit}
+		</if>
+   	</select>
+   	
+   	<select id="selectOrderListByMemberCount" parameterType="baseMediaOrderListViewmodel" resultType="Integer">
+   		select
+			count( a.order_id )
+		from
+			order_wechat_info a
+		where
+		a.member_id = #{memberId}
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+   	</select>
+   	
+   	<select id="selectWechatMediaOrderDetailByOrderId" parameterType="Integer" resultType="wechatOrderDetail">
+   		select
+			order_id		orderId,
+			execute_date	executeDate,
+			text_content	textContent,
+			resource_link	resourceLink,
+			original_link	originalLink,
+			title			title,
+			file_url		fileUrl,
+			remark			remark
+		from
+			order_wechat_detail
+		where
+			order_id = #{orderId}
+   	</select>
+   	
+   	<select id="selectWechatMediaOrderInfoByOrderId" parameterType="Integer" resultType="orderInfo">
+   		select
+			order_id			orderId,
+			order_code			orderCode,
+			member_id			memberId,
+			trans_amount		transAmount,
+			order_status		orderStatus,
+			trans_type			transType,
+			order_date			orderDate,
+			pay_date			payDate,
+			created_date		createDate
+		from
+			order_wechat_info
+		where
+			order_id = #{orderId}
+   	</select>
+   	
+   	<select id="selectOrderLaunchDetailByOrderId" parameterType="Integer" resultType="launchDetail">
+   		select
+			a.order_split_id		orderSplitId,
+			b.wechat_media_id		newsMediaId,
+			c.nickname				mediaName,
+			a.launch_url			launchUrl,
+			a.launch_date			launchDate,
+			a.order_status			orderStatus,
+			a.trans_amount			splitAmount
+		from
+			order_wechat_split a,
+			media_wechat_info b,
+			media_wechat_channel c
+		where
+			a.wechat_media_id = b.wechat_media_id
+		and
+			b.channel_id = c.channel_id
+		and
+			a.order_id = #{orderId}
+   	</select>
+   
+   
+</mapper>

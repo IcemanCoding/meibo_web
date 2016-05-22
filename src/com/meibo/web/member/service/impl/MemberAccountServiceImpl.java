@@ -51,4 +51,17 @@ public class MemberAccountServiceImpl implements MemberAccountService {
 		
 	}
 
+	@Override
+	public Boolean cosumeMemberAccount( Integer memberId, BigDecimal transAmount ) {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put( "memberId", memberId );
+		params.put( "transAmount", transAmount );
+		
+		memberAccountDao.consumeMemberAccount( params );
+		
+		return true;
+		
+	}
+
 }

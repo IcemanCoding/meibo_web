@@ -13,7 +13,7 @@ public class BaseWechatMediaListDTO {
 	private String account;
 	private String qrCode;
 	private String desc;
-	private String authentication;
+	private String authInfo;
 	private String typeName;
 	private String headImage;
 	private Integer fansCount;
@@ -73,12 +73,6 @@ public class BaseWechatMediaListDTO {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
-	public String getAuthentication() {
-		return authentication;
-	}
-	public void setAuthentication(String authentication) {
-		this.authentication = authentication;
-	}
 	public String getTypeName() {
 		return typeName;
 	}
@@ -102,6 +96,12 @@ public class BaseWechatMediaListDTO {
 	}
 	public void setAreaName(String areaName) {
 		this.areaName = areaName;
+	}
+	public String getAuthInfo() {
+		return authInfo;
+	}
+	public void setAuthInfo(String authInfo) {
+		this.authInfo = authInfo;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package com.meibo.web.media.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.meibo.web.media.utils.MediaTransforUtils;
 import com.meibo.web.media.viewmodel.NewsMediaListQueryParams;
 import com.meibo.web.member.dao.MemberInfoDAO;
 import com.meibo.web.member.dto.MemberInfoDTO;
+import com.meibo.web.order.dto.NewsMediaOrderSplitDTO;
 
 public class NewsMediaServiceImpl implements NewsMediaService {
 
@@ -97,55 +99,59 @@ public class NewsMediaServiceImpl implements NewsMediaService {
 	}
 
 	@Override
-	public Boolean auditNewsMedia( Integer auditUser, Integer newsMediaId ) throws Exception {
+	public Boolean auditNewsMedia( Integer auditUser, Integer newsMediaId, Integer auditStatus ) throws Exception {
 		
 		// get news_media entity
 		NewsMediaEntity newsMediaEntity = newsMediaDao.selectNewsMediaInfo( newsMediaId );
 		
 		// check news_media audit_status
-		if ( newsMediaEntity.getAuditStatus() != 0 ) {
+		if ( newsMediaEntity.getAuditStatus() != 0 && newsMediaEntity.getAuditStatus() != 2 ) {
 			return false;
 		}
 		
-		// get news_channel entity
-		Integer channelId = newsMediaEntity.getChannelId();
-		NewsMediaChannelEntity newsMediaChannel = newsMediaChannelDao.selectNewsMediaChannelById( channelId );
-		
-		Integer channelStatus = newsMediaChannel.getStatus();
-		if ( channelStatus == 0 ) {
+		if ( auditStatus == 1 ) {
 			
-			// get news_type
-			Integer newsTypeId = newsMediaChannel.getNewsTypeId();
+			// get news_channel entity
+			Integer channelId = newsMediaEntity.getChannelId();
+			NewsMediaChannelEntity newsMediaChannel = newsMediaChannelDao.selectNewsMediaChannelById( channelId );
 			
-			// get news_type entity
-			NewsMediaTypeEntity newsMediaType = newsMediaTypeDao.selectNewsMediaTypeById( newsTypeId );
-			if ( newsMediaType.getStatus() == 0 ) {
+			Integer channelStatus = newsMediaChannel.getStatus();
+			if ( channelStatus == 0 ) {
 				
-				// update news_type status = 1
-				newsMediaType.setStatus( 1 );
-				newsMediaTypeDao.updateNewsMediaTypeStatus( newsMediaType );
+				// get news_type
+				Integer newsTypeId = newsMediaChannel.getNewsTypeId();
+				
+				// get news_type entity
+				NewsMediaTypeEntity newsMediaType = newsMediaTypeDao.selectNewsMediaTypeById( newsTypeId );
+				if ( newsMediaType.getStatus() == 0 ) {
+					
+					// update news_type status = 1
+					newsMediaType.setStatus( 1 );
+					newsMediaTypeDao.updateNewsMediaTypeStatus( newsMediaType );
+					
+				}
+				
+				// update news_channel status = 1
+				newsMediaChannel.setStatus( 1 );
+				newsMediaChannelDao.updateNewsMediaChannelStatus( newsMediaChannel );
 				
 			}
 			
-			// update news_channel status = 1
-			newsMediaChannel.setStatus( 1 );
-			newsMediaChannelDao.updateNewsMediaChannelStatus( newsMediaChannel );
-			
-		}
-		
-		// get news_column entity
-		Integer columnId = newsMediaEntity.getColumnId();
-		NewsMediaColumnEntity newsMediaColumn = newsMediaColumnDao.selectNewsMediaColumnById( columnId );
-		if ( newsMediaColumn.getStatus() == 0 ) {
-			
-			// update news_column status = 1
-			newsMediaColumn.setStatus( 1 );
-			newsMediaColumnDao.updateNewsMediaColumnStatus( newsMediaColumn );
+			// get news_column entity
+			Integer columnId = newsMediaEntity.getColumnId();
+			NewsMediaColumnEntity newsMediaColumn = newsMediaColumnDao.selectNewsMediaColumnById( columnId );
+			if ( newsMediaColumn.getStatus() == 0 ) {
+				
+				// update news_column status = 1
+				newsMediaColumn.setStatus( 1 );
+				newsMediaColumnDao.updateNewsMediaColumnStatus( newsMediaColumn );
+				
+			}
 			
 		}
 		
 		// audit news_media
-		newsMediaEntity.setAuditStatus( 1 );
+		newsMediaEntity.setAuditStatus( auditStatus );
 		newsMediaEntity.setAuditUser( auditUser );
 		newsMediaEntity.setAuditDate( new Date() );
 		newsMediaDao.updateNewsMediaByAudit( newsMediaEntity );
@@ -212,7 +218,7 @@ public class NewsMediaServiceImpl implements NewsMediaService {
 			return null;
 		}
 		Integer totalPages = 0;
-		Integer totalRows = newsMediaDao.selectNewsMediaListByAdminCount( params );
+		Integer totalRows = newsMediaDao.selectNewsMediaListByMemberCount( params );
 		if ( recorders != null && recorders != 0 ) {
 			totalPages = ( totalRows / recorders ) == 0 ? 1 : totalRows / recorders;
 		}
@@ -248,33 +254,54 @@ public class NewsMediaServiceImpl implements NewsMediaService {
 		NewsMediaEntity newsMediaEntity = MediaTransforUtils.transMapToNewsMediaEntity( formData );
 		
 		// type_id
-		Integer typeId = newsMediaTypeService.getOrAddNewsMediaTypeId( newsMediaEntity.getChannelType() );
+		Integer typeId = null;
+		if ( newsMediaEntity.getChannelType() != null && !"".equals( newsMediaEntity.getChannelType() ) ) {
+			typeId = newsMediaTypeService.getOrAddNewsMediaTypeId( newsMediaEntity.getChannelType() );
+		}
 		
 		// channel_id
-		NewsMediaChannelEntity newsMediaChannelEntity = new NewsMediaChannelEntity();
-		newsMediaChannelEntity.setChannelName( newsMediaEntity.getChannelName() );
-		newsMediaChannelEntity.setLinkUrl( newsMediaEntity.getLinkUrl() );
-		newsMediaChannelEntity.setNewsTypeId( typeId );
-		newsMediaChannelEntity.setPicUrl( imageUrl );
-		newsMediaChannelEntity.setStatus( 0 );
+		Integer channelId = null;
+		if ( newsMediaEntity.getChannelName() != null && !"".equals( newsMediaEntity.getChannelName() ) ) {
+			
+			NewsMediaChannelEntity newsMediaChannelEntity = new NewsMediaChannelEntity();
+			newsMediaChannelEntity.setChannelName( newsMediaEntity.getChannelName() );
+			newsMediaChannelEntity.setLinkUrl( newsMediaEntity.getLinkUrl() );
+			newsMediaChannelEntity.setNewsTypeId( typeId );
+			newsMediaChannelEntity.setPicUrl( imageUrl );
+			newsMediaChannelEntity.setStatus( 0 );
+			channelId = newsMediaChannelService.getOrAddNewsMediaChannelId( newsMediaChannelEntity );
+			
+		}
 		
-		Integer channelId = newsMediaChannelService.getOrAddNewsMediaChannelId( newsMediaChannelEntity );
 		newsMediaEntity.setChannelId( channelId );
 		
 		// column_id
-		Integer columnId = newsMediaColumnService.getOrAddNewsMediaColumnId( newsMediaEntity.getChannelColumn() );
+		Integer columnId = null;
+		if ( newsMediaEntity.getChannelColumn() != null && !"".equals( newsMediaEntity.getChannelColumn() ) ) {
+			columnId = newsMediaColumnService.getOrAddNewsMediaColumnId( newsMediaEntity.getChannelColumn() );
+		}
 		newsMediaEntity.setColumnId( columnId );
 		
 		// insert db
 		newsMediaEntity.setImageUrl( imageUrl );
 		newsMediaEntity.setAuditStatus( 0 );
 		
-		Integer insertCount = newsMediaDao.insertNewsMediaInfo( newsMediaEntity );
+		Integer insertCount = newsMediaDao.updateNewsMediaInfo( newsMediaEntity );
 		if ( insertCount > 0 ) {
 			return true;
 		}
 		return false;
 		
+	}
+
+	@Override
+	public BigDecimal getOrderAmountById( int[] newsMediaId ) throws Exception {
+		return newsMediaDao.selectOrderAmountById( newsMediaId );
+	}
+
+	@Override
+	public List<NewsMediaOrderSplitDTO> getOrderSplitDtoById( int[] newsMediaId ) throws Exception {
+		return newsMediaDao.selectOrderSplitDtoById( newsMediaId );
 	}
 	
 }

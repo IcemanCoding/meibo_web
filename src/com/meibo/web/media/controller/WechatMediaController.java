@@ -48,7 +48,7 @@ public class WechatMediaController extends BaseController {
 		
 		try {
 			List<Map<String, Object>> typeList = wechatMediaTypeService.getWechatMediaType();
-			resData.put( "typeList", typeList );
+			resData.put( "wechatMediaType", typeList );
 		} catch ( Exception e ) {
 			logger.error( "查询微信媒体类型失败!" + e );
 			return ContainerUtils.buildResFailMap( "操作失败" );
@@ -130,9 +130,14 @@ public class WechatMediaController extends BaseController {
 		Integer memberId = viewModel.getMemberId();
 		JSONObject requestJson = RequestParseUtils.loadPostRequest( viewModel.getRequest() );
 		Integer wechatMediaId = requestJson.getInteger( "wechatMediaId" );
+		Integer auditStatus = requestJson.getInteger( "auditStatus" );
+		
+		if ( auditStatus != 1 || auditStatus != 2 ) {
+			ContainerUtils.buildResFailMap( "无效的审核状态" );
+		}
 		
 		try {
-			wechatMediaService.auditWechatMedia( memberId, wechatMediaId );
+			wechatMediaService.auditWechatMedia( memberId, wechatMediaId, auditStatus );
 		} catch ( Exception e ) {
 			logger.error( "审核媒体数据失败!" + e );
 			ContainerUtils.buildResFailMap( "操作失败" );

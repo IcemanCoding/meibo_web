@@ -12,13 +12,14 @@
 			nickname = #{nickname}
 	</select>
 	
-	<insert id="insertBlogMediaChannel" parameterType="blogMediaChannel">
+	<insert id="insertBlogMediaChannel" parameterType="blogMediaChannel" useGeneratedKeys="true" keyProperty="channelId">
 		insert into
 			media_blog_channel
-		( nickname, fans_count, head_image, qr_code, auth_type, auth_info, desc, type_id, status )
+		( nickname, fans_count, head_image, qr_code, auth_type, 
+			auth_info, `desc`, type_id, status, register_date )
 		values
-		( #{nickname}, #{fansCount}, #{headImage}, #{qrCode}, #{authType}, #{authInfo}, #{desc},
-			#{typeId}, #{status} )
+		( #{nickname}, #{fansCount}, #{headImage}, #{qrCode}, #{authType}, 
+			#{authInfo}, #{desc}, #{typeId}, #{status}, #{registerDate} )
 	</insert>
 	
 	<select id="selectBlogMediaChannelById" parameterType="Integer" resultType="blogMediaChannel">
@@ -30,7 +31,7 @@
 			qr_code				qrCode,
 			auth_type			authType,
 			auth_info			authInfo,
-			desc				desc,
+			`desc`				`desc`,
 			type_id				typeId,
 			status				status
 		from
@@ -48,7 +49,7 @@
 			qr_code				qrCode,
 			auth_type			authType,
 			auth_info			authInfo,
-			desc				desc,
+			`desc`				`desc`,
 			type_id				typeId,
 			status				status
 		from
@@ -57,7 +58,7 @@
 			nickname = #{channelName}
 	</select>
 	
-	<update id="updateWechatMediaChannelStatus" parameterType="blogMediaChannel">
+	<update id="updateBlogMediaChannelStatus" parameterType="blogMediaChannel">
 		update
 			media_blog_channel
 		set

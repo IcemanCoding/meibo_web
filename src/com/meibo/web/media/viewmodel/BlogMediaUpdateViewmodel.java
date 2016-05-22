@@ -25,6 +25,7 @@ public class BlogMediaUpdateViewmodel {
 	private String typeName;
 	private Integer authType;
 	private String authInfo;
+	private String registerDate;
 	
 	public Integer getBlogMediaId() {
 		return blogMediaId;
@@ -121,6 +122,12 @@ public class BlogMediaUpdateViewmodel {
 	}
 	public void setAuthInfo(String authInfo) {
 		this.authInfo = authInfo;
+	}
+	public String getRegisterDate() {
+		return registerDate;
+	}
+	public void setRegisterDate(String registerDate) {
+		this.registerDate = registerDate;
 	}
 
 }

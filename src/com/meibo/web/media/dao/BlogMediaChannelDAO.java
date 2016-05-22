@@ -10,7 +10,7 @@ public interface BlogMediaChannelDAO {
 	
 	BlogMediaChannelEntity selectBlogMediaChannelById( Integer channelId );
 	
-	void updateWechatMediaChannelStatus( BlogMediaChannelEntity channelEntity );
+	void updateBlogMediaChannelStatus( BlogMediaChannelEntity channelEntity );
 	
 	BlogMediaChannelEntity selectBlogMediaChannelByName( String channelName );
 

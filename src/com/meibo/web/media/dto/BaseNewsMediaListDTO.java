@@ -18,6 +18,7 @@ public class BaseNewsMediaListDTO {
 	private BigDecimal quotePrice;
 	private String remark;
 	private Integer newsMediaId;
+	private String areaName;
 	
 	public String getMediaName() {
 		return mediaName;
@@ -102,6 +103,12 @@ public class BaseNewsMediaListDTO {
 	}
 	public void setNewsMediaId(Integer newsMediaId) {
 		this.newsMediaId = newsMediaId;
+	}
+	public String getAreaName() {
+		return areaName;
+	}
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
 	}
 	
 }

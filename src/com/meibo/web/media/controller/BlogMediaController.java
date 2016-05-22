@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.meibo.web.common.controller.BaseController;
 import com.meibo.web.common.utils.ContainerUtils;
 import com.meibo.web.common.utils.RequestParseUtils;
 import com.meibo.web.common.viewmodel.BaseViewModel;
@@ -24,7 +25,7 @@ import com.meibo.web.media.viewmodel.MemberBlogMediaListQueryViewmodel;
 
 @RequestMapping ( "/blogMedia" )
 @Controller
-public class BlogMediaController {
+public class BlogMediaController extends BaseController {
 	
 	private static final Logger logger = LoggerFactory.getLogger( BlogMediaController.class );
 	
@@ -47,7 +48,11 @@ public class BlogMediaController {
 		
 		try {
 			List<Map<String, Object>> typeList = blogMediaTypeService.getBlogMediaType();
-			resData.put( "typeList", typeList );
+			if ( typeList == null || typeList.size() == 0 ) {
+				resData.put( "blogMediaType", null );
+			} else {
+				resData.put( "blogMediaType", typeList );
+			}
 		} catch ( Exception e ) {
 			logger.error( "查询新闻媒体类型失败!" + e );
 			return ContainerUtils.buildResFailMap( "操作失败" );
@@ -70,7 +75,11 @@ public class BlogMediaController {
 		
 		try {
 			List<Map<String, Object>> areaList = blogMediaService.getBlogMediaAreaList();
-			resData.put( "areaList", areaList );
+			if ( areaList == null || areaList.size() == 0 ) {
+				resData.put( "areaList", null );
+			} else {
+				resData.put( "areaList", areaList );
+			}
 		} catch ( Exception e ) {
 			logger.error( "查询新闻媒体类型失败!" + e );
 			return ContainerUtils.buildResFailMap( "操作失败" );
@@ -126,9 +135,14 @@ public class BlogMediaController {
 		Integer memberId = viewModel.getMemberId();
 		JSONObject requestJson = RequestParseUtils.loadPostRequest( viewModel.getRequest() );
 		Integer blogMediaId = requestJson.getInteger( "blogMediaId" );
+		Integer auditStatus = requestJson.getInteger( "auditStatus" );
+		
+		if ( auditStatus != 1 || auditStatus != 2 ) {
+			ContainerUtils.buildResFailMap( "无效的审核状态" );
+		}
 		
 		try {
-			blogMediaService.auditBlogMedia( memberId, blogMediaId );
+			blogMediaService.auditBlogMedia( memberId, blogMediaId, auditStatus );
 		} catch ( Exception e ) {
 			logger.error( "审核媒体数据失败!" + e );
 			ContainerUtils.buildResFailMap( "操作失败" );

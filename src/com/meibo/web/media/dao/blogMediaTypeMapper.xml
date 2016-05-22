@@ -6,8 +6,7 @@
 	<select id="selectBlogMediaTypeList" resultType="java.util.Map">
 		select
 			id 				typeId,
-			name			typeName,
-			sort_index		sortIndex
+			name			typeName
 		from
 			media_blog_type
 		where
@@ -42,8 +41,8 @@
 	
 	<select id="selectBlogMediaTypeById" parameterType="Integer" resultType="newsMediaType">
 		select
-			id 				typeId,
-			name			typeName,
+			id 				id,
+			name			name,
 			sort_index		sortIndex,
 			status			status
 		from
@@ -58,7 +57,7 @@
 		set
 			status = #{status}
 		where
-			id = #{typeId}
+			id = #{id}
 	</update>
 	
 </mapper>

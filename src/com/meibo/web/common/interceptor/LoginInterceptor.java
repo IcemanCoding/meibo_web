@@ -25,7 +25,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	 * 登录、登出、注册不进行拦截
 	 */
 	private List<String> excludeUrls = Arrays.asList( new String[] { "login", "doRegister", "verifyCode", 
-			"test", "testUpload" } );
+			"areaList", "testUpload" } );
 	
 	private String handUrl = "handCal";
 	private List<String> images = Arrays.asList( "jpg", "gif", "jpeg", "png" );

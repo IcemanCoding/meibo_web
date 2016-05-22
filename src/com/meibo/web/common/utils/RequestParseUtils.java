@@ -58,6 +58,8 @@ public class RequestParseUtils {
 					formData.put( "file", fileItem );
 				} else if ( name.equals( "qrCode" ) ) {
 					formData.put( "qrCode", fileItem );
+				} else if ( name.equals( "orderUploadFile" ) ) {
+					formData.put( "uploadFile", fileItem );
 				}
 				
 			}

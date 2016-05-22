@@ -17,6 +17,7 @@ public class NewsMediaListQueryParams {
 	private Integer isLimit;
 	private Integer beginLimit;
 	private Integer endLimit;
+	private Integer auditStatus;
 	
 	public Integer getTypeId() {
 		return typeId;
@@ -95,6 +96,12 @@ public class NewsMediaListQueryParams {
 	}
 	public void setCreatedUser(Integer createdUser) {
 		this.createdUser = createdUser;
+	}
+	public Integer getAuditStatus() {
+		return auditStatus;
+	}
+	public void setAuditStatus(Integer auditStatus) {
+		this.auditStatus = auditStatus;
 	}
 	
 }

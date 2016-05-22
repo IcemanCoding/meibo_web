@@ -1,5 +1,7 @@
 package com.meibo.web.media.service.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +19,6 @@ import com.meibo.web.media.dto.BaseBlogMediaListDTO;
 import com.meibo.web.media.entity.BlogMediaChannelEntity;
 import com.meibo.web.media.entity.BlogMediaInfoEntity;
 import com.meibo.web.media.entity.NewsMediaTypeEntity;
-import com.meibo.web.media.entity.WechatMediaChannelEntity;
 import com.meibo.web.media.service.BlogMediaChannelService;
 import com.meibo.web.media.service.BlogMediaService;
 import com.meibo.web.media.service.BlogMediaTypeService;
@@ -28,6 +29,7 @@ import com.meibo.web.media.viewmodel.BlogMediaUpdateViewmodel;
 import com.meibo.web.media.viewmodel.MemberBlogMediaListQueryViewmodel;
 import com.meibo.web.member.dao.MemberInfoDAO;
 import com.meibo.web.member.dto.MemberInfoDTO;
+import com.meibo.web.order.dto.BlogMediaOrderSplitDTO;
 
 public class BlogMediaServiceImpl implements BlogMediaService {
 	
@@ -86,6 +88,7 @@ public class BlogMediaServiceImpl implements BlogMediaService {
 			channelEntity.setQrCode( qrCode );
 			channelEntity.setStatus( 1 );
 			channelEntity.setTypeId( typeId );
+			channelEntity.setRegisterDate( viewmodel.getRegisterDate() );
 			
 			blogMediaChannelDao.insertBlogMediaChannel( channelEntity );
 			channelId = channelEntity.getChannelId();
@@ -109,32 +112,36 @@ public class BlogMediaServiceImpl implements BlogMediaService {
 	}
 
 	@Override
-	public Boolean auditBlogMedia( Integer auditUser, Integer blogMediaId ) throws Exception {
+	public Boolean auditBlogMedia( Integer auditUser, Integer blogMediaId, Integer auditStatus ) throws Exception {
 		
 		// get blogMedia entity by blogMediaId
 		BlogMediaInfoEntity blogMediaInfo = blogMediaDao.selectBlogMediaInfoById( blogMediaId );
 		
-		// get blogMediaChannel entity by channelId
-		Integer channelId = blogMediaInfo.getChannelId();
-		BlogMediaChannelEntity blogMediaChannel = blogMediaChannelDao.selectBlogMediaChannelById( channelId );
-		
-		// update blogMediaChannel status = 1
-		if ( blogMediaChannel.getStatus() != 1 ) {
-			blogMediaChannel.setStatus( 1 );
-			blogMediaChannelDao.updateWechatMediaChannelStatus( blogMediaChannel );
-		}
-		
-		// get blogMediaType entity by typeId
-		NewsMediaTypeEntity blogMediaType = blogMediaTypeDao.selectBlogMediaTypeById( blogMediaChannel.getTypeId() );
-		
-		// update blogMediaType status = 1
-		if ( blogMediaType.getStatus() != 1 ) {
-			blogMediaType.setStatus( 1 );
-			blogMediaTypeDao.updateBlogMediaTypeStatus( blogMediaType );
+		if ( auditStatus == 1 ) {
+			
+			// get blogMediaChannel entity by channelId
+			Integer channelId = blogMediaInfo.getChannelId();
+			BlogMediaChannelEntity blogMediaChannel = blogMediaChannelDao.selectBlogMediaChannelById( channelId );
+			
+			// update blogMediaChannel status = 1
+			if ( blogMediaChannel.getStatus() != 1 ) {
+				blogMediaChannel.setStatus( 1 );
+				blogMediaChannelDao.updateBlogMediaChannelStatus( blogMediaChannel );
+			}
+			
+			// get blogMediaType entity by typeId
+			NewsMediaTypeEntity blogMediaType = blogMediaTypeDao.selectBlogMediaTypeById( blogMediaChannel.getTypeId() );
+			
+			// update blogMediaType status = 1
+			if ( blogMediaType.getStatus() != 1 ) {
+				blogMediaType.setStatus( 1 );
+				blogMediaTypeDao.updateBlogMediaTypeStatus( blogMediaType );
+			}
+			
 		}
 		
 		// audit blogMediaEntity
-		blogMediaInfo.setAuditStatus( 1 );
+		blogMediaInfo.setAuditStatus( auditStatus );
 		blogMediaInfo.setAuditDate( new Date() );
 		blogMediaInfo.setAuditUser( auditUser );
 		
@@ -202,7 +209,7 @@ public class BlogMediaServiceImpl implements BlogMediaService {
 			return null;
 		}
 		Integer totalPages = 0;
-		Integer totalRows = blogMediaDao.selectWechatMediaListByMemberCount( viewmodel );
+		Integer totalRows = blogMediaDao.selectBlogMediaListByMemberCount( viewmodel );
 		if ( recorders != null && recorders != 0 ) {
 			totalPages = ( totalRows / recorders ) == 0 ? 1 : totalRows / recorders;
 		}
@@ -263,6 +270,7 @@ public class BlogMediaServiceImpl implements BlogMediaService {
 				blogMediaChannel.setQrCode( qrCode );
 				blogMediaChannel.setStatus( 1 );
 				blogMediaChannel.setTypeId( typeId );
+				blogMediaChannel.setRegisterDate( viewmodel.getRegisterDate() );
 				
 				channelId = blogMediaChannelService.getOrAddBlogMediaChannelId( blogMediaChannel );
 				
@@ -284,6 +292,58 @@ public class BlogMediaServiceImpl implements BlogMediaService {
 	public List<Map<String, Object>> getBlogMediaAreaList() throws Exception {
 		
 		return blogMediaDao.selectBlogMediaAreaList();
+		
+	}
+
+	@Override
+	public BigDecimal getOrderAmountById( int[] blogMediaId, int[] selectedId ) {
+		
+		BigDecimal transAmount = BigDecimal.ZERO;
+		
+		for ( int i = 0; i < blogMediaId.length; i++ ) {
+			
+			BlogMediaInfoEntity mediaInfo = blogMediaDao.selectBlogMediaInfoById( blogMediaId[i] );
+			
+			if ( selectedId[i] == 1 ) {
+				transAmount = transAmount.add( mediaInfo.getPublishPrice() );
+			} else if ( selectedId[i] == 2 ) {
+				transAmount = transAmount.add( mediaInfo.getForwardPrice() );
+			} else {
+				return transAmount;
+			}
+			
+		}
+		
+		return transAmount;
+		
+	}
+
+	@Override
+	public List<BlogMediaOrderSplitDTO> getOrderSplitDtoById( int[] blogMediaId,
+			int[] selectedId ) {
+		
+		List<BlogMediaOrderSplitDTO> orderSplitDtos = new ArrayList<BlogMediaOrderSplitDTO>();
+		
+		for ( int i = 0; i < blogMediaId.length; i++ ) {
+			
+			BlogMediaOrderSplitDTO orderSplitDto = new BlogMediaOrderSplitDTO();
+			BlogMediaInfoEntity mediaInfo = blogMediaDao.selectBlogMediaInfoById( blogMediaId[i] );
+			
+			if ( selectedId[i] == 1 ) {
+				orderSplitDto.setTransAmount( mediaInfo.getPublishPrice() );
+			} else if ( selectedId[i] == 2 ) {
+				orderSplitDto.setTransAmount( mediaInfo.getForwardPrice() );
+			} 
+			
+			orderSplitDto.setBlogMediaId( blogMediaId[i] );
+			orderSplitDto.setMediaMemberId( mediaInfo.getCreatedUser() );
+			orderSplitDto.setPriceType( selectedId[i] );
+			
+			orderSplitDtos.add( orderSplitDto );
+			
+		}
+		
+		return orderSplitDtos;
 		
 	}
 

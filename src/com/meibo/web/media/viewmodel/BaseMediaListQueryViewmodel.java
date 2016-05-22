@@ -8,6 +8,7 @@ public class BaseMediaListQueryViewmodel {
 	private Integer isLimit;
 	private Integer beginLimit;
 	private Integer endLimit;
+	private String mediaName;
 	
 	public Integer getIsLimit() {
 		return isLimit;
@@ -44,6 +45,12 @@ public class BaseMediaListQueryViewmodel {
 	}
 	public void setMemberId(Integer memberId) {
 		this.memberId = memberId;
+	}
+	public String getMediaName() {
+		return mediaName;
+	}
+	public void setMediaName(String mediaName) {
+		this.mediaName = mediaName;
 	}
 	
 }

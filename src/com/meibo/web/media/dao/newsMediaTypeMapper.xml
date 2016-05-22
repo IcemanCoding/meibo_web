@@ -6,8 +6,7 @@
 	<select id="selectNewsMediaType" resultType="java.util.Map">
 		select
 			id 				typeId,
-			name			typeName,
-			sort_index		sortIndex
+			name			typeName
 		from
 			media_news_type
 		where

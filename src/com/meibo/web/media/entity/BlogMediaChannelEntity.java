@@ -12,6 +12,7 @@ public class BlogMediaChannelEntity {
 	private String desc;
 	private Integer typeId;
 	private Integer status;
+	private String registerDate;
 	
 	public Integer getChannelId() {
 		return channelId;
@@ -72,6 +73,12 @@ public class BlogMediaChannelEntity {
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	public String getRegisterDate() {
+		return registerDate;
+	}
+	public void setRegisterDate(String registerDate) {
+		this.registerDate = registerDate;
 	}
 
 }

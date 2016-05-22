@@ -18,9 +18,9 @@
 			nickname				nickName,
 			account					account,
 			qr_code					qrCode,
-			desc					desc,
+			`desc`					`desc`,
 			authentication			authentication,
-			type_id					typeId
+			type_id					typeId,
 			status					status
 		from
 			media_wechat_channel
@@ -34,7 +34,7 @@
 			nickname				nickName,
 			account					account,
 			qr_code					qrCode,
-			desc					desc,
+			`desc`					`desc`,
 			authentication			authentication,
 			type_id					typeId
 			status					status
@@ -56,7 +56,7 @@
 	<insert id="insertWechatMediaChannel" parameterType="wechatMediaChannel" useGeneratedKeys="true" keyProperty="channelId">
 		insert into
 			media_wechat_channel
-		( fans_count, head_image, nickname, account, qr_code, desc, authentication, type_id, status )
+		( fans_count, head_image, nickname, account, qr_code, `desc`, authentication, type_id, status )
 		values
 			( #{fansCount}, #{headImage}, #{nickName}, #{account}, #{qrCode}, #{desc}, #{authentication}, #{typeId}, #{status} )
 	</insert>

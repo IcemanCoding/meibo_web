@@ -26,7 +26,7 @@ public interface BlogMediaDAO {
 
 	List<BaseBlogMediaListDTO> selectBlogMediaListByMember( MemberBlogMediaListQueryViewmodel viewmodel );
 
-	Integer selectWechatMediaListByMemberCount( MemberBlogMediaListQueryViewmodel viewmodel );
+	Integer selectBlogMediaListByMemberCount( MemberBlogMediaListQueryViewmodel viewmodel );
 
 	void updateBlogMediaInfo( BlogMediaUpdateViewmodel viewmodel );
 

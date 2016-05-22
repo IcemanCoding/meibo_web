@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.order.dao.NewsMediaOrderDAO">
+	
+	<insert id="insertOrderNewsInfo" parameterType="orderInfo" useGeneratedKeys="true" keyProperty="orderId">
+		insert into
+			order_news_info
+		( order_code, member_id, trans_amount, order_status, trans_type, order_date, created_date )
+		values
+			( #{orderCode}, #{memberId}, #{transAmount}, #{orderStatus}, #{transType}, #{orderDate}, #{createDate} )
+	</insert>
+	
+	<insert id="insertOrderNewsSplit" parameterType="newsOrderSplit" useGeneratedKeys="true" keyProperty="orderSplitId">
+		insert into
+			order_news_split
+		( order_id, news_media_id, media_member_id, trans_amount, order_status, created_date )
+		values
+			( #{orderId}, #{newsMediaId}, #{mediaMemberId}, #{transAmount}, #{orderStatus}, #{createDate} )
+	</insert>
+	
+	<insert id="insertOrderNewsDetail" parameterType="newsOrderDetail">
+		insert into
+			order_news_detail
+		( order_id, execute_date, title, resource_link, file_url, remark, created_date )
+		values
+			( #{orderId}, #{executeDate}, #{title}, #{resourceLink}, #{fileUrl}, #{remark}, #{createDate} )
+	</insert>
+	
+	<update id="updateOrderNewsInfoStatus" parameterType="orderInfo">
+		update
+			order_news_info
+		set
+			pay_date = #{payDate},
+			order_status = #{orderStatus}
+		where
+			order_id = #{orderId}
+	</update>
+	
+	<update id="updateOrderNewsSplitStatus" parameterType="java.util.Map">
+		update
+			order_news_split
+		set
+			order_status = #{orderStatus}
+		where
+			order_id = #{orderId}
+	</update>
+	
+	<select id="selectOrderListByAdmin" parameterType="baseMediaOrderListViewmodel" resultType="baseMediaOrderListDto">
+		select
+			a.order_id			orderId,
+			a.order_code		orderCode,
+			a.order_date		orderDate,
+			a.trans_amount		transAmount,
+			a.order_status		orderStatus,
+			b.execute_date		executeDate,
+			c.login_name		memberName
+		from
+			order_news_info a,
+			order_news_detail b,
+			member_info c
+		where
+			a.order_id = b.order_id
+		and
+			a.member_id = c.member_id
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+		order by a.created_date desc
+		<if test="isLimit != null and isLimit == 1">
+			limit #{beginLimit}, #{endLimit}
+		</if>
+	</select>
+	
+	<select id="selectOrderListByAdminCount" parameterType="baseMediaOrderListViewmodel" resultType="Integer">
+		select
+			count( a.order_id )
+		from
+			order_news_info a
+		where
+			1 = 1
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+	</select>
+	
+	<select id="selectOrderListBySupplier" parameterType="baseMediaOrderListViewmodel" resultType="baseMediaOrderListDto">
+		select
+			a.order_id			orderId,
+			a.order_code		orderCode,
+			a.order_date		orderDate,
+			a.order_status		orderStatus,
+			b.execute_date		executeDate,
+			c.login_name		memberName
+		from
+			order_news_info a
+		inner join
+			order_news_detail b
+		on
+			a.order_id = b.order_id
+		inner join
+			member_info c
+		on
+			a.member_id = c.member_id
+		inner join
+			order_news_split d
+		on
+			d.order_id = a.order_id
+		where
+			d.media_member_id = #{memberId}
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+		GROUP BY a.order_id
+		order by a.created_date desc
+		<if test="isLimit != null and isLimit == 1">
+			limit #{beginLimit}, #{endLimit}
+		</if>
+	</select>
+	
+	<select id="selectOrderListBySupplierCount" parameterType="baseMediaOrderListViewmodel" resultType="Integer">
+		select
+			count( distinct( a.order_id ) )
+		from
+			order_news_info a,
+			order_news_split b
+		where
+			a.order_id = b.order_id
+		and
+			b.media_member_id = #{memberId}
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+	</select>
+	
+	<select id="selectOrderListByMember" parameterType="baseMediaOrderListViewmodel" resultType="baseMediaOrderListDto">
+		select
+			a.order_id			orderId,
+			a.order_code		orderCode,
+			a.order_date		orderDate,
+			a.trans_amount		transAmount,
+			a.order_status		orderStatus,
+			b.execute_date		executeDate
+		from
+			order_news_info a
+		left join
+			order_news_detail b
+		on
+			a.order_id = b.order_id
+		where
+			a.member_id = #{memberId}
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+		order by a.created_date desc
+		<if test="isLimit != null and isLimit == 1">
+			limit #{beginLimit}, #{endLimit}
+		</if>
+	</select>
+	
+	<select id="selectOrderListByMemberCount" parameterType="baseMediaOrderListViewmodel" resultType="Integer">
+		select
+			count( a.order_id )
+		from
+			order_news_info a
+		where
+		a.member_id = #{memberId}
+		<if test="orderStatus != null">
+		and
+			a.order_status = #{orderStatus}	
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+		and
+			a.order_code like CONCAT('%',#{orderCode},'%' )
+		</if>
+	</select>
+	
+	<select id="selectOrderSplitMediaId" parameterType="java.util.Map" resultType="String">
+		select
+			c.channel_name channelName
+		from
+			order_news_split a,
+			media_news_info b,
+			media_news_channel c
+		where
+			a.news_media_id = b.news_media_id
+		and
+			b.channel_id = c.channel_id
+		<if test="orderId != null">
+		and
+			a.order_id = #{orderId}
+		</if>
+		<if test="memberId != null">
+		and
+			a.member_id = #{memberId}
+		</if>
+	</select>
+	
+	<select id="selectNewsMediaOrderDetailByOrderId" parameterType="Integer" resultType="newsOrderDetail">
+		select
+			order_id		orderId,
+			execute_date	executeDate,
+			title			title,
+			resource_link	resourceLink,
+			file_url		fileUrl,
+			remark			remark
+		from
+			order_news_detail
+		where
+			order_id = #{orderId}
+	</select>
+	
+	<select id="selectNewsMediaOrderInfoByOrderId" parameterType="Integer" resultType="orderInfo">
+		select
+			order_id			orderId,
+			order_code			orderCode,
+			member_id			memberId,
+			trans_amount		transAmount,
+			order_status		orderStatus,
+			trans_type			transType,
+			order_date			orderDate,
+			pay_date			payDate,
+			created_date		createDate
+		from
+			order_news_info
+		where
+			order_id = #{orderId}
+	</select>
+	
+	<select id="selectNewsMediaSplitByOrderId" parameterType="Integer" resultType="newsOrderSplit">
+		select
+			order_split_id		orderSplitId,
+			order_id			orderId,
+			news_media_id		newsMediaId,
+			media_member_id		mediaMemberId,
+			trans_amount		transAmount,
+			order_status		orderStatus,
+			created_date		createDate
+		from
+			order_news_split
+		where
+			order_id = #{orderId}
+	</select>
+	
+	<select id="selectOrderLaunchDetailByOrderId" parameterType="Integer" resultType="launchDetail">
+		select
+			a.order_split_id		orderSplitId,
+			b.news_media_id			newsMediaId,
+			c.channel_name			mediaName,
+			a.launch_url			launchUrl,
+			a.launch_date			launchDate,
+			a.order_status			orderStatus,
+			a.trans_amount			splitAmount
+		from
+			order_news_split a,
+			media_news_info b,
+			media_news_channel c
+		where
+			a.news_media_id = b.news_media_id
+		and
+			b.channel_id = c.channel_id
+		and
+			a.order_id = #{orderId}
+	</select>
+   
+</mapper>

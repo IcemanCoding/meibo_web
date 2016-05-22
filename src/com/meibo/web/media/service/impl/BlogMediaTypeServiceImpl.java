@@ -17,7 +17,7 @@ public class BlogMediaTypeServiceImpl implements BlogMediaTypeService {
 	@Override
 	public List<Map<String, Object>> getBlogMediaType() throws Exception {
 		
-		return blogMediaTypeDao.selectWechatMediaTypeList();
+		return blogMediaTypeDao.selectBlogMediaTypeList();
 		
 	}
 

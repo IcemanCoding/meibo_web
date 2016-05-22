@@ -72,6 +72,10 @@ public class MemberInfoController extends BaseController {
 		String sessionId = MD5Utils.encode( session.getId() );
 		
 		resData.put( "sessionId", sessionId );
+		resData.put( "memberType", memberInfo.getMemberType() );
+		resData.put( "loginName", memberInfo.getLoginName() );
+		resData.put( "roleType", memberInfo.getRoleId() );
+		resData.put( "mobileNum", memberInfo.getMobileNum() );
 		
 		sessionService.saveSession( session, sessionId );
 		sessionService.saveSessionData( "userInfo", memberInfo, sessionId );

@@ -156,9 +156,14 @@ public class NewsMediaController extends BaseController {
 		Integer memberId = viewModel.getMemberId();
 		JSONObject requestJson = RequestParseUtils.loadPostRequest( viewModel.getRequest() );
 		Integer newsMediaId = requestJson.getInteger( "newsMediaId" );
+		Integer auditStatus = requestJson.getInteger( "auditStatus" );
+		
+		if ( auditStatus != 1 || auditStatus != 2 ) {
+			ContainerUtils.buildResFailMap( "无效的审核状态" );
+		}
 		
 		try {
-			if ( !newsMediaService.auditNewsMedia( memberId, newsMediaId ) ) {
+			if ( !newsMediaService.auditNewsMedia( memberId, newsMediaId, auditStatus ) ) {
 				ContainerUtils.buildResFailMap( "该媒体数据已审核" );
 			}
 		} catch ( Exception e ) {

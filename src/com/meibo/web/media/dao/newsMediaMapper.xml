@@ -27,6 +27,26 @@
 			news_media_id = #{newsMediaId}
 	</select>
 	
+	<update id="updateNewsMediaInfo" parameterType="newsMedia">
+		update
+			media_news_info
+		<set>
+			<if test="channelId != null">channel_id = #{channelId},</if>
+			<if test="columnId != null">column_id = #{columnId},</if>
+			<if test="areaId != null">area_id = #{areaId},</if>
+			<if test="includeType != null">include_type = #{includeType},</if>
+			<if test="quotePrice != null and quotePrice != ''">quote_price = #{quotePrice},</if>
+			<if test="title != null and title != ''">title = #{title},</if>
+			<if test="allowLink != null">allow_link = #{allowLink},</if>
+			<if test="allowQRCode != null">allow_qrcode = #{allowQRCode},</if>
+			<if test="allowContactWay != null">allow_contactway = #{allowContactWay},</if>
+			<if test="imageUrl != null and imageUrl != ''">image_url = #{imageUrl},</if>
+			<if test="remark != null and remark != ''">remark = #{remark}</if>
+		</set>
+		where
+			news_media_id = #{newsMediaId}
+	</update>
+	
 	<update id="updateNewsMediaByAudit" parameterType="newsMedia">
 		update
 			media_news_info
@@ -56,20 +76,29 @@
 			d.news_column_name 			mediaColumn,
 			a.created_date 				createdate,
 			e.login_name 				creator,
-			b.link_url 					linkUrl
+			b.link_url 					linkUrl,
+			f.area_name					areaName
 		FROM
 			media_news_info a,
 			media_news_channel b,
 			media_news_type c,
 			media_news_column d,
-			member_info e
+			member_info e,
+			system_area_info f
 		WHERE
-			a.channel_id = b.channel_id
+			a.area_id = f.area_id
+		AND	a.channel_id = b.channel_id
 		AND b.news_type = c.id
 		AND a.column_id = d.news_column_id
 		AND a.created_user = e.member_id
 		<if test="createdUser != null and '' != createdUser">
 		AND a.created_user = #{createdUser}
+		</if>
+		<if test="channelName != null and '' != channelName">
+		AND b.channel_name like CONCAT('%',#{channelName},'%' )
+		</if>
+		<if test="auditStatus != null and '' != auditStatus">
+		AND	a.audit_status = #{auditStatus}
 		</if>
 		ORDER BY
 			a.audit_status,
@@ -96,6 +125,12 @@
 		<if test="createdUser != null and '' != createdUser">
 		AND a.created_user = #{createdUser}
 		</if>
+		<if test="channelName != null and '' != channelName">
+		AND b.channel_name like CONCAT('%',#{channelName},'%' )
+		</if>
+		<if test="auditStatus != null and '' != auditStatus">
+		AND	a.audit_status = #{auditStatus}
+		</if>
 	</select>
 	
 	<select id="selectNewsMediaListByMember" parameterType="newsMediaQuery" resultType="baseNewsListDto">
@@ -103,7 +138,8 @@
 			g.*, b.channel_name mediaName,
 			c. NAME mediaType,
 			d.news_column_name mediaColumn,
-			b.link_url linkUrl
+			b.link_url linkUrl,
+			e.area_name areaName
 		FROM
 			(
 				SELECT
@@ -119,7 +155,8 @@
 					a.allow_contactway allowContactWay,
 					a.image_url imageUrl,
 					a.include_type includeType,
-					a.remark remark
+					a.remark remark,
+					a.created_date createdate
 				FROM
 					media_news_info a
 				LEFT JOIN media_news_info f ON a.channel_id = f.channel_id
@@ -132,15 +169,59 @@
 			media_news_channel b,
 			media_news_type c,
 			media_news_column d,
-			member_info e
+			system_area_info e
 		WHERE
 			g.channelId = b.channel_id
 		AND b.news_type = c.id
 		AND g.columnId = d.news_column_id
-		AND g.createdUser = e.member_id
+		AND e.area_id = g.areaId
+		<if test="channelName != null and '' != channelName">
+		AND b.channel_name like CONCAT('%',#{channelName},'%' )
+		</if>
 		ORDER BY g.createdate desc
 		<if test="isLimit != null and isLimit == 1">
 			limit #{beginLimit}, #{endLimit}
+		</if>
+	</select>
+	
+	<select id="selectNewsMediaListByMemberCount" parameterType="newsMediaQuery" resultType="Integer">
+		SELECT
+			count( g.channelId )
+		FROM
+			(
+				SELECT
+					a.channel_id channelId,
+					a.column_id columnId,
+					a.news_media_id newsMediaId,
+					a.created_user createdUser,
+					a.quote_price quotePrice,
+					a.title title,
+					a.area_id areaId,
+					a.allow_link allowLink,
+					a.allow_qrcode allowQRCode,
+					a.allow_contactway allowContactWay,
+					a.image_url imageUrl,
+					a.include_type includeType,
+					a.remark remark,
+					a.created_date createdate
+				FROM
+					media_news_info a
+				LEFT JOIN media_news_info f ON a.channel_id = f.channel_id
+<![CDATA[ 			AND a.quote_price < f.quote_price	]]>	
+				WHERE
+					a.audit_status = 1
+				GROUP BY
+					a.channel_id
+			) g,
+			media_news_channel b,
+			media_news_type c,
+			media_news_column d
+		WHERE
+			g.channelId = b.channel_id
+		AND b.news_type = c.id
+		AND g.columnId = d.news_column_id
+		<if test="channelName != null and '' != channelName">
+		AND b.channel_name like CONCAT('%',#{channelName},'%' )
 		</if>
 	</select>
 	
@@ -155,6 +236,34 @@
 			t.audit_status = 1
 		GROUP BY
 			t.area_id
+	</select>
+	
+	<select id="selectOrderAmountById" resultType="java.math.BigDecimal">
+		select
+			sum( quote_price )
+		from
+			media_news_info
+		where
+			news_media_id
+		in
+			<foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+				#{item}  
+			</foreach>
+	</select>
+	
+	<select id="selectOrderSplitDtoById" resultType="newsOrderSplitDto">
+		select
+			news_media_id		newsMediaId,
+			quote_price			transAmount,
+			created_user		mediaMemberId
+		from
+			media_news_info
+		where
+			news_media_id
+		in
+			<foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+				#{item}  
+			</foreach>
 	</select>
    
 </mapper>

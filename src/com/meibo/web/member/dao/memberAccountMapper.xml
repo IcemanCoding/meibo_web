@@ -30,5 +30,15 @@
     			#{totalBalance}, #{totalRechargeAmount}, #{totalConsumeAmount}, 
     			#{invoiceAmount}, #{status} )
     </insert>
+   <update id="consumeMemberAccount" parameterType="java.util.Map">
+   		update
+   			member_account
+   		set
+   			available_balance = available_balance - #{transAmount},
+   			total_balance = total_balance - #{transAmount},
+   			total_consume_amount = total_consume_amount + #{transAmount}
+   		where
+   			member_id = #{memberId}
+   </update>
    
 </mapper>

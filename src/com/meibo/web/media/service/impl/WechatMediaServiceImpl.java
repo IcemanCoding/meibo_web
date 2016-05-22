@@ -1,5 +1,7 @@
 package com.meibo.web.media.service.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,7 @@ import com.meibo.web.media.dao.WechatMediaDAO;
 import com.meibo.web.media.dao.WechatMediaTypeDAO;
 import com.meibo.web.media.dto.AdminWechatMediaListDTO;
 import com.meibo.web.media.dto.BaseWechatMediaListDTO;
+import com.meibo.web.media.entity.BlogMediaInfoEntity;
 import com.meibo.web.media.entity.NewsMediaTypeEntity;
 import com.meibo.web.media.entity.WechatMediaChannelEntity;
 import com.meibo.web.media.entity.WechatMediaInfoEntity;
@@ -27,6 +30,8 @@ import com.meibo.web.media.viewmodel.WechatMediaInsertViewmodel;
 import com.meibo.web.media.viewmodel.WechatMediaUpdateViewmodel;
 import com.meibo.web.member.dao.MemberInfoDAO;
 import com.meibo.web.member.dto.MemberInfoDTO;
+import com.meibo.web.order.dto.BlogMediaOrderSplitDTO;
+import com.meibo.web.order.dto.WechatMediaOrderSplitDTO;
 
 public class WechatMediaServiceImpl implements WechatMediaService {
 	
@@ -117,32 +122,36 @@ public class WechatMediaServiceImpl implements WechatMediaService {
 	}
 
 	@Override
-	public Boolean auditWechatMedia( Integer auditUser, Integer wechatMediaId ) throws Exception {
+	public Boolean auditWechatMedia( Integer auditUser, Integer wechatMediaId, Integer auditStatus ) throws Exception {
 		
 		// get wechatMedia entity by wechatMediaId
 		WechatMediaInfoEntity wechatMediaInfo = wechatMediaDao.selectWechatMediaInfoById( wechatMediaId );
 		
-		// get wechatMediaChannel entity by channelId
-		Integer channelId = wechatMediaInfo.getChannelId();
-		WechatMediaChannelEntity wechatMediaChannel = wechatMediaChannelDao.selectWechatMediaChannelById( channelId );
-		
-		// update wechatMediaChannel status = 1
-		if ( wechatMediaChannel.getStatus() != 1 ) {
-			wechatMediaChannel.setStatus( 1 );
-			wechatMediaChannelDao.updateWechatMediaChannelStatus( wechatMediaChannel );
-		}
-		
-		// get wechatMediaType entity by typeId
-		NewsMediaTypeEntity wechatMediaType = wechatMediaTypeDao.selectWechatMediaTypeById( wechatMediaChannel.getTypeId() );
-		
-		// update wechatMediaType status = 1
-		if ( wechatMediaType.getStatus() != 1 ) {
-			wechatMediaType.setStatus( 1 );
-			wechatMediaTypeDao.updateWechatMediaTypeStatus( wechatMediaType );
+		if ( auditStatus == 1 ) {
+			
+			// get wechatMediaChannel entity by channelId
+			Integer channelId = wechatMediaInfo.getChannelId();
+			WechatMediaChannelEntity wechatMediaChannel = wechatMediaChannelDao.selectWechatMediaChannelById( channelId );
+			
+			// update wechatMediaChannel status = 1
+			if ( wechatMediaChannel.getStatus() != 1 ) {
+				wechatMediaChannel.setStatus( 1 );
+				wechatMediaChannelDao.updateWechatMediaChannelStatus( wechatMediaChannel );
+			}
+			
+			// get wechatMediaType entity by typeId
+			NewsMediaTypeEntity wechatMediaType = wechatMediaTypeDao.selectWechatMediaTypeById( wechatMediaChannel.getTypeId() );
+			
+			// update wechatMediaType status = 1
+			if ( wechatMediaType.getStatus() != 1 ) {
+				wechatMediaType.setStatus( 1 );
+				wechatMediaTypeDao.updateWechatMediaTypeStatus( wechatMediaType );
+			}
+			
 		}
 		
 		// audit wechatMediaEntity
-		wechatMediaInfo.setAuditStatus( 1 );
+		wechatMediaInfo.setAuditStatus( auditStatus );
 		wechatMediaInfo.setAuditDate( new Date() );
 		wechatMediaInfo.setAuditUser( auditUser );
 		
@@ -282,6 +291,59 @@ public class WechatMediaServiceImpl implements WechatMediaService {
 		wechatMediaDao.updateWechatMediaInfo( viewmodel );
 		
 		return true;
+		
+	}
+
+	@Override
+	public BigDecimal getOrderAmountById( int[] wechatMediaId, int[] selectedId ) {
+		
+		BigDecimal transAmount = BigDecimal.ZERO;
+		
+		for ( int i = 0; i < wechatMediaId.length; i++ ) {
+			
+			WechatMediaInfoEntity mediaInfo = wechatMediaDao.selectWechatMediaInfoById( wechatMediaId[i] );
+			
+			if ( selectedId[i] == 1 ) {
+				transAmount = transAmount.add( mediaInfo.getFirstPrice() );
+			} else if ( selectedId[i] == 2 ) {
+				transAmount = transAmount.add( mediaInfo.getSecondPrice() );
+			} else if ( selectedId[i] == 3 ) {
+				transAmount = transAmount.add( mediaInfo.getOtherPrice() );
+			} 
+			
+		}
+		
+		return transAmount;
+		
+	}
+
+	@Override
+	public List<WechatMediaOrderSplitDTO> getOrderSplitDtoById( int[] wechatMediaId, int[] selectedId ) {
+		
+		List<WechatMediaOrderSplitDTO> orderSplitDtos = new ArrayList<WechatMediaOrderSplitDTO>();
+		
+		for ( int i = 0; i < wechatMediaId.length; i++ ) {
+			
+			WechatMediaOrderSplitDTO orderSplitDto = new WechatMediaOrderSplitDTO();
+			WechatMediaInfoEntity mediaInfo = wechatMediaDao.selectWechatMediaInfoById( wechatMediaId[i] );
+			
+			if ( selectedId[i] == 1 ) {
+				orderSplitDto.setTransAmount( mediaInfo.getFirstPrice() );
+			} else if ( selectedId[i] == 2 ) {
+				orderSplitDto.setTransAmount( mediaInfo.getSecondPrice() );
+			} else if ( selectedId[i] == 3 ) {
+				orderSplitDto.setTransAmount( mediaInfo.getOtherPrice() );
+			} 
+			
+			orderSplitDto.setWechatMediaId( wechatMediaId[i] );
+			orderSplitDto.setMediaMemberId( mediaInfo.getCreatedUser() );
+			orderSplitDto.setPriceType( selectedId[i] );
+			
+			orderSplitDtos.add( orderSplitDto );
+			
+		}
+		
+		return orderSplitDtos;
 		
 	}
 

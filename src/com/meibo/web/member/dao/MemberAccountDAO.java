@@ -10,5 +10,7 @@ public interface MemberAccountDAO {
 	MemberAccountDTO selectMemberAccountByCondition( Map<String, Object> params );
 	
 	void insertMemberAccount( MemberAccountEntity accountEntity );
+	
+	void consumeMemberAccount( Map<String, Object> params );
 
 }

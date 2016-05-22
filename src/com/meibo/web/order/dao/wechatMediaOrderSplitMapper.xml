@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.order.dao.WechatMediaOrderSplitDAO">
+	
+	
+	<select id="countOrderSplitTransAmountByOrderId" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		select
+			sum( a.trans_amount )
+		from
+			order_wechat_split a
+		where
+			a.order_id = #{orderId}
+		and
+			media_member_id = #{memberId}
+	</select>
+	
+	<select id="selectWechatMediaOrderSplitById" parameterType="Integer" resultType="wechatOrderSplit">
+		select
+			order_split_id		orderSplitId,
+			order_id			orderId,
+			wechat_media_id		wechatMediaId,
+			media_member_id		mediaMemberId,
+			trans_amount		transAmount,
+			launch_url			launchUrl,
+			order_status		orderStatus,
+			accept_date			acceptDate,
+			reject_date			rejectDate,
+			launch_date			launchDate,
+			finish_date			finishDate,
+			created_date		createDate
+		from
+			order_wechat_split
+		where
+			order_split_id = #{orderSplitId}
+	</select>
+	
+	<update id="updateWechatMediaOrderSplitById" parameterType="java.util.Map">
+		update
+			order_wechat_split
+		<set>
+		<if test="orderStatus != null">
+			order_status = #{orderStatus},
+		</if>
+		<if test="acceptDate != null">
+			accept_date = #{acceptDate},
+		</if>
+		<if test="rejectDate != null">
+			reject_date = #{rejectDate},
+		</if>
+		<if test="launchDate != null">
+			launch_date = #{launchDate},
+		</if>
+		<if test="finishDate != null">
+			finish_date = #{finishDate},
+		</if>
+		<if test="launchUrl != null and launchUrl != ''">
+			launch_url = #{launchUrl}
+		</if>
+		</set>
+		where
+			order_split_id = #{orderSplitId}
+	</update>
+	
+</mapper>

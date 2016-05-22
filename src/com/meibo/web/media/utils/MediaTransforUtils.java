@@ -23,13 +23,13 @@ public class MediaTransforUtils {
 		
 		NewsMediaListQueryParams viewmodel = new NewsMediaListQueryParams();
 		
-		if ( requestJson.getInteger( "areaId" ) != null ) {
+		if ( requestJson.getInteger( "areaId" ) != null && !"".equals( requestJson.getInteger( "areaId" ) )) {
 			viewmodel.setAreaId( requestJson.getInteger( "areaId" ) );
 		}
-		if ( requestJson.getString( "channelName" ) != null ) {
+		if ( requestJson.getString( "channelName" ) != null && !"".equals( requestJson.getString( "channelName" ) ) ) {
 			viewmodel.setChannelName( requestJson.getString( "channelName" ) );
 		}
-		if ( requestJson.getInteger( "includeType" ) != null ) {
+		if ( requestJson.getInteger( "includeType" ) != null && !"".equals( requestJson.getInteger( "includeType" ) ) ) {
 			viewmodel.setIncludeType( requestJson.getInteger( "includeType" ) );
 		}
 		if ( requestJson.getInteger( "memberId" ) != null ) {
@@ -37,18 +37,25 @@ public class MediaTransforUtils {
 		}
 		if ( requestJson.getInteger( "pageNum" ) != null ) {
 			viewmodel.setPageNum( requestJson.getInteger( "pageNum" ) );
+		} else {
+			viewmodel.setPageNum( 1 );
 		}
 		if ( requestJson.getInteger( "pageRecorders" ) != null ) {
 			viewmodel.setPageRecorders( requestJson.getInteger( "pageRecorders" ) );
+		} else {
+			viewmodel.setPageRecorders( 10 );
 		}
-		if ( requestJson.getInteger( "typeId" ) != null ) {
+		if ( requestJson.getInteger( "typeId" ) != null && !"".equals( requestJson.getInteger( "typeId" ) ) ) {
 			viewmodel.setTypeId( requestJson.getInteger( "typeId" ) );
 		}
-		if ( requestJson.getBigDecimal( "maxPrice" ) != null ) {
+		if ( requestJson.getBigDecimal( "maxPrice" ) != null && !"".equals( requestJson.getBigDecimal( "maxPrice" ) ) ) {
 			viewmodel.setMaxPrice( requestJson.getBigDecimal( "maxPrice" ) );
 		}
-		if ( requestJson.getBigDecimal( "minPrice" ) != null ) {
+		if ( requestJson.getBigDecimal( "minPrice" ) != null && !"".equals( requestJson.getBigDecimal( "minPrice" ) ) ) {
 			viewmodel.setMinPrice( requestJson.getBigDecimal( "minPrice" ) );
+		}
+		if ( requestJson.getInteger( "auditStatus") != null && !"".equals( requestJson.getInteger( "auditStatus") ) ) {
+			viewmodel.setAuditStatus( requestJson.getInteger( "auditStatus" ) );
 		}
 		
 		return viewmodel;
@@ -68,13 +75,13 @@ public class MediaTransforUtils {
 		if ( data.get( "channelColumn" ) != null && !"".equals( data.get( "channelColumn" ) + "" ) ) {
 			newsMediaEntity.setChannelColumn( data.get( "channelColumn" ) + "" );
 		}
-		if ( data.get( "areaId" ) != null ) {
+		if ( data.get( "areaId" ) != null && !"".equals( data.get( "areaId" ) ) ) {
 			newsMediaEntity.setAreaId( Integer.parseInt( data.get( "areaId" ) + "" ) );
 		}
-		if ( data.get( "includeType" ) != null  ) {
+		if ( data.get( "includeType" ) != null && !"".equals( data.get( "includeType" ) )  ) {
 			newsMediaEntity.setIncludeType( Integer.parseInt( data.get( "includeType" ) + "" ) );
 		}
-		if ( data.get( "quotePrice" ) != null  ) {
+		if ( data.get( "quotePrice" ) != null && !"".equals( data.get( "quotePrice" ) )  ) {
 			newsMediaEntity.setQuotePrice( new BigDecimal( data.get( "quotePrice" ) + "" ) );
 		}
 		if ( data.get( "remark" ) != null && !"".equals( data.get( "remark" ) + "" ) ) {
@@ -86,19 +93,19 @@ public class MediaTransforUtils {
 		if ( data.get( "title" ) != null && !"".equals( data.get( "title" ) + "" ) ) {
 			newsMediaEntity.setTitle( data.get( "title" ) + "" );
 		}
-		if ( data.get( "allowLink" ) != null  ) {
+		if ( data.get( "allowLink" ) != null && !"".equals( data.get( "allowLink" ) )  ) {
 			newsMediaEntity.setAllowLink( Integer.parseInt( data.get( "allowLink" ) + "" ) );
 		}
-		if ( data.get( "allowQRCode" ) != null  ) {
+		if ( data.get( "allowQRCode" ) != null && !"".equals( data.get( "allowQRCode" ) )  ) {
 			newsMediaEntity.setAllowQRCode( Integer.parseInt( data.get( "allowQRCode" ) + "" ) );
 		}
-		if ( data.get( "allowContactWay" ) != null  ) {
+		if ( data.get( "allowContactWay" ) != null && !"".equals( data.get( "allowContactWay" ) )  ) {
 			newsMediaEntity.setAllowContactWay( Integer.parseInt( data.get( "allowContactWay" ) + "" ) );
 		}
 		if ( data.get( "memberId" ) != null  ) {
 			newsMediaEntity.setCreatedUser( Integer.parseInt( data.get( "memberId" ) + "" ) );
 		}
-		if ( data.get( "newsMediaId" ) != null  ) {
+		if ( data.get( "newsMediaId" ) != null && !"".equals( data.get( "newsMediaId" ) )  ) {
 			newsMediaEntity.setNewsMediaId( Integer.parseInt( data.get( "newsMediaId" ) + "" ) );
 		}
 		
@@ -111,7 +118,7 @@ public class MediaTransforUtils {
 		WechatMediaInsertViewmodel viewmodel = new WechatMediaInsertViewmodel();
 		
 		if ( data.get( "nickname" ) != null && !"".equals( "nickname" ) ) {
-			viewmodel.setNickName( data.get( "nickName" ) + "" );
+			viewmodel.setNickName( data.get( "nickname" ) + "" );
 		}
 		if ( data.get( "account" ) != null && !"".equals( "account" ) ) {
 			viewmodel.setAccount( data.get( "account" ) + "" );
@@ -119,8 +126,8 @@ public class MediaTransforUtils {
 		if ( data.get( "desc" ) != null && !"".equals( "desc" ) ) {
 			viewmodel.setDesc( data.get( "desc" ) + "" );
 		}
-		if ( data.get( "authentication" ) != null && !"".equals( "authentication" ) ) {
-			viewmodel.setAuthentication( data.get( "authentication" ) + "" );
+		if ( data.get( "authInfo" ) != null && !"".equals( "authInfo" ) ) {
+			viewmodel.setAuthentication( data.get( "authInfo" ) + "" );
 		}
 		if ( data.get( "typeName" ) != null && !"".equals( "typeName" ) ) {
 			viewmodel.setTypeName( data.get( "typeName" ) + "" );
@@ -168,6 +175,12 @@ public class MediaTransforUtils {
 		} else {
 			viewmodel.setPageRecorders( 10 );
 		}
+		if ( requestJson.getInteger( "auditStatus" ) != null && !"".equals( requestJson.getInteger( "auditStatus" ) ) ) {
+			viewmodel.setAuditStatus( requestJson.getInteger( "auditStatus" ) );
+		}
+		if ( requestJson.getString( "channelName" ) != null && !"".equals( requestJson.getString( "channelName" ) ) ) {
+			viewmodel.setMediaName( requestJson.getString( "channelName" ) );
+		}
 		
 		return viewmodel;
 		
@@ -189,6 +202,12 @@ public class MediaTransforUtils {
 			viewmodel.setPageRecorders( requestJson.getInteger( "pageRecorders" ) );
 		} else {
 			viewmodel.setPageRecorders( 10 );
+		}
+		if ( requestJson.getInteger( "auditStatus" ) != null && !"".equals( requestJson.getInteger( "auditStatus" ) ) ) {
+			viewmodel.setAuditStatus( requestJson.getInteger( "auditStatus" ) );
+		}
+		if ( requestJson.getString( "channelName" ) != null && !"".equals( requestJson.getString( "channelName" ) ) ) {
+			viewmodel.setMediaName( requestJson.getString( "channelName" ) );
 		}
 		
 		return viewmodel;
@@ -215,8 +234,8 @@ public class MediaTransforUtils {
 		if ( requestJson.getString( "typeIds" ) != null && !"".equals( requestJson.getString( "typeIds" ) ) ) {
 			viewmodel.setTypeIds( requestJson.getString( "typeIds" ) );
 		}
-		if ( requestJson.getString( "mediaName" ) != null && !"".equals( requestJson.getString( "mediaName" ) ) ) {
-			viewmodel.setMediaName( requestJson.getString( "mediaName" ) );
+		if ( requestJson.getString( "channelName" ) != null && !"".equals( requestJson.getString( "channelName" ) ) ) {
+			viewmodel.setMediaName( requestJson.getString( "channelName" ) );
 		}
 		if ( requestJson.getBigDecimal( "minPrice" ) != null ) {
 			viewmodel.setMinPrice( requestJson.getBigDecimal( "minPrice" ) );
@@ -258,19 +277,19 @@ public class MediaTransforUtils {
 		if ( requestJson.getString( "typeIds" ) != null && !"".equals( requestJson.getString( "typeIds" ) ) ) {
 			viewmodel.setTypeIds( requestJson.getString( "typeIds" ) );
 		}
-		if ( requestJson.getString( "mediaName" ) != null && !"".equals( requestJson.getString( "mediaName" ) ) ) {
-			viewmodel.setMediaName( requestJson.getString( "mediaName" ) );
+		if ( requestJson.getString( "channelName" ) != null && !"".equals( requestJson.getString( "channelName" ) ) ) {
+			viewmodel.setMediaName( requestJson.getString( "channelName" ) );
 		}
-		if ( requestJson.getBigDecimal( "minPrice" ) != null ) {
+		if ( requestJson.getBigDecimal( "minPrice" ) != null && !"".equals( requestJson.getBigDecimal( "minPrice" ) ) ) {
 			viewmodel.setMinPrice( requestJson.getBigDecimal( "minPrice" ) );
 		}
-		if ( requestJson.getBigDecimal( "maxPrice" ) != null ) {
+		if ( requestJson.getBigDecimal( "maxPrice" ) != null && !"".equals( requestJson.getBigDecimal( "maxPrice" ) ) ) {
 			viewmodel.setMaxPrice( requestJson.getBigDecimal( "maxPrice" ) );
 		}
-		if ( requestJson.getInteger( "minFansCount" ) != null ) {
+		if ( requestJson.getInteger( "minFansCount" ) != null && !"".equals( requestJson.getInteger( "minFansCount" ) ) ) {
 			viewmodel.setMinFansCount( requestJson.getInteger( "minFansCount" ) );
 		}
-		if ( requestJson.getInteger( "maxFansCount" ) != null ) {
+		if ( requestJson.getInteger( "maxFansCount" ) != null && !"".equals( requestJson.getInteger( "maxFansCount" ) ) ) {
 			viewmodel.setMaxFansCount( requestJson.getInteger( "maxFansCount" ) );
 		}
 		if ( requestJson.getString( "areaIds" ) != null && !"".equals( requestJson.getString( "areaIds" ) ) ) {
@@ -288,16 +307,16 @@ public class MediaTransforUtils {
 		if ( data.get( "wechatMediaId" ) != null ) {
 			viewmodel.setWechatMediaId( Integer.parseInt( data.get( "wechatMediaId" ) + "" ) );
 		}
-		if ( data.get( "areaId" ) != null ) {
+		if ( data.get( "areaId" ) != null && !"".equals( data.get( "areaId" ) ) ) {
 			viewmodel.setAreaId( Integer.parseInt( data.get( "areaId" ) + "" ) );
 		}
-		if ( data.get( "firstPrice" ) != null ) {
+		if ( data.get( "firstPrice" ) != null && !"".equals( data.get( "firstPrice" ) ) ) {
 			viewmodel.setFirstPrice( new BigDecimal( data.get( "firstPrice" ) + "" ) );
 		}
-		if ( data.get( "secondPrice" ) != null ) {
+		if ( data.get( "secondPrice" ) != null && !"".equals( data.get( "secondPrice" ) ) ) {
 			viewmodel.setSecondPrice( new BigDecimal( data.get( "secondPrice" ) + "" ) );
 		}
-		if ( data.get( "otherPrice" ) != null ) {
+		if ( data.get( "otherPrice" ) != null && !"".equals( data.get( "otherPrice" ) ) ) {
 			viewmodel.setOtherPrice( new BigDecimal( data.get( "otherPrice" ) + "" ) );
 		}
 		if ( data.get( "remark" ) != null && !"".equals( data.get( "remark" ) ) ) {
@@ -309,20 +328,20 @@ public class MediaTransforUtils {
 		if ( data.get( "account" ) != null && !"".equals( data.get( "account" ) ) ) {
 			viewmodel.setAccount( data.get( "account" ) + "" );
 		}
-		if ( data.get( "fansCount" ) != null ) {
+		if ( data.get( "fansCount" ) != null && !"".equals( data.get( "fansCount" ) ) ) {
 			viewmodel.setFansCount( Integer.parseInt( data.get( "fansCount" ) + "" ) );
 		}
-		if ( data.get( "file" ) != null ) {
+		if ( data.get( "file" ) != null && !"".equals( data.get( "file" ) ) ) {
 			viewmodel.setFile( ( FileItem ) data.get( "file" ) );
 		}
-		if ( data.get( "qrCode" ) != null ) {
+		if ( data.get( "qrCode" ) != null && !"".equals( data.get( "qrCode" ) ) ) {
 			viewmodel.setQrCode( ( FileItem ) data.get( "qrCode" ) );
 		}
 		if ( data.get( "desc" ) != null && !"".equals( data.get( "desc" ) ) ) {
 			viewmodel.setDesc( data.get( "desc" ) + "" );
 		}
-		if ( data.get( "authentication" ) != null && !"".equals( data.get( "authentication" ) ) ) {
-			viewmodel.setAuthentication( data.get( "authentication" ) + "" );
+		if ( data.get( "authInfo" ) != null && !"".equals( data.get( "authInfo" ) ) ) {
+			viewmodel.setAuthentication( data.get( "authInfo" ) + "" );
 		}
 		if ( data.get( "typeName" ) != null && !"".equals( data.get( "typeName" ) ) ) {
 			viewmodel.setTypeName( data.get( "typeName" ) + "" );
@@ -336,16 +355,16 @@ public class MediaTransforUtils {
 		
 		BlogMediaUpdateViewmodel viewmodel = new BlogMediaUpdateViewmodel();
 		
-		if ( data.get( "blogMediaId" ) != null ) {
+		if ( data.get( "blogMediaId" ) != null && !"".equals( data.get( "blogMediaId" ) ) ) {
 			viewmodel.setBlogMediaId( Integer.parseInt( data.get( "blogMediaId" ) + "" ) );
 		}
-		if ( data.get( "areaId" ) != null ) {
+		if ( data.get( "areaId" ) != null && !"".equals( data.get( "areaId" ) ) ) {
 			viewmodel.setAreaId( Integer.parseInt( data.get( "areaId" ) + "" ) );
 		}
-		if ( data.get( "publishPrice" ) != null ) {
+		if ( data.get( "publishPrice" ) != null && !"".equals( data.get( "publishPrice" ) ) ) {
 			viewmodel.setPublishPrice( new BigDecimal( data.get( "publishPrice" ) + "" ) );
 		}
-		if ( data.get( "forwardPrice" ) != null ) {
+		if ( data.get( "forwardPrice" ) != null && !"".equals( data.get( "forwardPrice" ) ) ) {
 			viewmodel.setForwardPrice( new BigDecimal( data.get( "forwardPrice" ) + "" ) );
 		}
 		if ( data.get( "remark" ) != null && !"".equals( data.get( "remark" ) ) ) {
@@ -354,13 +373,13 @@ public class MediaTransforUtils {
 		if ( data.get( "nickname" ) != null && !"".equals( data.get( "nickname" ) ) ) {
 			viewmodel.setNickname( data.get( "nickname" ) + "" );
 		}
-		if ( data.get( "fansCount" ) != null ) {
+		if ( data.get( "fansCount" ) != null && !"".equals( data.get( "fansCount" ) ) ) {
 			viewmodel.setFansCount( Integer.parseInt( data.get( "fansCount" ) + "" ) );
 		}
-		if ( data.get( "file" ) != null ) {
+		if ( data.get( "file" ) != null && !"".equals( data.get( "file" ) ) ) {
 			viewmodel.setFile( ( FileItem ) data.get( "file" ) );
 		}
-		if ( data.get( "qrCode" ) != null ) {
+		if ( data.get( "qrCode" ) != null && !"".equals( data.get( "qrCode" ) ) ) {
 			viewmodel.setQrCode( ( FileItem ) data.get( "qrCode" ) );
 		}
 		if ( data.get( "desc" ) != null && !"".equals( data.get( "desc" ) ) ) {
@@ -372,8 +391,11 @@ public class MediaTransforUtils {
 		if ( data.get( "authInfo" ) != null && !"".equals( data.get( "authInfo" ) ) ) {
 			viewmodel.setAuthInfo( data.get( "authInfo" ) + "" );
 		}
-		if ( data.get( "authType" ) != null ) {
+		if ( data.get( "authType" ) != null && !"".equals( data.get( "authType" ) ) ) {
 			viewmodel.setAuthType( Integer.parseInt( data.get( "authType" ) + "" ) );
+		}
+		if ( data.get( "registerDate" ) != null && !"".equals( data.get( "registerDate" ) ) ) {
+			viewmodel.setRegisterDate( data.get( "registerDate" ) + "" );
 		}
 		
 		return viewmodel;
@@ -385,7 +407,7 @@ public class MediaTransforUtils {
 		BlogMediaInsertViewmodel viewmodel = new BlogMediaInsertViewmodel();
 		
 		if ( data.get( "nickname" ) != null && !"".equals( "nickname" ) ) {
-			viewmodel.setNickname( data.get( "nickName" ) + "" );
+			viewmodel.setNickname( data.get( "nickname" ) + "" );
 		}
 		if ( data.get( "registerDate" ) != null && !"".equals( "registerDate" ) ) {
 			viewmodel.setRegisterDate( data.get( "registerDate" ) + "" );

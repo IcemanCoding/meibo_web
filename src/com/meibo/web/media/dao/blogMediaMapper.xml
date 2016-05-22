@@ -35,7 +35,8 @@
 			audit_user				auditUser,
 			audit_status			auditStatus,
 			audit_date				auditDate,
-			status					status
+			status					status,
+			created_user			createdUser
 		from
 			media_blog_info
 		where
@@ -50,7 +51,7 @@
 			audit_user = #{auditUser},
 			audit_date = #{auditDate}
 		where
-			wechat_blog_id = #{blogMediaId}
+			blog_media_id = #{blogMediaId}
 	</update>
 	
 	<select id="selectBlogMediaListByAdmin" parameterType="adminBlogMediaQuery" resultType="adminBlogMediaListDto">
@@ -60,33 +61,43 @@
 			a.forward_price				forwardPrice,
 			a.remark					remark,
 			a.audit_status				auditStatus,
-			a.created_user				createdUser,
+			e.login_name				creator,
 			b.nickname					nickname,
 			b.qr_code					qrCode,
 			b.head_image				headImage,
-			b.desc						desc,
+			b.register_date				registerDate,
+			b.`desc`					`desc`,
 			b.fans_count				fansCount,
 			b.auth_type					authType,
 			b.auth_info					authInfo,
 			c.name						typeName,
-			d.area_name					areaName
+			d.area_name					areaName,
+			a.created_date				createdate
 		from
-			media_blog_info a
-		inner join
-			media_blog_channel b
-		on
-			a.channel_id = b.channel_id
-		inner join
-			media_blog_type c
-		on
-			b.type_id = c.id
-		inner join
-			system_area_info d
-		on
-			d.area_id = a.area_id
-		<if test="createdUser != null and '' != createdUser">
+			media_blog_info a,
+			media_blog_channel b,
+			media_blog_type c,
+			system_area_info d,
+			member_info e
 		where
+			a.channel_id = b.channel_id
+		and	
+			b.type_id = c.id
+		and	
+			d.area_id = a.area_id
+		and
+			a.created_user = e.member_id
+		<if test="createdUser != null and '' != createdUser">
+		and
 			a.created_user = #{createdUser}
+		</if>
+		<if test="auditStatus != null">
+		and
+			a.audit_status = #{auditStatus}
+		</if>
+		<if test="mediaName != null and '' != mediaName">
+		and
+			b.nickname like CONCAT('%',#{mediaName},'%' )
 		</if>
 		order by 
 			a.audit_status, a.created_date desc
@@ -99,22 +110,27 @@
 		select
 			count( a.blog_media_id )
 		from
-			media_blog_info a
-		inner join
-			media_blog_channel b
-		on
-			a.channel_id = b.channel_id
-		inner join
-			media_blog_type c
-		on
-			b.type_id = c.id
-		inner join
+			media_blog_info a,
+			media_blog_channel b,
+			media_blog_type c,
 			system_area_info d
-		on
+		where
+			a.channel_id = b.channel_id
+		and
+			b.type_id = c.id
+		and
 			d.area_id = a.area_id
 		<if test="createdUser != null and '' != createdUser">
-		where
+		and
 			a.created_user = #{createdUser}
+		</if>
+		<if test="auditStatus != null">
+		and
+			a.audit_status = #{auditStatus}
+		</if>
+		<if test="mediaName != null and '' != mediaName">
+		and
+			b.nickname like CONCAT('%',#{mediaName},'%' )
 		</if>
 	</select>
 	
@@ -126,8 +142,9 @@
 			b.auth_info				authInfo,
 			b.qr_code				qrCode,
 			b.head_image			headImage,
+			b.register_date			registerDate,
 			c.name 					typeName,
-			b.desc					desc,
+			b.`desc`				`desc`,
 			b.fans_count			fansCount,
 			d.area_name				areaName
 		FROM
@@ -138,7 +155,8 @@
 					a.publish_price 			publishPrice,
 					a.forward_price				forwardPrice,
 					a.area_id 					areaId,
-					a.remark 					remark
+					a.remark 					remark,
+					a.created_date				createdate
 				FROM
 					media_blog_info a
 				LEFT JOIN media_blog_info f ON a.channel_id = f.channel_id
@@ -155,33 +173,25 @@
 			g.channelId = b.channel_id
 		AND b.type_id = c.id
 		AND d.area_id = g.areaId
-		<if test="areaIds != null and areaIds != ''">
-		and
-			g.areaId in ( #{areaIds} )
-		</if>
 		<if test="mediaName != null and mediaName != ''">
 		and
-			b.nickname like '%#{mediaName}%'
+			b.nickname like CONCAT('%',#{mediaName},'%' )
 		</if>
 		<if test="minPrice != null and maxPrice != null">
 <![CDATA[
 		and
-			g.publishPrice > #{minPrice}
+			g.publishPrice >= #{minPrice}
 		and
-			g.publishPrice < #{maxPrice}
+			g.publishPrice <= #{maxPrice}
 ]]>	
 		</if>
 		<if test="minFansCount != null and maxFansCount != null">
 <![CDATA[	
 		and
-			b.fansCount > #{minFansCount}
+			b.fans_count >= #{minFansCount}
 		and
-			b.fansCount < #{maxFansCount}
+			b.fans_count <= #{maxFansCount}
 ]]>		
-		</if>
-		<if test="typeIds != null and typeIds != ''">
-		and
-			b.type_id in ( #{typeIds} )
 		</if>
 		ORDER BY g.createdate desc
 		<if test="isLimit != null and isLimit == 1">
@@ -217,33 +227,25 @@
 			g.channelId = b.channel_id
 		AND b.type_id = c.id
 		AND d.area_id = g.areaId
-		<if test="areaIds != null and areaIds != ''">
-		and
-			g.areaId in ( #{areaIds} )
-		</if>
 		<if test="mediaName != null and mediaName != ''">
 		and
-			b.nickname like '%#{mediaName}%'
+			b.nickname like CONCAT('%',#{mediaName},'%' )
 		</if>
 		<if test="minPrice != null and maxPrice != null">
 <![CDATA[
 		and
-			g.publishPrice > #{minPrice}
+			g.publishPrice >= #{minPrice}
 		and
-			g.publishPrice < #{maxPrice}
+			g.publishPrice <= #{maxPrice}
 ]]>	
 		</if>
 		<if test="minFansCount != null and maxFansCount != null">
 <![CDATA[	
 		and
-			b.fansCount > #{minFansCount}
+			b.fans_count >= #{minFansCount}
 		and
-			b.fansCount < #{maxFansCount}
+			b.fans_count <= #{maxFansCount}
 ]]>		
-		</if>
-		<if test="typeIds != null and typeIds != ''">
-		and
-			b.type_id in ( #{typeIds} )
 		</if>
 	</select>
 	
@@ -273,5 +275,6 @@
 		GROUP BY
 			t.area_id
 	</select>
+	
    
 </mapper>

@@ -84,14 +84,19 @@ public class RegisterController {
 		}
 		
 		if ( !allowReigster ) {
-			return ContainerUtils.buildResFailMap( "该用户名或密码已注册，请登录!" );
+			return ContainerUtils.buildResFailMap( "该用户名或手机号已注册，请输入!" );
 		}
 		String verifyCode = RandomCodeGenerator.generateRandomCodeWithNumeric( 6 );
 		
 		HttpSession session = request.getSession();
-		session.setAttribute( "verifyCode", verifyCode );
-		session.setAttribute( "loginName", loginName );
-		session.setAttribute( "mobileNum", mobileNum );
+		String sessionId = MD5Utils.encode( session.getId() );
+		
+		resData.put( "sessionId", sessionId );
+		
+		sessionService.saveSession( session, sessionId );
+		sessionService.saveSessionData( "verifyCode", verifyCode, sessionId );
+		sessionService.saveSessionData( "loginName", loginName, sessionId );
+		sessionService.saveSessionData( "mobileNum", mobileNum, sessionId );
 		
 		return ContainerUtils.buildResSuccessMap( resData );
 
@@ -110,6 +115,9 @@ public class RegisterController {
 		String loginPwd = reqJson.getString( "loginPwd" );
 		String verifyCode = reqJson.getString( "verifyCode" );
 
+		String sessionId = request.getHeader( "sessionId" );
+		JSONObject sessionJson = sessionService.getSessionData( sessionId );
+		
 		/*
 		 * 1、上送数据验证
 		 */
@@ -126,10 +134,9 @@ public class RegisterController {
 			return ContainerUtils.buildResFailMap( "请输入验证码!" );
 		}
 		
-		HttpSession session = request.getSession();
-		String oriVerifyCode = session.getAttribute( "verifyCode" ) + "";
-		String oriLoginName = session.getAttribute( "loginName" ) + "";
-		String oriMobileNum = session.getAttribute( "mobileNum" ) + "";
+		String oriVerifyCode = sessionJson.getString( "verifyCode" );
+		String oriLoginName = sessionJson.getString( "loginName" );
+		String oriMobileNum = sessionJson.getString( "mobileNum" );
 		
 		if ( oriVerifyCode == null || "".equals( oriVerifyCode ) ) {
 			return ContainerUtils.buildResFailMap( "操作超时，请重新获取验证码!" );
@@ -152,7 +159,8 @@ public class RegisterController {
 		}
 		
 		if ( !oriMobileNum.equals( mobileNum ) || !oriLoginName.equals( loginName ) ) {
-			return ContainerUtils.buildResFailMap( "输入信息错误!" );
+			return ContainerUtils.buildResFailMap( "输入信息错误! oriMobileNum : "
+					+ "【" +oriMobileNum + "】 oriLoginName : 【" +oriLoginName + "】" );
 		}
 		
 		MemberInfoEntity memberInfo = new MemberInfoEntity();
@@ -174,10 +182,13 @@ public class RegisterController {
 			return ContainerUtils.buildResFailMap( "系统异常，请稍后再试!" );
 		}
 		
-		session.removeAttribute( "verifyCode" );
-		String sessionId = MD5Utils.encode( session.getId() );
-		
 		resData.put( "sessionId", sessionId );
+		resData.put( "memberType", memberInfo.getMemberType() );
+		resData.put( "loginName", memberInfo.getLoginName() );
+		resData.put( "roleType", memberInfo.getRoleId() );
+		resData.put( "mobileNum", memberInfo.getMobileNum() );
+		
+		HttpSession session = request.getSession();
 		
 		sessionService.saveSession( session, sessionId );
 		sessionService.saveSessionData( "userInfo", memberInfo, sessionId );

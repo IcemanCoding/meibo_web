@@ -25,7 +25,8 @@
 			audit_user					auditUser,
 			audit_status				auditStatus,
 			audit_date					auditDate,
-			status						status
+			status						status,
+			created_user				createdUser
 		from
 			media_wechat_info
 		where
@@ -64,28 +65,42 @@
 			a.other_price				otherPrice,
 			a.remark					remark,
 			a.audit_status				auditStatus,
-			a.created_user				createdUser,
 			b.nickname					nickname,
 			b.account					account,
 			b.qr_code					qrCode,
 			b.head_image				headImage,
-			b.desc						desc,
-			b.authentication			authentication,
+			b.`desc`					`desc`,
+			b.authentication			authInfo,
 			b.fans_count				fansCount,
-			c.name						typeName
+			c.name						typeName,
+			d.area_name					areaName,
+			e.login_name				creator,
+			a.created_date				createdate
 		from
-			media_wechat_info a
-		inner join
-			media_wechat_channel b
-		on
-			a.channel_id = b.channel_id
-		inner join
-			media_wechat_type c
-		on
-			b.type_id = c.id
-		<if test="createdUser != null and '' != createdUser">
+			media_wechat_info a,
+			media_wechat_channel b,
+			media_wechat_type c,
+			system_area_info d,
+			member_info e
 		where
+			a.channel_id = b.channel_id
+		and
+			b.type_id = c.id
+		and
+			d.area_id = a.area_id
+		and
+			a.created_user = e.member_id
+		<if test="createdUser != null and '' != createdUser">
+		and
 			a.created_user = #{createdUser}
+		</if>
+		<if test="mediaName != null and '' != mediaName">
+		and
+			b.nickname like CONCAT('%',#{mediaName},'%' )
+		</if>
+		<if test="auditStatus != null">
+		and	
+			a.audit_status = #{auditStatus}
 		</if>
 		order by 
 			a.audit_status, a.created_date desc
@@ -98,18 +113,24 @@
 		select
 			count(a.wechat_media_id)
 		from
-			media_wechat_info a
-		inner join
-			media_wechat_channel b
-		on
-			a.channel_id = b.channel_id
-		inner join
+			media_wechat_info a,
+			media_wechat_channel b,
 			media_wechat_type c
-		on
+		where
+			a.channel_id = b.channel_id
+		and
 			b.type_id = c.id
 		<if test="createdUser != null and '' != createdUser">
-		where
+		and
 			a.created_user = #{createdUser}
+		</if>
+		<if test="mediaName != null and '' != mediaName">
+		and
+			b.nickname like CONCAT('%',#{mediaName},'%' )
+		</if>
+		<if test="auditStatus != null ">
+		and	
+			a.audit_status = #{auditStatus}
 		</if>
 	</select>
 	
@@ -121,8 +142,8 @@
 			b.qr_code				qrCode,
 			b.head_image			headImage,
 			c.name 					typeName,
-			b.desc					desc,
-			b.authentication		authentication,
+			b.`desc`				`desc`,
+			b.authentication		authInfo,
 			b.fans_count			fansCount,
 			d.area_name				areaName
 		FROM
@@ -134,7 +155,8 @@
 					a.second_price				secondPrice,
 					a.other_price				otherPrice,
 					a.area_id 					areaId,
-					a.remark 					remark
+					a.remark 					remark,
+					a.created_date				createdate
 				FROM
 					media_wechat_info a
 				LEFT JOIN media_wechat_info f ON a.channel_id = f.channel_id
@@ -151,13 +173,9 @@
 			g.channelId = b.channel_id
 		AND b.type_id = c.id
 		AND d.area_id = g.areaId
-		<if test="areaIds != null and areaIds != ''">
+		<if test="mediaName != null and '' != mediaName">
 		and
-			g.areaId in ( #{areaIds} )
-		</if>
-		<if test="mediaName != null and mediaName != ''">
-		and
-			b.nickname like '%#{mediaName}%'
+			b.nickname like CONCAT('%',#{mediaName},'%' )
 		</if>
 		<if test="minPrice != null and maxPrice != null">
 <![CDATA[
@@ -174,10 +192,6 @@
 		and
 			b.fansCount < #{maxFansCount}
 ]]>		
-		</if>
-		<if test="typeIds != null and typeIds != ''">
-		and
-			b.type_id in ( #{typeIds} )
 		</if>
 		ORDER BY g.createdate desc
 		<if test="isLimit != null and isLimit == 1">
@@ -214,33 +228,25 @@
 			g.channelId = b.channel_id
 		AND b.type_id = c.id
 		AND d.area_id = g.areaId
-		<if test="areaIds != null and areaIds != ''">
+		<if test="mediaName != null and '' != mediaName">
 		and
-			g.areaId in ( #{areaIds} )
-		</if>
-		<if test="mediaName != null and mediaName != ''">
-		and
-			b.nickname like '%#{mediaName}%'
+			b.nickname like CONCAT('%',#{mediaName},'%' )
 		</if>
 		<if test="minPrice != null and maxPrice != null">
 <![CDATA[
 		and
-			g.firstPrice > #{minPrice}
+			g.firstPrice >= #{minPrice}
 		and
-			g.firstPrice < #{maxPrice}
+			g.firstPrice <= #{maxPrice}
 ]]>	
 		</if>
 		<if test="minFansCount != null and maxFansCount != null">
 <![CDATA[	
 		and
-			b.fansCount > #{minFansCount}
+			b.fansCount >= #{minFansCount}
 		and
-			b.fansCount < #{maxFansCount}
+			b.fansCount <= #{maxFansCount}
 ]]>		
-		</if>
-		<if test="typeIds != null and typeIds != ''">
-		and
-			b.type_id in ( #{typeIds} )
 		</if>
 	</select>
 	

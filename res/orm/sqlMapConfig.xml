@@ -49,6 +49,25 @@
     	<typeAlias type="com.meibo.web.media.viewmodel.BlogMediaUpdateViewmodel" alias="blogMediaUpdate"/>
     	
     	<typeAlias type="com.meibo.web.system.dto.SystemAreaInfoDTO" alias="areaDto"/>
+    	<typeAlias type="com.meibo.web.system.entity.SystemTransDtlEntity" alias="transdtlEntity"/>
+    	
+    	
+    	<typeAlias type="com.meibo.web.order.dto.BaseMediaOrderListDTO" alias="baseMediaOrderListDto"/>
+    	<typeAlias type="com.meibo.web.order.entity.OrderInfoEntity" alias="orderInfo"/>
+    	<typeAlias type="com.meibo.web.order.entity.MediaOrderLaunchDetailEntity" alias="launchDetail"/>
+    	<typeAlias type="com.meibo.web.order.viewmodel.BaseMediaOrderListQueryViewmodel" alias="baseMediaOrderListViewmodel"/>
+    	
+    	<typeAlias type="com.meibo.web.order.entity.NewsMediaOrderSplitEntity" alias="newsOrderSplit"/>
+    	<typeAlias type="com.meibo.web.order.entity.NewsMediaOrderDetailEntity" alias="newsOrderDetail"/>
+    	<typeAlias type="com.meibo.web.order.dto.NewsMediaOrderSplitDTO" alias="newsOrderSplitDto"/>
+    	
+    	<typeAlias type="com.meibo.web.order.dto.BlogMediaOrderSplitDTO" alias="blogOrderSplitDto"/>
+    	<typeAlias type="com.meibo.web.order.entity.BlogMediaOrderSplitEntity" alias="blogOrderSplit"/>
+    	<typeAlias type="com.meibo.web.order.entity.BlogMediaOrderDetailEntity" alias="blogOrderDetail"/>
+    	
+    	<typeAlias type="com.meibo.web.order.dto.WechatMediaOrderSplitDTO" alias="wechatOrderSplitDto"/>
+    	<typeAlias type="com.meibo.web.order.entity.WechatMediaOrderSplitEntity" alias="wechatOrderSplit"/>
+    	<typeAlias type="com.meibo.web.order.entity.WechatMediaOrderDetailEntity" alias="wechatOrderDetail"/>
     	
     </typeAliases>
 
@@ -70,6 +89,17 @@
     	<mapper resource="com/meibo/web/media/dao/blogMediaTypeMapper.xml"/>
     	
     	<mapper resource="com/meibo/web/system/dao/dictionaryMapper.xml"/>
+    	<mapper resource="com/meibo/web/system/dao/systemTransDtlMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/order/dao/newsMediaOrderMapper.xml"/>
+    	<mapper resource="com/meibo/web/order/dao/newsMediaOrderSplitMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/order/dao/blogMediaOrderMapper.xml"/>
+    	<mapper resource="com/meibo/web/order/dao/blogMediaOrderSplitMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/order/dao/wechatMediaOrderMapper.xml"/>
+    	<mapper resource="com/meibo/web/order/dao/wechatMediaOrderSplitMapper.xml"/>
+    	
     </mappers>
 
 </configuration> 

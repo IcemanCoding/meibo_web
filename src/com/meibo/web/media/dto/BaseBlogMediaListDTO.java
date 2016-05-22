@@ -17,6 +17,7 @@ public class BaseBlogMediaListDTO {
 	private String authInfo;
 	private String desc;
 	private String typeName;
+	private String registerDate;
 	
 	public Integer getBlogMediaId() {
 		return blogMediaId;
@@ -95,6 +96,12 @@ public class BaseBlogMediaListDTO {
 	}
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
+	}
+	public String getRegisterDate() {
+		return registerDate;
+	}
+	public void setRegisterDate(String registerDate) {
+		this.registerDate = registerDate;
 	}
 
 }
