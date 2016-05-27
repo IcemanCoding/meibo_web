@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.system.dao.AreaInfoDAO">
+
+	<select id="selectHotAreaList" resultType="baseAreaDto">
+		select
+			area_id		areaId,
+			area_name	areaName,
+			`status`	`status`
+		from
+			system_area_info
+		where
+			is_hot = 1
+	</select>	
+	
+	<select id="selectProvinceList" resultType="provinceDto">
+		select
+			area_id				areaId,
+			area_name			areaName,
+			`status`			`status`,
+			level				level,
+			initial_letters		initialLetters
+		from
+			system_area_info
+		where
+			level = 2
+		or
+			level = 0
+	</select>
+	
+	<select id="selectCityList" resultType="cityDto">
+		select
+			area_id			areaId,
+			area_name		areaName,
+			`status`		`status`,
+			level			level,
+			pre_area_id		preAreaId
+		from
+			system_area_info
+		where
+			level = 3
+	</select>
+   
+</mapper>

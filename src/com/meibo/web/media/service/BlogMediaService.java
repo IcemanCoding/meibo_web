@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.meibo.web.media.entity.BlogMediaInfoEntity;
 import com.meibo.web.media.viewmodel.AdminBlogMediaListQueryViewmodel;
 import com.meibo.web.media.viewmodel.MemberBlogMediaListQueryViewmodel;
 import com.meibo.web.order.dto.BlogMediaOrderSplitDTO;
@@ -25,5 +26,7 @@ public interface BlogMediaService {
 	BigDecimal getOrderAmountById( int[] blogMediaId, int[] selectedId );
 
 	List<BlogMediaOrderSplitDTO> getOrderSplitDtoById( int[] blogMediaId, int[] selectedId );
+
+	BlogMediaInfoEntity getBlogMediaInfoById( Integer blogMediaId );
 
 }

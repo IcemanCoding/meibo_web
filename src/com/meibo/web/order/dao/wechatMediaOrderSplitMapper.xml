@@ -62,4 +62,24 @@
 			order_split_id = #{orderSplitId}
 	</update>
 	
+	<select id="selectWechatMediaOrderSplitByOrderId" parameterType="Integer" resultType="wechatOrderSplit">
+		select
+			order_split_id		orderSplitId,
+			order_id			orderId,
+			wechat_media_id		wechatMediaId,
+			media_member_id		mediaMemberId,
+			trans_amount		transAmount,
+			launch_url			launchUrl,
+			order_status		orderStatus,
+			accept_date			acceptDate,
+			reject_date			rejectDate,
+			launch_date			launchDate,
+			finish_date			finishDate,
+			created_date		createDate
+		from
+			order_wechat_split
+		where
+			order_id = #{orderId}
+	</select>
+	
 </mapper>

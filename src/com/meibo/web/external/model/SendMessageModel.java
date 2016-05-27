@@ -1,4 +1,4 @@
-package com.meibo.web.message.model;
+package com.meibo.web.external.model;
 
 public class SendMessageModel {
 	

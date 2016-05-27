@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.order.dao.FlowMediaOrderDAO">
+	
+	<insert id="insertOrderFlowInfo" parameterType="flowOrderInfo" useGeneratedKeys="true" keyProperty="orderId">
+		insert into
+			order_flow_info
+		( order_code, member_id, trans_amount, order_status, order_name, trans_type, 
+			order_date, created_date )
+		values
+		( #{orderCode}, #{memberId}, #{transAmount}, #{orderStatus}, #{orderName}, #{transType}, 
+			#{orderDate}, #{createDate} )
+	</insert>
+	
+	<update id="updateOrderFlowInfoStatus" parameterType="flowOrderInfo">
+		update
+			order_flow_info
+		set
+			order_status = #{orderStatus},
+			pay_date = #{payDate},
+			serial_number = #{serialNumber}
+		where
+			order_id = #{orderId}
+	</update>
+	
+	<select id="selectOrderFlowInfoByOrderId" parameterType="Integer" resultType="flowOrderInfo">
+		select
+			order_id			orderId,
+			order_code			orderCode,
+			member_id			memberId,
+			trans_amount		transAmount,
+			order_status		orderStatus,
+			trans_type			transType,
+			serial_number		serialNumber,
+			order_date			orderDate,
+			pay_date			payDate,
+			created_date		createDate
+		from
+			order_flow_info
+		where
+			order_id = #{orderId}
+	</select>
+
+	<select id="selectOrderFlowListByConditions" parameterType="java.util.Map" resultType="flowOrderListDto">
+		select
+			a.order_id			orderId,
+			a.order_code		orderCode,
+			a.order_name		orderName,
+			a.trans_amount		price,
+			a.order_status		orderStatus,
+			b.login_name		memberName
+		from
+			order_flow_info a,
+			member_info b
+		where
+			b.member_id = a.member_id
+		<if test="memberId != null">
+		and
+			a.member_id = #{memberId}
+		</if>
+		order by a.created_date desc
+		limit #{beginLimit}, #{endLimit}
+	</select>
+	
+	<select id="selectOrderFlowListCountByConditions" parameterType="java.util.Map" resultType="Integer">
+		select
+			count( a.order_id )		
+		from
+			order_flow_info a
+		<if test="memberId != null">
+		where
+			a.member_id = #{memberId}
+		</if>
+	</select>
+   
+</mapper>

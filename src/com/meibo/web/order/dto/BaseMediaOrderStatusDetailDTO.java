@@ -8,6 +8,7 @@ public class BaseMediaOrderStatusDetailDTO {
 	private Date acceptDate;
 	private Date launchDate;
 	private Date finishDate;
+	private Date rejectDate;
 	private Integer orderStatus;
 	
 	public Date getOrderDate() {
@@ -39,6 +40,18 @@ public class BaseMediaOrderStatusDetailDTO {
 	}
 	public void setOrderStatus(Integer orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+	/**
+	 * @return the rejectDate
+	 */
+	public Date getRejectDate() {
+		return rejectDate;
+	}
+	/**
+	 * @param rejectDate the rejectDate to set
+	 */
+	public void setRejectDate(Date rejectDate) {
+		this.rejectDate = rejectDate;
 	}
 
 }

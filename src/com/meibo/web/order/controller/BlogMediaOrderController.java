@@ -206,5 +206,42 @@ public class BlogMediaOrderController extends BaseController {
 		return ContainerUtils.buildResSuccessMap( resData );
 
 	}
+	
+	@RequestMapping ( value = "/pay", method = RequestMethod.POST )
+	@ResponseBody
+	public Map<String, Object> pay( BaseViewModel viewModel ) {
+		
+		Map<String, Object> resData = new HashMap<String, Object>();
+		
+		JSONObject requestJson = RequestParseUtils.loadPostRequest( viewModel.getRequest() );
+		if ( requestJson.isEmpty() ) {
+			return ContainerUtils.buildResFailMap( "请输入orderId!" );
+		}
+		Integer orderId = requestJson.getInteger( "orderId" );
+		if ( orderId == null ) {
+			return ContainerUtils.buildResFailMap( "请输入orderId!" );
+		}
+		
+		try {
+			Integer ret = blogMediaOrderService.payBlogMediaOrder( orderId );
+			if ( ret == -2 ) {
+				return ContainerUtils.buildResMap( resData, -2, "余额不足!" );
+			} else if ( ret == -5 ) {
+				return ContainerUtils.buildResMap( resData, 0, "商品已过期，请重新下单!" );
+			} else if ( ret == -6 ) {
+				return ContainerUtils.buildResMap( resData, 0, "订单已完成，请勿重复支付!" );
+			} else if ( ret == -7 ) {
+				return ContainerUtils.buildResMap( resData, 0, "非法操作!" );
+			} else if ( ret == 0 ) {
+				return ContainerUtils.buildResFailMap( "操作失败" );
+			} 
+		} catch ( Exception e ) {
+			logger.error( "修改微博订单投放详情失败!" + e );
+			return ContainerUtils.buildResFailMap( "操作失败!" );
+		}
+		
+		return ContainerUtils.buildResSuccessMap( resData );
+		
+	}
 
 }

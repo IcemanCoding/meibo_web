@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.meibo.web.common.utils.UploadUtils;
+import com.meibo.web.media.entity.BlogMediaInfoEntity;
 import com.meibo.web.media.service.BlogMediaService;
 import com.meibo.web.member.dao.MemberInfoDAO;
 import com.meibo.web.member.dto.MemberAccountDTO;
@@ -21,12 +22,9 @@ import com.meibo.web.order.dto.BaseMediaOrderListDTO;
 import com.meibo.web.order.dto.BaseMediaOrderStatusDetailDTO;
 import com.meibo.web.order.dto.BlogMediaOrderDetailDTO;
 import com.meibo.web.order.dto.BlogMediaOrderSplitDTO;
-import com.meibo.web.order.dto.NewsMediaOrderDetailDTO;
 import com.meibo.web.order.entity.BlogMediaOrderDetailEntity;
 import com.meibo.web.order.entity.BlogMediaOrderSplitEntity;
 import com.meibo.web.order.entity.MediaOrderLaunchDetailEntity;
-import com.meibo.web.order.entity.NewsMediaOrderDetailEntity;
-import com.meibo.web.order.entity.NewsMediaOrderSplitEntity;
 import com.meibo.web.order.entity.OrderInfoEntity;
 import com.meibo.web.order.service.BlogMediaOrderService;
 import com.meibo.web.order.service.OrderInfoService;
@@ -130,7 +128,7 @@ public class BlogMediaOrderServiceImpl implements BlogMediaOrderService {
 		transModel.setOrderId( orderId );
 		transModel.setTransAmount( transAmount );
 		transModel.setTransCode( 1 );
-		transModel.setTransType( 1 );
+		transModel.setTransType( 2 );
 		
 		if ( tradeCenterService.consumeTransHandle( transModel ) ) {
 			
@@ -297,6 +295,7 @@ public class BlogMediaOrderServiceImpl implements BlogMediaOrderService {
 		orderStatusDetail.setLaunchDate( orderSplit.getLaunchDate() );
 		orderStatusDetail.setOrderDate( orderInfo.getOrderDate() );
 		orderStatusDetail.setOrderStatus( orderSplit.getOrderStatus() );
+		orderStatusDetail.setRejectDate( orderSplit.getRejectDate() );
 		
 		return orderStatusDetail;
 		
@@ -353,6 +352,64 @@ public class BlogMediaOrderServiceImpl implements BlogMediaOrderService {
 		blogMediaOrderSplitDao.updateBlogMediaOrderSplitById( params );
 		
 		return true;
+		
+	}
+
+	@Override
+	public Integer payBlogMediaOrder( Integer orderId ) throws Exception {
+		
+		// get blogMediaOrder
+		OrderInfoEntity orderInfo = blogMediaOrderDao.selectBlogMediaOrderInfoByOrderId( orderId ); 
+		if ( orderInfo == null || orderInfo.getOrderStatus() != 1 ) {
+			return -6;
+		}
+		
+		// get blogMediaOrderSplit
+		List<BlogMediaOrderSplitEntity> orderSplitList = blogMediaOrderSplitDao.selectBlogMediaOrderSplitByOrderId( orderId );
+		for ( int i = 0; i < orderSplitList.size(); i++ ) {
+			
+			BlogMediaOrderSplitEntity orderSplit = orderSplitList.get( i );
+			Integer blogMediaId = orderSplit.getBlogMediaId();
+			BlogMediaInfoEntity blogMedia = blogMediaService.getBlogMediaInfoById( blogMediaId );
+			
+			if ( blogMedia.getAuditStatus() != 1 || blogMedia.getStatus() != 1 ) {
+				return -5;
+			}
+			
+		}
+		
+		// trade
+		MemberAccountDTO memberAccount = memberAccountService.getMemberAccount( orderInfo.getMemberId() );
+		BigDecimal accountBal = memberAccount.getAvailableBalance();
+		if ( accountBal.compareTo( orderInfo.getTransAmount() ) < 0 ) {
+			// 余额不足
+			return -2;
+		}
+		
+		ConsumeTransModel transModel = new ConsumeTransModel();
+		transModel.setMemberId( orderInfo.getMemberId() );
+		transModel.setOrderId( orderId );
+		transModel.setTransAmount( orderInfo.getTransAmount() );
+		transModel.setTransCode( 1 );
+		transModel.setTransType( 2 );
+		
+		if ( tradeCenterService.consumeTransHandle( transModel ) ) {
+			
+			// update order_info set orderStatus = 2
+			orderInfo.setPayDate( new Date() );
+			orderInfo.setOrderStatus( 2 );
+			
+			blogMediaOrderDao.updateOrderBlogInfoStatus( orderInfo );
+			
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put( "orderId", orderId );
+			params.put( "orderStatus", 2 );
+			
+			blogMediaOrderDao.updateOrderBlogSplitStatus( params );
+			
+		}
+		
+		return 1;
 		
 	}
 

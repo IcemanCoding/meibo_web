@@ -16,6 +16,9 @@ import com.meibo.web.media.viewmodel.MemberWechatMediaListQueryViewmodel;
 import com.meibo.web.media.viewmodel.NewsMediaListQueryParams;
 import com.meibo.web.media.viewmodel.WechatMediaInsertViewmodel;
 import com.meibo.web.media.viewmodel.WechatMediaUpdateViewmodel;
+import com.meibo.web.order.viewmodel.FlowMediaOrderAddViewmodel;
+import com.meibo.web.order.viewmodel.FlowMediaOrderBatchAddViewmodel;
+import com.meibo.web.order.viewmodel.FlowMediaOrderPayViewmodel;
 
 public class MediaTransforUtils {
 	
@@ -448,6 +451,45 @@ public class MediaTransforUtils {
 		if ( data.get( "remark" ) != null && !"".equals( "remark" ) ) {
 			viewmodel.setRemark( data.get( "remark" ) + "" );
 		}
+		
+		return viewmodel;
+		
+	}
+	
+	public static FlowMediaOrderAddViewmodel transJsonToFlowMediaAddViewmodel( JSONObject requestJson ) {
+		
+		FlowMediaOrderAddViewmodel viewmodel = new FlowMediaOrderAddViewmodel();
+		viewmodel.setMemberId( requestJson.getInteger( "memberId" ) );
+		viewmodel.setMobile( requestJson.getString( "mobile" ) );
+		viewmodel.setPackageId( requestJson.getInteger( "packageId" ) );
+		
+		return viewmodel;
+		
+	}
+
+	public static FlowMediaOrderBatchAddViewmodel transJsonToFlowMediaBatchAddViewmodel(
+			 JSONObject requestJson ) {
+		
+		String mobile = requestJson.getString( "mobile" );
+		String[] mobileArr = mobile.split( "," );
+		
+		FlowMediaOrderBatchAddViewmodel viewmodel = new FlowMediaOrderBatchAddViewmodel();
+		viewmodel.setDxPackageId( requestJson.getInteger( "dxPackageId" ) );
+		viewmodel.setLtPackageId( requestJson.getInteger( "ltPackageId" ) );
+		viewmodel.setYdPackageId( requestJson.getInteger( "ydPackageId" ) );
+		viewmodel.setMobile( mobileArr );
+		viewmodel.setOrderName( requestJson.getString( "orderName" ) );
+		viewmodel.setMemberId( requestJson.getInteger( "memberId" ) );
+		
+		return viewmodel;
+	
+	}
+
+	public static FlowMediaOrderPayViewmodel transJsonToFlowMediaPayViewmodel( JSONObject requestJson ) {
+		
+		FlowMediaOrderPayViewmodel viewmodel = new FlowMediaOrderPayViewmodel();
+		viewmodel.setMemberId( requestJson.getInteger( "memberId" ) );
+		viewmodel.setOrderId( requestJson.getInteger( "orderId" ) );
 		
 		return viewmodel;
 		

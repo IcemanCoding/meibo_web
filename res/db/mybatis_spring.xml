@@ -37,6 +37,12 @@
 	</bean>
 	
 	<!-- media -->
+	<bean id="flowMediaDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.media.dao.FlowMediaInfoDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	
 	<bean id="newsMediaDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.meibo.web.media.dao.NewsMediaDAO" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
@@ -92,8 +98,18 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
 	
+	<bean id="areaInfoDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.system.dao.AreaInfoDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
 	<bean id="transDtlDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.meibo.web.system.dao.SystemTransDtlDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="systemParamsDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.system.dao.SystemParamsInfoDAO" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
 	
@@ -124,6 +140,21 @@
 	
 	<bean id="wechatMediaOrderSplitDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.meibo.web.order.dao.WechatMediaOrderSplitDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="flowMediaOrderDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.order.dao.FlowMediaOrderDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="flowMediaOrderSplitDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.order.dao.FlowMediaOrderSplitDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="flowMediaOrderDetailDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.order.dao.FlowMediaOrderDetailDAO" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
 

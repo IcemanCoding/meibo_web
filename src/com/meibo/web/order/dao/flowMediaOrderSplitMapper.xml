@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.order.dao.FlowMediaOrderSplitDAO">
+	
+	<insert id="insertOrderFlowSplit" parameterType="flowOrderSplit" useGeneratedKeys="true" keyProperty="orderSplitId">
+		insert into
+			order_flow_split
+		( order_id, package_id, dest_mobile, trans_amount, order_status, created_date )
+		values
+		( #{orderId}, #{packageId}, #{destMobile}, #{transAmount}, #{orderStatus}, #{createDate} )
+	</insert>
+	
+	<update id="updateOrderFlowSplitStatus" parameterType="java.util.Map">
+		update
+			order_flow_split
+		set
+			order_status = #{orderStatus}
+		where
+			order_id = #{orderId}
+	</update>
+	
+	<select id="selectOrderFlowSplitByOrderId" parameterType="Integer" resultType="flowOrderSplit">
+		select
+			order_split_id		orderSplitId,
+			order_id			orderId,
+			package_id			packageId,
+			dest_mobile			destMobile,
+			trans_amount		transAmount,
+			order_status		orderStatus,
+			finish_date			finishDate,
+			created_date		createDate
+		from
+			order_flow_split
+		where
+			order_id = #{orderId}
+	</select>
+	
+	<select id="selectPackageIdByOrderId" parameterType="Integer" resultType="Integer">
+		select
+			package_id			packageId
+		from
+			order_flow_split
+		where
+			order_id = #{orderId}
+		group by package_id
+	</select>
+	
+	<select id="selectOrderFlowDetailByConditions" parameterType="java.util.Map" resultType="flowOrderDetailDto">
+		select
+			a.dest_mobile		mobile,
+			a.trans_amount		price,
+			a.order_status		orderStatus,
+			b.carrier_name		carrierName,
+			b.package_name		packageName
+		from
+			order_flow_split a,
+			media_flow_info b
+		where
+			a.package_id = b.package_id
+		and
+			a.order_id = #{orderId}
+		limit #{beginLimit}, #{endLimit}
+	</select>
+	
+	<select id="selectOrderFlowDetailCountByConditions" parameterType="java.util.Map" resultType="Integer">
+		select
+			count( a.order_split_id )
+		from
+			order_flow_split a
+		where
+			a.order_id = #{orderId}
+	</select>
+   
+</mapper>

@@ -72,21 +72,21 @@ public class HttpRequestUtils {
 		
 		String s1 = null;
 		try {
-			s1 = DESUtils.encode( "userPass=SH2543".getBytes(), "B7506071" );
+			s1 = DESUtils.encrypt( "userPass=SH2543".getBytes(), "B7506071", "B7506071" );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		System.out.println( s1 ); // 4c98wZZaVrlwh8eAE/hnzw==
 		
-		s1 = "7A8940CB6E8EE702268F17B96E03783D809AEDC9B148641BC604284F627B92DE446B4643D0C3F1F184A61B0A5DF0F94228BF082FEF222789";
+//		s1 = "7A8940CB6E8EE702268F17B96E03783D809AEDC9B148641BC604284F627B92DE446B4643D0C3F1F184A61B0A5DF0F94228BF082FEF222789";
 		
 		String postUrl = "http://4g.1069106.com:9898/FlowAPI/GetProductsInfo.ashx";
 		Map<String, String> param = new HashMap<String, String>();
 		param.put( "userCode", "SBXXLL" );
 		param.put( "submitInfo", s1 ); // 4c98wZZaVrlwh8eAE/hnzw==
 //		param.put( "userPass", "SH2543" );
-		
+		// 165|,|电信全国 5M|,|LJ流量包|,|电信|,|1.0000|;|172|,|移动全国 10M|,|LJ流量包|,|移动|,|3.0000|;|160|,|联通全国 20M|,|lj流量|,|联通|,|3.0000
 		String res = HttpRequestUtils.sendHttpPost( postUrl, param );
 		System.out.println( res ); // -3
 		
@@ -105,14 +105,17 @@ public class HttpRequestUtils {
 	}
 	
 	public static String convertStreamToString( InputStream is ) {
-		BufferedReader reader = new BufferedReader( new InputStreamReader( is ) );
+		
 		StringBuilder sb = new StringBuilder();
-
-		String line = null;
+		
 		try {
+			
+			BufferedReader reader = new BufferedReader( new InputStreamReader( is, "utf8" ) );
+			String line = null;
 			while ( ( line = reader.readLine() ) != null ) {
-				sb.append( line + "\n" );
+				sb.append( line );
 			}
+
 		} catch ( IOException e ) {
 			e.printStackTrace();
 		} finally {

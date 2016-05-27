@@ -16,6 +16,7 @@ import com.meibo.web.media.dao.NewsMediaDAO;
 import com.meibo.web.media.dao.NewsMediaTypeDAO;
 import com.meibo.web.media.dto.AdminNewsMediaListDTO;
 import com.meibo.web.media.dto.BaseNewsMediaListDTO;
+import com.meibo.web.media.entity.BlogMediaInfoEntity;
 import com.meibo.web.media.entity.NewsMediaChannelEntity;
 import com.meibo.web.media.entity.NewsMediaColumnEntity;
 import com.meibo.web.media.entity.NewsMediaEntity;
@@ -302,6 +303,11 @@ public class NewsMediaServiceImpl implements NewsMediaService {
 	@Override
 	public List<NewsMediaOrderSplitDTO> getOrderSplitDtoById( int[] newsMediaId ) throws Exception {
 		return newsMediaDao.selectOrderSplitDtoById( newsMediaId );
+	}
+
+	@Override
+	public NewsMediaEntity getNewsMediaInfoById( Integer newsMediaId ) {
+		return newsMediaDao.selectNewsMediaInfo( newsMediaId );
 	}
 	
 }

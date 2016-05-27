@@ -21,5 +21,7 @@ public interface NewsMediaOrderService {
 	Boolean editNewsMediaOrderLaunch( Integer orderSplitId, String launchUrl, Date launchDate ) throws Exception;
 	
 	BaseMediaOrderStatusDetailDTO getOrderSplitStatusDetail( Integer orderSplitId ) throws Exception;
+
+	Integer payNewsMediaOrder( Integer orderId ) throws Exception;
 	
 }

@@ -47,6 +47,17 @@ public class ContainerUtils {
 		
 	}
 	
+	public static Map<String, Object> buildResSuccessMap() {
+
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put( "data", null );
+		res.put( "flag", 1 );
+		res.put( "msg", "操作成功" );
+		
+		return res;
+		
+	}
+	
 	public static Map<String, Object> buildResSuccessMap( Map data ) {
 
 		if ( data == null || data.size() == 0 ) {

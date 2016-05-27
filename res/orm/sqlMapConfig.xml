@@ -19,10 +19,15 @@
     </settings>
 
     <typeAliases>
+    
+    	<typeAlias type="com.meibo.web.media.dto.FlowMediaInfoDTO" alias="flowInfoDto"/>
+    	
     	<typeAlias type="com.meibo.web.member.dto.MemberInfoDTO" alias="memberDto" />
     	<typeAlias type="com.meibo.web.member.dto.MemberAccountDTO" alias="memberAccount" />
     	<typeAlias type="com.meibo.web.member.entity.MemberInfoEntity" alias="memberInfo"/>
     	<typeAlias type="com.meibo.web.member.entity.MemberAccountEntity" alias="accountEntity"/>
+    	
+    	<typeAlias type="com.meibo.web.media.entity.FlowMediaInfoEntity" alias="flowInfoEntity"/>
     	
     	<typeAlias type="com.meibo.web.media.entity.NewsMediaChannelEntity" alias="newsMediaChannel"/>
     	<typeAlias type="com.meibo.web.media.entity.NewsMediaEntity" alias="newsMedia"/>
@@ -49,6 +54,9 @@
     	<typeAlias type="com.meibo.web.media.viewmodel.BlogMediaUpdateViewmodel" alias="blogMediaUpdate"/>
     	
     	<typeAlias type="com.meibo.web.system.dto.SystemAreaInfoDTO" alias="areaDto"/>
+    	<typeAlias type="com.meibo.web.system.dto.BaseAreaInfoDTO" alias="baseAreaDto"/>
+    	<typeAlias type="com.meibo.web.system.dto.ProvinceAreaInfoDTO" alias="provinceDto"/>
+    	<typeAlias type="com.meibo.web.system.dto.CityAreaInfoDTO" alias="cityDto"/>
     	<typeAlias type="com.meibo.web.system.entity.SystemTransDtlEntity" alias="transdtlEntity"/>
     	
     	
@@ -69,11 +77,20 @@
     	<typeAlias type="com.meibo.web.order.entity.WechatMediaOrderSplitEntity" alias="wechatOrderSplit"/>
     	<typeAlias type="com.meibo.web.order.entity.WechatMediaOrderDetailEntity" alias="wechatOrderDetail"/>
     	
+    	<typeAlias type="com.meibo.web.order.entity.FlowMediaOrderEntity" alias="flowOrderInfo"/>
+    	<typeAlias type="com.meibo.web.order.entity.FlowMediaOrderSplitEntity" alias="flowOrderSplit"/>
+    	<typeAlias type="com.meibo.web.order.entity.FlowMediaOrderDetailEntity" alias="flowOrderDetail"/>
+    	<typeAlias type="com.meibo.web.order.dto.FlowMediaOrderDTO" alias="flowOrderListDto"/>
+    	<typeAlias type="com.meibo.web.order.dto.FlowMediaOrderDetailDTO" alias="flowOrderDetailDto"/>
+    	
     </typeAliases>
 
     <mappers>
+    
     	<mapper resource="com/meibo/web/member/dao/memberInfoMapper.xml"/>
     	<mapper resource="com/meibo/web/member/dao/memberAccountMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/media/dao/flowMediaInfoMapper.xml"/>
     	
     	<mapper resource="com/meibo/web/media/dao/newsMediaMapper.xml"/>
     	<mapper resource="com/meibo/web/media/dao/newsMediaChannelMapper.xml"/>
@@ -89,7 +106,9 @@
     	<mapper resource="com/meibo/web/media/dao/blogMediaTypeMapper.xml"/>
     	
     	<mapper resource="com/meibo/web/system/dao/dictionaryMapper.xml"/>
+    	<mapper resource="com/meibo/web/system/dao/areaInfoMapper.xml"/>
     	<mapper resource="com/meibo/web/system/dao/systemTransDtlMapper.xml"/>
+    	<mapper resource="com/meibo/web/system/dao/systemParamsInfoMapper.xml"/>
     	
     	<mapper resource="com/meibo/web/order/dao/newsMediaOrderMapper.xml"/>
     	<mapper resource="com/meibo/web/order/dao/newsMediaOrderSplitMapper.xml"/>
@@ -99,6 +118,10 @@
     	
     	<mapper resource="com/meibo/web/order/dao/wechatMediaOrderMapper.xml"/>
     	<mapper resource="com/meibo/web/order/dao/wechatMediaOrderSplitMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/order/dao/flowMediaOrderMapper.xml"/>
+    	<mapper resource="com/meibo/web/order/dao/flowMediaOrderSplitMapper.xml"/>
+    	<mapper resource="com/meibo/web/order/dao/flowMediaOrderDetailMapper.xml"/>
     	
     </mappers>
 

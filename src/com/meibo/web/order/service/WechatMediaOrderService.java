@@ -22,4 +22,6 @@ public interface WechatMediaOrderService {
 
 	Boolean editWechatMediaOrderLaunch( Integer orderSplitId, String launchUrl, Date launchDate );
 
+	Integer payWechatMediaOrder( Integer orderId ) throws Exception;
+
 }

@@ -91,13 +91,13 @@
 		AND b.news_type = c.id
 		AND a.column_id = d.news_column_id
 		AND a.created_user = e.member_id
-		<if test="createdUser != null and '' != createdUser">
+		<if test="createdUser != null">
 		AND a.created_user = #{createdUser}
 		</if>
 		<if test="channelName != null and '' != channelName">
 		AND b.channel_name like CONCAT('%',#{channelName},'%' )
 		</if>
-		<if test="auditStatus != null and '' != auditStatus">
+		<if test="auditStatus != null">
 		AND	a.audit_status = #{auditStatus}
 		</if>
 		ORDER BY
@@ -122,13 +122,13 @@
 		AND b.news_type = c.id
 		AND a.column_id = d.news_column_id
 		AND a.created_user = e.member_id
-		<if test="createdUser != null and '' != createdUser">
+		<if test="createdUser != null">
 		AND a.created_user = #{createdUser}
 		</if>
 		<if test="channelName != null and '' != channelName">
 		AND b.channel_name like CONCAT('%',#{channelName},'%' )
 		</if>
-		<if test="auditStatus != null and '' != auditStatus">
+		<if test="auditStatus != null">
 		AND	a.audit_status = #{auditStatus}
 		</if>
 	</select>

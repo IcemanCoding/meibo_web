@@ -1,6 +1,7 @@
 package com.meibo.web.order.dao;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import com.meibo.web.order.entity.BlogMediaOrderSplitEntity;
@@ -13,5 +14,7 @@ public interface BlogMediaOrderSplitDAO {
 	BlogMediaOrderSplitEntity selectBlogMediaOrderSplitById( Integer orderSplitId );
 
 	void updateBlogMediaOrderSplitById( Map<String, Object> params );
+
+	List<BlogMediaOrderSplitEntity> selectBlogMediaOrderSplitByOrderId( Integer orderId );
 
 }

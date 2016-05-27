@@ -15,69 +15,10 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 
+import sun.misc.BASE64Encoder;
+
 public class DESUtils {
 
-	/**
-	 * 加密
-	 * 
-	 * @param datasource
-	 *            byte[]
-	 * @param password
-	 *            String
-	 * @return byte[]
-	 */
-	public static String encode(byte[] data, String key) 
-    {
-        try
-        {
-      DESKeySpec dks = new DESKeySpec(key.getBytes());
-
-      SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-            //key的长度不能够小于8位字节
-            Key secretKey = keyFactory.generateSecret(dks);
-            Cipher cipher = Cipher.getInstance( "DES/CBC/PKCS5Padding" );
-            IvParameterSpec iv = new IvParameterSpec(key.getBytes());
-            AlgorithmParameterSpec paramSpec = iv;
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey,paramSpec);
-
-            byte[] bytes = cipher.doFinal(data);
-            String isoString = new String(bytes,"ISO-8859-1");
-            return isoString;
-        } catch (Exception e)
-        {
-        	e.printStackTrace();
-        	return "";
-        }
-        
-    }
-
-	/**
-	 * 解密
-	 * 
-	 * @param src
-	 *            byte[]
-	 * @param password
-	 *            String
-	 * @return byte[]
-	 * @throws Exception
-	 */
-	public static byte[] decrypt(byte[] src, String password) throws Exception {
-		// DES算法要求有一个可信任的随机数源
-		SecureRandom random = new SecureRandom();
-		// 创建一个DESKeySpec对象
-		DESKeySpec desKey = new DESKeySpec(password.getBytes());
-		// 创建一个密匙工厂
-		SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-		// 将DESKeySpec对象转换成SecretKey对象
-		SecretKey securekey = keyFactory.generateSecret(desKey);
-		// Cipher对象实际完成解密操作
-		Cipher cipher = Cipher.getInstance("DES");
-		// 用密匙初始化Cipher对象
-		cipher.init(Cipher.DECRYPT_MODE, securekey, random);
-		// 真正开始解密操作
-		return cipher.doFinal(src);
-	}
-	
 	public static String SHA1(String decript) {
 		try {
 			MessageDigest digest = java.security.MessageDigest
@@ -101,32 +42,105 @@ public class DESUtils {
 		}
 		return "";
 	}
-	
+
 	public static void main(String[] args) {
-		
-		String sha1Str = SHA1( "SH2543" );
-		sha1Str = sha1Str.toUpperCase().substring( 0, 8 );
-		System.out.println( sha1Str ); // B7506071
-		
-		String s = encode( "userPass=SH2543".getBytes(), "B7506071" );
-		System.out.println( s );
-//		String params = "userPass=SH2543";
-//		String postUrl = "http://4g.1069106.com:9898/FlowAPI/GetProductsInfo.ashx";
-//		Map<String, String> param = new HashMap<String, String>();
-//		param.put( "userCode", "SBXXLL" );
-//		param.put( "submitInfo", params );
-//		param.put( "userPass", "SH2543" );
-//		
-//		String res = HttpRequestUtils.sendHttpPost(postUrl, param);
-//		System.out.println( res );
+
+		String sha1Str = SHA1("SH2543");
+		sha1Str = sha1Str.toUpperCase().substring(0, 8);
+		System.out.println(sha1Str); // B7506071
+
+		String s = encrypt("userPass=SH2543".getBytes(), "B7506071", "B7506071");
+		System.out.println(s);
+		// String params = "userPass=SH2543";
+		// String postUrl =
+		// "http://4g.1069106.com:9898/FlowAPI/GetProductsInfo.ashx";
+		// Map<String, String> param = new HashMap<String, String>();
+		// param.put( "userCode", "SBXXLL" );
+		// param.put( "submitInfo", params );
+		// param.put( "userPass", "SH2543" );
+		//
+		// String res = HttpRequestUtils.sendHttpPost(postUrl, param);
+		// System.out.println( res );
+	}
+
+	/**
+	 * 加密
+	 * 
+	 * @param datasource
+	 *            byte[]
+	 * @param password
+	 *            String
+	 * @return byte[]
+	 */
+	public static String encrypt(byte[] datasource, String password, String iv) {
+		try {
+			SecureRandom random = new SecureRandom();
+			DESKeySpec desKey = new DESKeySpec(password.getBytes());
+			IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
+			// 创建一个密匙工厂，然后用它把DESKeySpec转换成
+			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+			SecretKey securekey = keyFactory.generateSecret(desKey);
+			// Cipher对象实际完成加密操作
+			Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+			// 用密匙初始化Cipher对象
+			cipher.init(Cipher.ENCRYPT_MODE, securekey, ivSpec);
+			// 现在，获取数据并加密
+			// 正式执行加密操作
+			byte[] ret = cipher.doFinal(datasource);
+			return bytesToHexString( ret );
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
-	 public static String encodeBase64(byte[]input) throws Exception{  
-	        Class clazz=Class.forName("com.sun.org.apache.xerces.internal.impl.dv.util.Base64");  
-	        Method mainMethod= clazz.getMethod("encode", byte[].class);  
-	        mainMethod.setAccessible(true);  
-	         Object retObj=mainMethod.invoke(null, new Object[]{input});  
-	         return (String)retObj;  
-	    } 
+	public static String bytesToHexString(byte[] src) {
+		StringBuilder stringBuilder = new StringBuilder("");
+		if (src == null || src.length <= 0) {
+			return null;
+		}
+		for (int i = 0; i < src.length; i++) {
+			int v = src[i] & 0xFF;
+			String hv = Integer.toHexString(v);
+			if (hv.length() < 2) {
+				stringBuilder.append(0);
+			}
+			stringBuilder.append(hv);
+		}
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * Convert hex string to byte[]
+	 * 
+	 * @param hexString
+	 *            the hex string
+	 * @return byte[]
+	 */
+	public static byte[] hexStringToBytes(String hexString) {
+		if (hexString == null || hexString.equals("")) {
+			return null;
+		}
+		hexString = hexString.toUpperCase();
+		int length = hexString.length() / 2;
+		char[] hexChars = hexString.toCharArray();
+		byte[] d = new byte[length];
+		for (int i = 0; i < length; i++) {
+			int pos = i * 2;
+			d[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
+		}
+		return d;
+	}
+
+	/**
+	 * Convert char to byte
+	 * 
+	 * @param c
+	 *            char
+	 * @return byte
+	 */
+	private static byte charToByte(char c) {
+		return (byte) "0123456789ABCDEF".indexOf(c);
+	}
 
 }

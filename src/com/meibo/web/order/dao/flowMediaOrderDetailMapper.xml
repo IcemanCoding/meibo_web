@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.order.dao.FlowMediaOrderDetailDAO">
+	
+   <insert id="insertOrderFlowDetail" parameterType="flowOrderDetail">
+   		insert into
+   			order_flow_detail
+   		( order_id, dx_package_id, lt_package_id, yd_package_id )
+   		values
+   		( #{orderId}, #{dxPackageId}, #{ltPackageId}, #{ydPackageId} )
+   </insert>
+   
+   <select id="selectOrderFlowDetailByOrderId" parameterType="Integer" resultType="flowOrderDetail">
+   		select
+   			order_detail_id			orderDetailId,
+   			order_id				orderId,
+   			dx_package_id			dxPackageId,
+   			lt_package_id			ltPackageId,
+   			yd_package_id			ydPackageId
+   		from
+   			order_flow_detail
+   		where
+   			order_id = #{orderId}
+   </select>
+   
+</mapper>

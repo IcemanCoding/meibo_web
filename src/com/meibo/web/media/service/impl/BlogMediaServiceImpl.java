@@ -347,5 +347,12 @@ public class BlogMediaServiceImpl implements BlogMediaService {
 		
 	}
 
+	@Override
+	public BlogMediaInfoEntity getBlogMediaInfoById( Integer blogMediaId ) {
+		
+		return blogMediaDao.selectBlogMediaInfoById( blogMediaId );
+		
+	}
+
 
 }

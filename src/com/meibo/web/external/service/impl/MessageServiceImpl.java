@@ -1,10 +1,10 @@
-package com.meibo.web.message.service.impl;
+package com.meibo.web.external.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.meibo.web.message.model.SendMessageModel;
-import com.meibo.web.message.service.MessageService;
-import com.meibo.web.message.service.YunXinMessageService;
+import com.meibo.web.external.model.SendMessageModel;
+import com.meibo.web.external.service.MessageService;
+import com.meibo.web.external.service.YunXinMessageService;
 
 public class MessageServiceImpl implements MessageService {
 	

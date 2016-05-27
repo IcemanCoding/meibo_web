@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.meibo.web.common.utils.UploadUtils;
+import com.meibo.web.media.entity.WechatMediaInfoEntity;
 import com.meibo.web.media.service.WechatMediaService;
 import com.meibo.web.member.dao.MemberInfoDAO;
 import com.meibo.web.member.dto.MemberAccountDTO;
@@ -19,11 +20,8 @@ import com.meibo.web.order.dao.WechatMediaOrderDAO;
 import com.meibo.web.order.dao.WechatMediaOrderSplitDAO;
 import com.meibo.web.order.dto.BaseMediaOrderListDTO;
 import com.meibo.web.order.dto.BaseMediaOrderStatusDetailDTO;
-import com.meibo.web.order.dto.BlogMediaOrderDetailDTO;
 import com.meibo.web.order.dto.WechatMediaOrderDetailDTO;
 import com.meibo.web.order.dto.WechatMediaOrderSplitDTO;
-import com.meibo.web.order.entity.BlogMediaOrderDetailEntity;
-import com.meibo.web.order.entity.BlogMediaOrderSplitEntity;
 import com.meibo.web.order.entity.MediaOrderLaunchDetailEntity;
 import com.meibo.web.order.entity.OrderInfoEntity;
 import com.meibo.web.order.entity.WechatMediaOrderDetailEntity;
@@ -132,7 +130,7 @@ public class WechatMediaOrderServiceImpl implements WechatMediaOrderService {
 		transModel.setOrderId( orderId );
 		transModel.setTransAmount( transAmount );
 		transModel.setTransCode( 1 );
-		transModel.setTransType( 1 );
+		transModel.setTransType( 3 );
 		
 		if ( tradeCenterService.consumeTransHandle( transModel ) ) {
 			
@@ -301,6 +299,7 @@ public class WechatMediaOrderServiceImpl implements WechatMediaOrderService {
 		orderStatusDetail.setLaunchDate( orderSplit.getLaunchDate() );
 		orderStatusDetail.setOrderDate( orderInfo.getOrderDate() );
 		orderStatusDetail.setOrderStatus( orderSplit.getOrderStatus() );
+		orderStatusDetail.setRejectDate( orderSplit.getRejectDate() );
 		
 		return orderStatusDetail;
 		
@@ -358,6 +357,63 @@ public class WechatMediaOrderServiceImpl implements WechatMediaOrderService {
 		
 		return true;
 		
+	}
+
+	@Override
+	public Integer payWechatMediaOrder( Integer orderId ) throws Exception {
+		
+		// get wechatMediaOrder
+		OrderInfoEntity orderInfo = wechatMediaOrderDao.selectWechatMediaOrderInfoByOrderId( orderId ); 
+		if ( orderInfo == null || orderInfo.getOrderStatus() != 1 ) {
+			return -6;
+		}
+		
+		// get wechatMediaOrderSplit
+		List<WechatMediaOrderSplitEntity> orderSplitList = wechatMediaOrderSplitDao.selectWechatMediaOrderSplitByOrderId( orderId );
+		for ( int i = 0; i < orderSplitList.size(); i++ ) {
+			
+			WechatMediaOrderSplitEntity orderSplit = orderSplitList.get( i );
+			Integer wechatMediaId = orderSplit.getWechatMediaId();
+			WechatMediaInfoEntity wechatMedia = wechatMediaService.getWechatMediaInfoById( wechatMediaId );
+			
+			if ( wechatMedia.getAuditStatus() != 1 || wechatMedia.getStatus() != 1 ) {
+				return -5;
+			}
+			
+		}
+		
+		// trade
+		MemberAccountDTO memberAccount = memberAccountService.getMemberAccount( orderInfo.getMemberId() );
+		BigDecimal accountBal = memberAccount.getAvailableBalance();
+		if ( accountBal.compareTo( orderInfo.getTransAmount() ) < 0 ) {
+			// 余额不足
+			return -2;
+		}
+		
+		ConsumeTransModel transModel = new ConsumeTransModel();
+		transModel.setMemberId( orderInfo.getMemberId() );
+		transModel.setOrderId( orderId );
+		transModel.setTransAmount( orderInfo.getTransAmount() );
+		transModel.setTransCode( 1 );
+		transModel.setTransType( 2 );
+		
+		if ( tradeCenterService.consumeTransHandle( transModel ) ) {
+			
+			// update order_info set orderStatus = 2
+			orderInfo.setPayDate( new Date() );
+			orderInfo.setOrderStatus( 2 );
+			
+			wechatMediaOrderDao.updateOrderWechatInfoStatus( orderInfo );
+			
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put( "orderId", orderId );
+			params.put( "orderStatus", 2 );
+			
+			wechatMediaOrderDao.updateOrderWechatSplitStatus( params );
+			
+		}
+		
+		return 1;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.meibo.web.media.entity.WechatMediaInfoEntity;
 import com.meibo.web.media.viewmodel.AdminWechatMediaListQueryViewmodel;
 import com.meibo.web.media.viewmodel.MemberWechatMediaListQueryViewmodel;
 import com.meibo.web.order.dto.WechatMediaOrderSplitDTO;
@@ -25,5 +26,7 @@ public interface WechatMediaService {
 	BigDecimal getOrderAmountById( int[] wechatMediaId, int[] selectedId );
 
 	List<WechatMediaOrderSplitDTO> getOrderSplitDtoById( int[] wechatMediaId, int[] selectedId );
+
+	WechatMediaInfoEntity getWechatMediaInfoById( Integer wechatMediaId );
 	
 }

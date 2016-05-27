@@ -347,5 +347,10 @@ public class WechatMediaServiceImpl implements WechatMediaService {
 		
 	}
 
+	@Override
+	public WechatMediaInfoEntity getWechatMediaInfoById( Integer wechatMediaId ) {
+		return wechatMediaDao.selectWechatMediaInfoById( wechatMediaId );
+	}
+
 
 }

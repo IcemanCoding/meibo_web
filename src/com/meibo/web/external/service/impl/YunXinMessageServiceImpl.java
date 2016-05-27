@@ -1,7 +1,7 @@
-package com.meibo.web.message.service.impl;
+package com.meibo.web.external.service.impl;
 
-import com.meibo.web.message.model.SendMessageModel;
-import com.meibo.web.message.service.YunXinMessageService;
+import com.meibo.web.external.model.SendMessageModel;
+import com.meibo.web.external.service.YunXinMessageService;
 
 public class YunXinMessageServiceImpl implements YunXinMessageService {
 

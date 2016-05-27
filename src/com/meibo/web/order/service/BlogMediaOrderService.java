@@ -20,6 +20,8 @@ public interface BlogMediaOrderService {
 
 	Boolean editBlogMediaOrderSplitStatus( Integer orderSplitId, Integer procType );
 
-	Boolean editBlogMediaOrderLaunch( Integer orderSplitId, String launchUrl, Date launchDate);
+	Boolean editBlogMediaOrderLaunch( Integer orderSplitId, String launchUrl, Date launchDate );
+
+	Integer payBlogMediaOrder( Integer orderId ) throws Exception;
 
 }

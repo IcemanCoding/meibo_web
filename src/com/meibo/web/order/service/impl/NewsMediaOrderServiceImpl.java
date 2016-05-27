@@ -353,8 +353,67 @@ public class NewsMediaOrderServiceImpl implements NewsMediaOrderService {
 		orderStatusDetail.setLaunchDate( orderSplit.getLaunchDate() );
 		orderStatusDetail.setOrderDate( orderInfo.getOrderDate() );
 		orderStatusDetail.setOrderStatus( orderSplit.getOrderStatus() );
+		orderStatusDetail.setRejectDate( orderSplit.getRejectDate() );
 		
 		return orderStatusDetail;
+		
+	}
+
+	@Override
+	public Integer payNewsMediaOrder( Integer orderId ) throws Exception {
+		
+		// get newsMediaOrder
+		OrderInfoEntity orderInfo = newsMediaOrderDao.selectNewsMediaOrderInfoByOrderId( orderId ); 
+		if ( orderInfo == null || orderInfo.getOrderStatus() != 1 ) {
+			return -6;
+		}
+		
+		// get blogMediaOrderSplit
+		List<NewsMediaOrderSplitEntity> orderSplitList = newsMediaOrderSplitDao.selectNewsMediaOrderSplitByOrderId( orderId );
+		for ( int i = 0; i < orderSplitList.size(); i++ ) {
+			
+			NewsMediaOrderSplitEntity orderSplit = orderSplitList.get( i );
+			Integer newsMediaId = orderSplit.getNewsMediaId();
+			NewsMediaEntity newsMedia = newsMediaService.getNewsMediaInfoById( newsMediaId );
+			
+			if ( newsMedia.getAuditStatus() != 1 ) {
+				return -5;
+			}
+			
+		}
+		
+		// trade
+		MemberAccountDTO memberAccount = memberAccountService.getMemberAccount( orderInfo.getMemberId() );
+		BigDecimal accountBal = memberAccount.getAvailableBalance();
+		if ( accountBal.compareTo( orderInfo.getTransAmount() ) < 0 ) {
+			// 余额不足
+			return -2;
+		}
+		
+		ConsumeTransModel transModel = new ConsumeTransModel();
+		transModel.setMemberId( orderInfo.getMemberId() );
+		transModel.setOrderId( orderId );
+		transModel.setTransAmount( orderInfo.getTransAmount() );
+		transModel.setTransCode( 1 );
+		transModel.setTransType( 2 );
+		
+		if ( tradeCenterService.consumeTransHandle( transModel ) ) {
+			
+			// update order_info set orderStatus = 2
+			orderInfo.setPayDate( new Date() );
+			orderInfo.setOrderStatus( 2 );
+			
+			newsMediaOrderDao.updateOrderNewsInfoStatus( orderInfo );
+			
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put( "orderId", orderId );
+			params.put( "orderStatus", 2 );
+			
+			newsMediaOrderDao.updateOrderNewsSplitStatus( params );
+			
+		}
+				
+		return 1;
 		
 	}
 

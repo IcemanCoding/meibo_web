@@ -1,4 +1,4 @@
-package com.meibo.web.message.dto;
+package com.meibo.web.external.dto;
 
 public class YunXinSendMessageDTO {
 	

@@ -1,6 +1,7 @@
 package com.meibo.web.order.dao;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import com.meibo.web.order.entity.BlogMediaOrderSplitEntity;
@@ -15,6 +16,8 @@ public interface WechatMediaOrderSplitDAO {
 	WechatMediaOrderSplitEntity selectWechatMediaOrderSplitById( Integer orderSplitId );
 
 	void updateWechatMediaOrderSplitById( Map<String, Object> params );
+
+	List<WechatMediaOrderSplitEntity> selectWechatMediaOrderSplitByOrderId( Integer orderId );
 
 
 

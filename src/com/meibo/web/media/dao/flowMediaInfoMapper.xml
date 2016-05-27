@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.media.dao.FlowMediaInfoDAO">
+	
+   <insert id="insertFlowPackageInfo" parameterType="flowInfoEntity">
+   		insert into
+   			media_flow_info
+   		( package_id, package_name, price, carrier_type, carrier_name, `explain`, platform_id, `status` )
+   		values
+   		( #{packageId}, #{packageName}, #{price}, #{carrierType}, #{carrierName}, #{explain}, #{platformId}, #{status} )
+   </insert>
+   
+   <update id="updateFLowPackageUnused" parameterType="java.util.Map">
+	   	update
+	   		media_flow_info
+	   	set
+	   		status = 0
+	   	where
+	   		platform_id = #{platformId}
+	   	and
+	   		package_id not in
+		<foreach item="item" index="index" collection="packageIdArr" open="(" separator="," close=")">  
+			#{item}  
+		</foreach>
+   </update>
+   
+   <select id="selectFlowPackageDto" parameterType="Integer" resultType="flowInfoDto">
+   		select
+   			package_id		packageId,
+   			package_name	packageName,
+   			price			price,
+   			carrier_type	carrierType,
+   			carrier_name	carrierName
+   		from
+   			media_flow_info
+   		where
+   			status = 1
+   		<if test="carrierType != null">
+   		and
+   			carrier_type = #{carrierType}
+   		</if>
+   </select>
+   
+   <select id="selectFlowMediaInfoByPackageId" parameterType="Integer" resultType="flowInfoEntity">
+   		select
+   			id				id,
+   			package_id		packageId,
+   			package_name	packageName,
+   			price			price,
+   			carrier_name	carrierName,
+   			carrier_type	carrierType,
+   			`explain`		`explain`,
+   			platform_id		platformId,
+   			`status`		`status`
+   		from
+   			media_flow_info
+   		where
+   			package_id = #{packageId}
+   </select>
+   
+   <update id="updateFlowMediaInfo" parameterType="flowInfoEntity">
+   		update
+   			media_flow_info
+   		<set>
+   			<if test="packageName != null and packageName != ''">
+   				package_name = #{packageName},
+   			</if>
+   			<if test="price != null">
+   				price = #{price},
+   			</if>
+   			<if test="carrierName != null and carrierName != ''">
+   				carrier_name = #{carrierName},
+   			</if>
+   			<if test="carrierType != null">
+   				carrier_type = #{carrierType},
+   			</if>
+   			<if test="explain != null and explain != ''">
+   				`explain` = #{explain}
+   			</if>
+   			<if test="platformId != null">
+   				platform_id = #{platformId}
+   			</if>
+   		</set>
+   		where
+   			package_id = #{packageId}
+   </update>
+   
+   <select id="getPackageIdByNearPrice" parameterType="java.util.Map" resultType="Integer">
+   		SELECT 
+   			t.package_id 
+   		FROM 
+   			media_flow_info t
+		WHERE 
+			t.carrier_type = #{carrierType}
+		AND 
+			t.`status` = #{status}
+		ORDER BY ABS( t.price - #{price} )
+   </select>
+   
+</mapper>

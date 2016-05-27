@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.meibo.web.media.entity.BlogMediaInfoEntity;
+import com.meibo.web.media.entity.NewsMediaEntity;
 import com.meibo.web.media.viewmodel.NewsMediaListQueryParams;
 import com.meibo.web.order.dto.NewsMediaOrderSplitDTO;
 
@@ -24,5 +26,7 @@ public interface NewsMediaService {
 	BigDecimal getOrderAmountById( int[] newsMediaId ) throws Exception;
 	
 	List<NewsMediaOrderSplitDTO> getOrderSplitDtoById( int[] newsMediaId ) throws Exception;
+
+	NewsMediaEntity getNewsMediaInfoById( Integer blogMediaId );
 
 }
