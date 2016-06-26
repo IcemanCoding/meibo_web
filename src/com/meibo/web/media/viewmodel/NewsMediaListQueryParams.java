@@ -18,6 +18,7 @@ public class NewsMediaListQueryParams {
 	private Integer beginLimit;
 	private Integer endLimit;
 	private Integer auditStatus;
+	private String rate;
 	
 	public Integer getTypeId() {
 		return typeId;
@@ -102,6 +103,18 @@ public class NewsMediaListQueryParams {
 	}
 	public void setAuditStatus(Integer auditStatus) {
 		this.auditStatus = auditStatus;
+	}
+	/**
+	 * @return the rate
+	 */
+	public String getRate() {
+		return rate;
+	}
+	/**
+	 * @param rate the rate to set
+	 */
+	public void setRate(String rate) {
+		this.rate = rate;
 	}
 	
 }

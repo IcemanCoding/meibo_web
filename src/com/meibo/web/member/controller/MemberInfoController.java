@@ -20,6 +20,7 @@ import com.meibo.web.common.service.SessionService;
 import com.meibo.web.common.utils.ContainerUtils;
 import com.meibo.web.common.utils.MD5Utils;
 import com.meibo.web.common.utils.RequestParseUtils;
+import com.meibo.web.common.viewmodel.BaseViewModel;
 import com.meibo.web.member.dto.MemberInfoDTO;
 import com.meibo.web.member.service.MemberInfoService;
 
@@ -89,17 +90,49 @@ public class MemberInfoController extends BaseController {
 	public Map<String, Object> sessionId( HttpServletRequest request ) {
 
 		Map<String, Object> resData = new HashMap<String, Object>();
-		
 		String memberId = request.getAttribute( "memberId" ) + "";
-		
-		System.out.println( memberId + " ---- " );
-		
 		HttpSession session = request.getSession();
-		
-		System.out.println( session.getId() );
 		String sessionId = session.getAttribute( "sessionId" ) + "";
-		System.out.println( sessionId );
+		return ContainerUtils.buildResSuccessMap( resData );
 
+	}
+	
+	@RequestMapping ( value = "/editPassword", method = RequestMethod.POST )
+	@ResponseBody
+	public Map<String, Object> editPassword( BaseViewModel _viewModel ) {
+
+		Map<String, Object> resData = new HashMap<String, Object>();
+		
+		JSONObject reqJson = RequestParseUtils.loadPostRequest( _viewModel.getRequest() );
+		
+		String oriPwd = reqJson.getString( "oriPwd" );
+		String newPwd = reqJson.getString( "newPwd" );
+
+		/*
+		 * 1、上送数据验证
+		 */
+		if ( oriPwd == null || "".equals( oriPwd ) ) {
+			return ContainerUtils.buildResFailMap( "请输入原登录密码!" );
+		}
+		if ( newPwd == null || "".equals( newPwd ) ) {
+			return ContainerUtils.buildResFailMap( "请输入新登录密码!" );
+		}
+		if ( newPwd.equals( oriPwd ) ) {
+			return ContainerUtils.buildResFailMap( "新密码与原密码重复!" );
+		}
+		
+		try {
+			Integer ret = memberInfoService.editLoginPassword( _viewModel.getMemberId(), oriPwd, newPwd );
+			if ( ret == -2 ) {
+				return ContainerUtils.buildResFailMap( "账户异常，请重新登录!" );
+			} else if ( ret == -3 ) {
+				return ContainerUtils.buildResFailMap( "原密码错误!" );
+			}
+		} catch ( Exception e ) {
+			logger.error( "修改登录密码失败!" + e );
+			return ContainerUtils.buildResFailMap( "修改登录密码失败" );
+		}
+		
 		return ContainerUtils.buildResSuccessMap( resData );
 
 	}

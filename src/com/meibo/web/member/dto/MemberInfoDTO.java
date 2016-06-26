@@ -5,6 +5,7 @@ public class MemberInfoDTO {
 	private Integer memberId;
 	private String loginName;
 	private String mobileNum;
+	private String loginPwd;
 	private Integer memberType;
 	private Integer roleId;
 	
@@ -37,6 +38,18 @@ public class MemberInfoDTO {
 	}
 	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
+	}
+	/**
+	 * @return the loginPwd
+	 */
+	public String getLoginPwd() {
+		return loginPwd;
+	}
+	/**
+	 * @param loginPwd the loginPwd to set
+	 */
+	public void setLoginPwd(String loginPwd) {
+		this.loginPwd = loginPwd;
 	}
 	
 }

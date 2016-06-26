@@ -44,6 +44,27 @@
 			channel_id = #{channelId}
 	</update>
 	
+	<update id="updateNewsMediaChannelByChannelId" parameterType="newsMediaChannel">
+		update
+			media_news_channel
+		<set>
+			<if test="channelName != null and channelName != ''">
+				channel_name = #{channelName},
+			</if>
+			<if test="newsTypeId != null">
+				news_type = #{newsTypeId},
+			</if>
+			<if test="linkUrl != null and linkUrl != ''">
+				link_url = #{linkUrl},
+			</if>
+			<if test="picUrl != null and picUrl != ''">
+				pic_url = #{picUrl}
+			</if>
+		</set>
+		where
+			channel_id = #{channelId}
+	</update>
+	
 	<select id="selectNewsMediaChannelId" parameterType="newsMediaChannel" resultType="Integer">
 		select
 			channel_id

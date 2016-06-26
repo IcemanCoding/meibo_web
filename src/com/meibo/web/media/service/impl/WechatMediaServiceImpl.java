@@ -15,6 +15,7 @@ import com.meibo.web.media.dao.WechatMediaChannelDAO;
 import com.meibo.web.media.dao.WechatMediaDAO;
 import com.meibo.web.media.dao.WechatMediaTypeDAO;
 import com.meibo.web.media.dto.AdminWechatMediaListDTO;
+import com.meibo.web.media.dto.BaseNewsMediaListDTO;
 import com.meibo.web.media.dto.BaseWechatMediaListDTO;
 import com.meibo.web.media.entity.BlogMediaInfoEntity;
 import com.meibo.web.media.entity.NewsMediaTypeEntity;
@@ -32,6 +33,8 @@ import com.meibo.web.member.dao.MemberInfoDAO;
 import com.meibo.web.member.dto.MemberInfoDTO;
 import com.meibo.web.order.dto.BlogMediaOrderSplitDTO;
 import com.meibo.web.order.dto.WechatMediaOrderSplitDTO;
+import com.meibo.web.system.dao.SystemParamsInfoDAO;
+import com.meibo.web.utils.constants.ConstantsForSystemParams;
 
 public class WechatMediaServiceImpl implements WechatMediaService {
 	
@@ -46,6 +49,9 @@ public class WechatMediaServiceImpl implements WechatMediaService {
 	
 	@Autowired
 	private WechatMediaTypeDAO wechatMediaTypeDao;
+	
+	@Autowired
+	private SystemParamsInfoDAO systemParamsInfoDao;
 	
 	@Autowired
 	private WechatMediaTypeService wechatMediaTypeService;
@@ -214,10 +220,14 @@ public class WechatMediaServiceImpl implements WechatMediaService {
 			viewmodel.setIsLimit( 1 );
 		}
 		
-		List<BaseWechatMediaListDTO> adminNewsMediaList = wechatMediaDao.selectWechatMediaListByMember( viewmodel );
-		if ( adminNewsMediaList == null || adminNewsMediaList.size() == 0 ) {
+		String rate = systemParamsInfoDao.selectSystemParamsInfoByKey( ConstantsForSystemParams.MEIBO_STAGE_RATE );
+		viewmodel.setRate( rate );
+		
+		List<BaseWechatMediaListDTO> wechatMediaList = wechatMediaDao.selectWechatMediaListByMember( viewmodel );
+		if ( wechatMediaList == null || wechatMediaList.size() == 0 ) {
 			return null;
 		}
+		
 		Integer totalPages = 0;
 		Integer totalRows = wechatMediaDao.selectWechatMediaListByMemberCount( viewmodel );
 		if ( recorders != null && recorders != 0 ) {
@@ -225,7 +235,7 @@ public class WechatMediaServiceImpl implements WechatMediaService {
 		}
 		
 		Map<String, Object> resData = new HashMap<String, Object>();
-		resData.put( "mediaList", adminNewsMediaList );
+		resData.put( "mediaList", wechatMediaList );
 		resData.put( "totalPages", totalPages );
 		resData.put( "totalRows", totalRows );
 		
@@ -248,42 +258,65 @@ public class WechatMediaServiceImpl implements WechatMediaService {
 			typeId = wechatMediaTypeService.getOrAddWechatMediaTypeId( viewmodel.getTypeName() );
 		}
 		
+		// upload file
+		FileItem image = viewmodel.getFile();
+		String headImage = "";
+		if ( image != null ) {
+			headImage = UploadUtils.uploadFile( image, 2, rootDirProject );
+		}
+		
+		image = viewmodel.getQrCode();
+		String qrCode = "";
+		if ( image != null ) {
+			qrCode = UploadUtils.uploadFile( image, 4, rootDirProject );
+		}
+		
+		// get ori media_wechat_channel
+		WechatMediaInfoEntity _wechatMediaInfo = wechatMediaDao.selectWechatMediaInfoById( viewmodel.getWechatMediaId() );
+		WechatMediaChannelEntity _wechatMediaChannel = wechatMediaChannelDao.selectWechatMediaChannelById( _wechatMediaInfo.getChannelId() );
+		if ( !headImage.isEmpty() ) {
+			_wechatMediaChannel.setHeadImage( headImage );
+		}
+		if ( !qrCode.isEmpty() ) {
+			_wechatMediaChannel.setQrCode( qrCode );
+		}
+		if ( viewmodel.getAccount() != null && !viewmodel.getAccount().isEmpty() ) {
+			_wechatMediaChannel.setAccount( viewmodel.getAccount() );
+		}
+		if ( viewmodel.getNickname() != null && !viewmodel.getNickname().isEmpty() ) {
+			_wechatMediaChannel.setNickName( viewmodel.getNickname() );
+		}
+		if ( viewmodel.getFansCount() != null ) {
+			_wechatMediaChannel.setFansCount( viewmodel.getFansCount() );
+		}
+		if ( viewmodel.getDesc() != null && !viewmodel.getDesc().isEmpty() ) {
+			_wechatMediaChannel.setDesc( viewmodel.getDesc() );
+		}
+		if ( viewmodel.getAuthentication() != null && !viewmodel.getAuthentication().isEmpty() ) {
+			_wechatMediaChannel.setAuthentication( viewmodel.getAuthentication() );
+		}
+		if ( typeId != null ) {
+			_wechatMediaChannel.setTypeId( typeId );
+		}
+		
 		// get channelId
 		Integer channelId = null;
 		if ( viewmodel.getAccount() != null && !"".equals( viewmodel.getAccount() ) ) {
 			
 			WechatMediaChannelEntity wechatMediaChannel = wechatMediaChannelDao.selectWechatMediaChannelByName( viewmodel.getAccount() );
 			if ( wechatMediaChannel == null ) {
-				
-				wechatMediaChannel = new WechatMediaChannelEntity();
-				
-				FileItem image = viewmodel.getFile();
-				String headImage = "";
-				if ( image != null ) {
-					headImage = UploadUtils.uploadFile( image, 2, rootDirProject );
-				}
-				
-				image = viewmodel.getQrCode();
-				String qrCode = "";
-				if ( image != null ) {
-					qrCode = UploadUtils.uploadFile( image, 4, rootDirProject );
-				}
-				
-				wechatMediaChannel.setAccount( viewmodel.getAccount() );
-				wechatMediaChannel.setAuthentication( viewmodel.getAuthentication() );
-				wechatMediaChannel.setDesc( viewmodel.getDesc() );
-				wechatMediaChannel.setFansCount( viewmodel.getFansCount() );
-				wechatMediaChannel.setHeadImage(headImage);
-				wechatMediaChannel.setNickName( viewmodel.getNickname() );
-				wechatMediaChannel.setQrCode(qrCode);
-				wechatMediaChannel.setStatus( 1 );
-				wechatMediaChannel.setTypeId( typeId );
-				channelId = wechatMediaChannelService.getOrAddWechatMediaChannelId( wechatMediaChannel );
-				
+				_wechatMediaChannel.setStatus( 1 );
+				channelId = wechatMediaChannelService.getOrAddWechatMediaChannelId( _wechatMediaChannel );
+				_wechatMediaChannel.setChannelId( null );
 			} else {
 				channelId = wechatMediaChannel.getChannelId();
 			}
 			
+		}
+		
+		// update wechat_media_channel
+		if ( _wechatMediaChannel.getChannelId() != null ) {
+			wechatMediaChannelDao.updateWechatMediaChannelByChannelId( _wechatMediaChannel );
 		}
 		
 		// update wechat_media_info

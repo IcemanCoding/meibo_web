@@ -12,6 +12,8 @@ public interface BlogMediaChannelDAO {
 	
 	void updateBlogMediaChannelStatus( BlogMediaChannelEntity channelEntity );
 	
+	void updateBlogMediaChannelByChannelId( BlogMediaChannelEntity channelEntity );
+	
 	BlogMediaChannelEntity selectBlogMediaChannelByName( String channelName );
 
 }

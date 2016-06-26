@@ -12,7 +12,7 @@ public interface FlowMediaInfoDAO {
 
 	void updateFLowPackageUnused( Map<String, Object> params );
 
-	List<FlowMediaInfoDTO> selectFlowPackageDto( Integer carrierType );
+	List<FlowMediaInfoDTO> selectFlowPackageDto( Map<String, Object> params );
 
 	FlowMediaInfoEntity selectFlowMediaInfoByPackageId( Integer packageId );
 

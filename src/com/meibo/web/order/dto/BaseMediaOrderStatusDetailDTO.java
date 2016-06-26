@@ -10,6 +10,7 @@ public class BaseMediaOrderStatusDetailDTO {
 	private Date finishDate;
 	private Date rejectDate;
 	private Integer orderStatus;
+	private String rejectMsg;
 	
 	public Date getOrderDate() {
 		return orderDate;
@@ -52,6 +53,18 @@ public class BaseMediaOrderStatusDetailDTO {
 	 */
 	public void setRejectDate(Date rejectDate) {
 		this.rejectDate = rejectDate;
+	}
+	/**
+	 * @return the rejectMsg
+	 */
+	public String getRejectMsg() {
+		return rejectMsg;
+	}
+	/**
+	 * @param rejectMsg the rejectMsg to set
+	 */
+	public void setRejectMsg(String rejectMsg) {
+		this.rejectMsg = rejectMsg;
 	}
 
 }

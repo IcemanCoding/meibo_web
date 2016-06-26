@@ -1,6 +1,7 @@
 package com.meibo.web.media.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.meibo.web.media.dao.NewsMediaColumnDAO;
 import com.meibo.web.media.dao.NewsMediaDAO;
 import com.meibo.web.media.dao.NewsMediaTypeDAO;
 import com.meibo.web.media.dto.AdminNewsMediaListDTO;
+import com.meibo.web.media.dto.BaseBlogMediaListDTO;
 import com.meibo.web.media.dto.BaseNewsMediaListDTO;
 import com.meibo.web.media.entity.BlogMediaInfoEntity;
 import com.meibo.web.media.entity.NewsMediaChannelEntity;
@@ -30,6 +32,8 @@ import com.meibo.web.media.viewmodel.NewsMediaListQueryParams;
 import com.meibo.web.member.dao.MemberInfoDAO;
 import com.meibo.web.member.dto.MemberInfoDTO;
 import com.meibo.web.order.dto.NewsMediaOrderSplitDTO;
+import com.meibo.web.system.dao.SystemParamsInfoDAO;
+import com.meibo.web.utils.constants.ConstantsForSystemParams;
 
 public class NewsMediaServiceImpl implements NewsMediaService {
 
@@ -47,6 +51,9 @@ public class NewsMediaServiceImpl implements NewsMediaService {
 	
 	@Autowired
 	private NewsMediaColumnDAO newsMediaColumnDao;
+	
+	@Autowired
+	private SystemParamsInfoDAO systemParamsInfoDao;
 	
 	@Autowired
 	private NewsMediaTypeService newsMediaTypeService;
@@ -214,10 +221,13 @@ public class NewsMediaServiceImpl implements NewsMediaService {
 			params.setIsLimit( 1 );
 		}
 		
+		String rate = systemParamsInfoDao.selectSystemParamsInfoByKey( ConstantsForSystemParams.MEIBO_STAGE_RATE );
+		params.setRate( rate );
 		List<BaseNewsMediaListDTO> baseNewsMediaList = newsMediaDao.selectNewsMediaListByMember( params );
 		if ( baseNewsMediaList == null || baseNewsMediaList.size() == 0 ) {
 			return null;
 		}
+		
 		Integer totalPages = 0;
 		Integer totalRows = newsMediaDao.selectNewsMediaListByMemberCount( params );
 		if ( recorders != null && recorders != 0 ) {
@@ -245,6 +255,11 @@ public class NewsMediaServiceImpl implements NewsMediaService {
 	@Override
 	public Boolean updateNewsMedia( Map<String, Object> formData, String rootDirProject ) throws Exception {
 		
+		NewsMediaEntity newsMediaEntity = MediaTransforUtils.transMapToNewsMediaEntity( formData );
+		if ( newsMediaEntity.getNewsMediaId() == null ) {
+			return false;
+		}
+		
 		// upload image
 		FileItem image = (FileItem) formData.get( "file" );
 		String imageUrl = "";
@@ -252,26 +267,38 @@ public class NewsMediaServiceImpl implements NewsMediaService {
 			imageUrl = UploadUtils.uploadFile( image, 1, rootDirProject );
 		}
 		
-		NewsMediaEntity newsMediaEntity = MediaTransforUtils.transMapToNewsMediaEntity( formData );
-		
 		// type_id
 		Integer typeId = null;
 		if ( newsMediaEntity.getChannelType() != null && !"".equals( newsMediaEntity.getChannelType() ) ) {
 			typeId = newsMediaTypeService.getOrAddNewsMediaTypeId( newsMediaEntity.getChannelType() );
 		}
 		
+		NewsMediaEntity _newsMediaEntity = newsMediaDao.selectNewsMediaInfo( newsMediaEntity.getNewsMediaId() );
+		NewsMediaChannelEntity _newsMediaChannel = newsMediaChannelDao.selectNewsMediaChannelById( _newsMediaEntity.getChannelId() );
+		if ( !imageUrl.isEmpty() ) {
+			_newsMediaChannel.setPicUrl( imageUrl );
+		}
+		if ( newsMediaEntity.getLinkUrl() != null && !newsMediaEntity.getLinkUrl().isEmpty() ) {
+			_newsMediaChannel.setLinkUrl( newsMediaEntity.getLinkUrl() );
+		}
+		if ( newsMediaEntity.getChannelName() != null && !newsMediaEntity.getChannelName().isEmpty() ) {
+			_newsMediaChannel.setChannelName( newsMediaEntity.getChannelName() );
+		}
+		if ( typeId != null ) {
+			_newsMediaChannel.setNewsTypeId( typeId );
+		}
+		
 		// channel_id
 		Integer channelId = null;
 		if ( newsMediaEntity.getChannelName() != null && !"".equals( newsMediaEntity.getChannelName() ) ) {
-			
-			NewsMediaChannelEntity newsMediaChannelEntity = new NewsMediaChannelEntity();
-			newsMediaChannelEntity.setChannelName( newsMediaEntity.getChannelName() );
-			newsMediaChannelEntity.setLinkUrl( newsMediaEntity.getLinkUrl() );
-			newsMediaChannelEntity.setNewsTypeId( typeId );
-			newsMediaChannelEntity.setPicUrl( imageUrl );
-			newsMediaChannelEntity.setStatus( 0 );
-			channelId = newsMediaChannelService.getOrAddNewsMediaChannelId( newsMediaChannelEntity );
-			
+			_newsMediaChannel.setStatus( 0 );
+			channelId = newsMediaChannelService.getOrAddNewsMediaChannelId( _newsMediaChannel );
+			_newsMediaChannel.setChannelId( null );
+		}
+		
+		// update media_news_channel
+		if ( _newsMediaChannel.getChannelId() != null ) {
+			newsMediaChannelDao.updateNewsMediaChannelByChannelId( _newsMediaChannel );
 		}
 		
 		newsMediaEntity.setChannelId( channelId );

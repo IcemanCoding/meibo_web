@@ -56,4 +56,41 @@ public class TradeCenterServiceImpl implements TradeCenterService {
 		
 	}
 
+	@Override
+	public Boolean rechargeTransHandle( ConsumeTransModel transModel ) {
+		
+		Date nowDate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String transDate = sdf.format( nowDate );
+		sdf = new SimpleDateFormat("HHmmss");
+		String transTime = sdf.format( nowDate );
+		
+		// insert transDetail
+		SystemTransDtlEntity transDtlEntity = new SystemTransDtlEntity();
+		transDtlEntity.setMemberId( transModel.getMemberId() );
+		transDtlEntity.setOrderId( transModel.getOrderId() );
+		transDtlEntity.setTransAmount( transModel.getTransAmount() );
+		transDtlEntity.setTransCode( transModel.getTransCode() );
+		transDtlEntity.setTransDate( transDate );
+		transDtlEntity.setTransStatus( 1 );
+		transDtlEntity.setTransTime( transTime );
+		transDtlEntity.setTransType( transModel.getTransType() );
+		
+		systemTransDtlDao.insertSystemTransDtl( transDtlEntity );
+		
+		// memberAccount consume
+		Boolean procFlag = memberAccountService.rechargeMemberAccount( transModel.getMemberId(), transModel.getTransAmount() );
+		if ( procFlag ) {
+			transDtlEntity.setTransStatus( 2 );
+		} else {
+			transDtlEntity.setTransStatus( 3 );
+		}
+		
+		// update transdtl
+		systemTransDtlDao.updateSystemTransDtlStatus( transDtlEntity );
+		
+		return true;
+		
+	}
+
 }

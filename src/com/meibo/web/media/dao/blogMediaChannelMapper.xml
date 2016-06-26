@@ -67,4 +67,40 @@
 			channel_id = #{channelId}
 	</update>
 	
+	<update id="updateBlogMediaChannelByChannelId" parameterType="blogMediaChannel">
+		update
+			media_blog_channel
+		<set>
+			<if test="nickname != null and nickname != ''">
+				nickname = #{nickname},
+			</if>
+			<if test="fansCount != null">
+				fans_count = #{fansCount},
+			</if>
+			<if test="headImage != null and headImage != ''">
+				head_image = #{headImage},
+			</if>
+			<if test="qrCode != null and qrCode != ''">
+				qr_code = #{qrCode},
+			</if>
+			<if test="registerDate != null and registerDate != ''">
+				register_date = #{registerDate},
+			</if>
+			<if test="authType != null">
+				auth_type = #{authType},
+			</if>
+			<if test="authInfo != null and authInfo != ''">
+				auth_info = #{authInfo},
+			</if>
+			<if test="desc != null and desc != ''">
+				`desc` = #{desc},
+			</if>
+			<if test="typeId != null">
+				type_id = #{typeId}
+			</if>
+		</set>
+		where
+			channel_id = #{channelId}
+	</update>
+	
 </mapper>

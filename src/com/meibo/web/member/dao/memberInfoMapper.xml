@@ -9,7 +9,8 @@
     		login_name 		loginName,
     		mobile_num		mobileNum,
     		member_type		memberType,
-    		role_id			roleId
+    		role_id			roleId,
+    		login_pwd		loginPwd
     	from
     		member_info
     	where
@@ -40,5 +41,17 @@
     	values
     		( #{loginName}, #{loginPwd}, #{mobileNum}, #{memberType}, #{roleId}, #{status} )
     </insert>
+    
+    <update id="updateMemberInfo" parameterType="memberInfo">
+    	update
+    		member_info
+    	<set>
+    		<if test="loginPwd != null and loginPwd != ''">
+    			login_pwd = #{loginPwd}
+    		</if>
+    	</set>
+    	where
+    		member_id = #{memberId}
+    </update>
    
 </mapper>

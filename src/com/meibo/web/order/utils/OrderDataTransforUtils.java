@@ -8,6 +8,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.meibo.web.order.viewmodel.BaseMediaOrderListQueryViewmodel;
 import com.meibo.web.order.viewmodel.BlogMediaCommitOrderViewmodel;
 import com.meibo.web.order.viewmodel.NewsMediaCommitOrderViewmodel;
+import com.meibo.web.order.viewmodel.RechargeOfflineAuditViewmodel;
+import com.meibo.web.order.viewmodel.RechargeOfflineCommitViewmodel;
+import com.meibo.web.order.viewmodel.RechargeOfflineEditViewmodel;
+import com.meibo.web.order.viewmodel.RechargeOfflineListQueryViewmodel;
 import com.meibo.web.order.viewmodel.WechatMediaCommitOrderViewmodel;
 
 public class OrderDataTransforUtils {
@@ -115,6 +119,66 @@ public class OrderDataTransforUtils {
 		viewmodel.setSelectedId( selectIntArr );
 		viewmodel.setOriginalLink( formData.get( "originalLink" ) + "" );
 		viewmodel.setTitle( formData.get( "title" ) + "" );
+		
+		return viewmodel;
+		
+	}
+	
+	public static RechargeOfflineCommitViewmodel transRechargeOfflineCommitByJson( JSONObject requestJson ) {
+		
+		RechargeOfflineCommitViewmodel viewmodel = new RechargeOfflineCommitViewmodel();
+		
+		viewmodel.setMemberId( requestJson.getInteger( "memberId" ) );
+		viewmodel.setPlatformId( requestJson.getInteger( "platformId" ) );
+		viewmodel.setTransAmount( requestJson.getBigDecimal( "transAmount" ) );
+		viewmodel.setVoucherNum( requestJson.getString( "voucherNum" ) );
+		
+		return viewmodel;
+		
+	}
+
+	public static RechargeOfflineEditViewmodel transRechargeOfflineEditByJson( JSONObject requestJson ) {
+		
+		RechargeOfflineEditViewmodel viewmodel = new RechargeOfflineEditViewmodel();
+		
+		viewmodel.setEditMsg( requestJson.getString( "editMsg" ) );
+		viewmodel.setMemberId( requestJson.getInteger( "memberId" ) );
+		viewmodel.setOrderId( requestJson.getInteger( "orderId" ) );
+		viewmodel.setTransAmount( requestJson.getBigDecimal( "transAmount" ) );
+		
+		return viewmodel;
+		
+	}
+
+	public static RechargeOfflineAuditViewmodel transRechargeOfflineAuditByJson( JSONObject requestJson ) {
+		
+		RechargeOfflineAuditViewmodel viewmodel = new RechargeOfflineAuditViewmodel();
+		
+		viewmodel.setAuditStatus( requestJson.getInteger( "auditStatus" ) );
+		viewmodel.setAuditMsg( requestJson.getString( "auditMsg" ) );
+		viewmodel.setMemberId( requestJson.getInteger( "memberId" ) );
+		viewmodel.setOrderId( requestJson.getInteger( "orderId" ) );
+		
+		return viewmodel;
+
+	}
+
+	public static RechargeOfflineListQueryViewmodel transRechargeOfflineListByJson( JSONObject requestJson ) {
+		
+		RechargeOfflineListQueryViewmodel viewmodel = new RechargeOfflineListQueryViewmodel();
+		
+		if ( requestJson.getInteger( "pageNum" ) == null ) {
+			viewmodel.setPageNum( 1 );
+		} else {
+			viewmodel.setPageNum( requestJson.getInteger( "pageNum" ) );
+		}
+		if ( requestJson.getInteger( "pageRecorders" ) == null ) {
+			viewmodel.setPageRecorders( 10 );
+		} else {
+			viewmodel.setPageRecorders( requestJson.getInteger( "pageRecorders" ) );
+		}
+		viewmodel.setOrderStatus( requestJson.getInteger( "orderStatus" ) );
+		viewmodel.setMemberId( requestJson.getInteger( "memberId" ) );
 		
 		return viewmodel;
 		

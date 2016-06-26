@@ -41,4 +41,15 @@
    			member_id = #{memberId}
    </update>
    
+   <update id="rechargeMemberAccount" parameterType="java.util.Map">
+   		update
+   			member_account
+   		set
+   			available_balance = available_balance + #{transAmount},
+   			total_balance = total_balance + #{transAmount},
+   			total_recharge_amount = total_recharge_amount + #{transAmount}
+   		where
+   			member_id = #{memberId}
+   </update>
+   
 </mapper>

@@ -12,4 +12,6 @@ public interface MemberAccountService {
 	
 	Boolean cosumeMemberAccount( Integer memberId, BigDecimal transAmount );
 
+	Boolean rechargeMemberAccount( Integer memberId, BigDecimal transAmount );
+
 }

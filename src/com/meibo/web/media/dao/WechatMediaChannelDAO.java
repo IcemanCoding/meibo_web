@@ -12,6 +12,8 @@ public interface WechatMediaChannelDAO {
 	
 	void updateWechatMediaChannelStatus( WechatMediaChannelEntity entity );
 	
+	void updateWechatMediaChannelByChannelId( WechatMediaChannelEntity entity );
+	
 	void insertWechatMediaChannel( WechatMediaChannelEntity entity );
 
 }

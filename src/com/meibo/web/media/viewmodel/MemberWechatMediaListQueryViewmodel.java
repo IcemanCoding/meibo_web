@@ -4,20 +4,15 @@ import java.math.BigDecimal;
 
 public class MemberWechatMediaListQueryViewmodel extends BaseMediaListQueryViewmodel {
 
-	private String typeIds;
 	private String mediaName;
 	private BigDecimal minPrice;
 	private BigDecimal maxPrice;
 	private Integer minFansCount;
 	private Integer maxFansCount;
-	private String areaIds;
+	private Integer areaId;
+	private Integer typeId;
+	private String rate;
 	
-	public String getTypeIds() {
-		return typeIds;
-	}
-	public void setTypeIds(String typeIds) {
-		this.typeIds = typeIds;
-	}
 	public String getMediaName() {
 		return mediaName;
 	}
@@ -48,11 +43,41 @@ public class MemberWechatMediaListQueryViewmodel extends BaseMediaListQueryViewm
 	public void setMaxFansCount(Integer maxFansCount) {
 		this.maxFansCount = maxFansCount;
 	}
-	public String getAreaIds() {
-		return areaIds;
+	/**
+	 * @return the areaId
+	 */
+	public Integer getAreaId() {
+		return areaId;
 	}
-	public void setAreaIds(String areaIds) {
-		this.areaIds = areaIds;
+	/**
+	 * @param areaId the areaId to set
+	 */
+	public void setAreaId(Integer areaId) {
+		this.areaId = areaId;
+	}
+	/**
+	 * @return the typeId
+	 */
+	public Integer getTypeId() {
+		return typeId;
+	}
+	/**
+	 * @param typeId the typeId to set
+	 */
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+	/**
+	 * @return the rate
+	 */
+	public String getRate() {
+		return rate;
+	}
+	/**
+	 * @param rate the rate to set
+	 */
+	public void setRate(String rate) {
+		this.rate = rate;
 	}
 	
 }

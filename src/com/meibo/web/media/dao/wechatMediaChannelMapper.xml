@@ -53,6 +53,39 @@
 			channel_id = #{channelId}
 	</update>
 	
+	<update id="updateWechatMediaChannelByChannelId" parameterType="wechatMediaChannel">
+		update
+			media_wechat_channel
+		<set>
+			<if test="nickname != null and nickname != ''">
+				nickname = #{nickname},
+			</if>
+			<if test="account != null and account != ''">
+				account = #{account},
+			</if>
+			<if test="fansCount != null">
+				fans_count = #{fansCount},
+			</if>
+			<if test="headImage != null and headImage != ''">
+				head_image = #{headImage},
+			</if>
+			<if test="qrCode != null and qrCode != ''">
+				qr_code = #{qrCode},
+			</if>
+			<if test="desc != null and desc != ''">
+				`desc` = #{desc},
+			</if>
+			<if test="authentication != null and authentication != ''">
+				authentication = #{authentication},
+			</if>
+			<if test="typeId != null">
+				type_id = #{typeId}
+			</if>
+		</set>
+		where
+			channel_id = #{channelId}
+	</update>
+	
 	<insert id="insertWechatMediaChannel" parameterType="wechatMediaChannel" useGeneratedKeys="true" keyProperty="channelId">
 		insert into
 			media_wechat_channel

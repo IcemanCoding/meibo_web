@@ -1,6 +1,8 @@
 package com.meibo.web.media.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,9 @@ public class FlowMediaServiceImpl implements FlowMediaService {
 	public List<FlowMediaInfoDTO> getFlowPackage( String mobile ) throws Exception {
 		
 		Integer carrierType = FlowMediaUtils.checkMobileCarrier( mobile );
-		
-		List<FlowMediaInfoDTO> flowPackageDto = flowMediaInfoDao.selectFlowPackageDto( carrierType );
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put( "carrierType", carrierType );
+		List<FlowMediaInfoDTO> flowPackageDto = flowMediaInfoDao.selectFlowPackageDto( params );
 		
 		return flowPackageDto;
 		

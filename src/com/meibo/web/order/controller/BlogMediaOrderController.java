@@ -113,6 +113,7 @@ public class BlogMediaOrderController extends BaseController {
 		Integer orderSplitId = requestJson.getInteger( "orderSplitId" );
 		// 1-接受 2-拒绝 3-已投放
 		Integer procType = requestJson.getInteger( "procType" );
+		String rejectMsg = requestJson.getString( "rejectMsg" );
 		if ( orderSplitId == null ) {
 			return ContainerUtils.buildResFailMap( "请输入orderSplitId" );
 		}
@@ -121,7 +122,7 @@ public class BlogMediaOrderController extends BaseController {
 		}
 		
 		try {
-			Boolean ret = blogMediaOrderService.editBlogMediaOrderSplitStatus( orderSplitId, procType );
+			Boolean ret = blogMediaOrderService.editBlogMediaOrderSplitStatus( orderSplitId, procType, rejectMsg );
 			if ( !ret ) {
 				return ContainerUtils.buildResFailMap( "操作类型错误或未投放媒体!" );
 			}

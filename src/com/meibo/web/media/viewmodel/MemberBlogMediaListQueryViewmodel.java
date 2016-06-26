@@ -8,9 +8,10 @@ public class MemberBlogMediaListQueryViewmodel extends BaseMediaListQueryViewmod
 	private Integer maxFansCount;
 	private BigDecimal minPrice;
 	private BigDecimal maxPrice;
-	private String areaIds;
-	private String typeIds;
+	private Integer areaId;
+	private Integer typeId;
 	private String mediaName;
+	private String rate;
 	
 	public Integer getMinFansCount() {
 		return minFansCount;
@@ -36,23 +37,47 @@ public class MemberBlogMediaListQueryViewmodel extends BaseMediaListQueryViewmod
 	public void setMaxPrice(BigDecimal maxPrice) {
 		this.maxPrice = maxPrice;
 	}
-	public String getAreaIds() {
-		return areaIds;
-	}
-	public void setAreaIds(String areaIds) {
-		this.areaIds = areaIds;
-	}
-	public String getTypeIds() {
-		return typeIds;
-	}
-	public void setTypeIds(String typeIds) {
-		this.typeIds = typeIds;
-	}
 	public String getMediaName() {
 		return mediaName;
 	}
 	public void setMediaName(String mediaName) {
 		this.mediaName = mediaName;
+	}
+	/**
+	 * @return the areaId
+	 */
+	public Integer getAreaId() {
+		return areaId;
+	}
+	/**
+	 * @param areaId the areaId to set
+	 */
+	public void setAreaId(Integer areaId) {
+		this.areaId = areaId;
+	}
+	/**
+	 * @return the typeId
+	 */
+	public Integer getTypeId() {
+		return typeId;
+	}
+	/**
+	 * @param typeId the typeId to set
+	 */
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+	/**
+	 * @return the rate
+	 */
+	public String getRate() {
+		return rate;
+	}
+	/**
+	 * @param rate the rate to set
+	 */
+	public void setRate(String rate) {
+		this.rate = rate;
 	}
 
 }

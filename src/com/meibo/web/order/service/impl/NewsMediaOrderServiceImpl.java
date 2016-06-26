@@ -31,8 +31,10 @@ import com.meibo.web.order.service.NewsMediaOrderService;
 import com.meibo.web.order.service.OrderInfoService;
 import com.meibo.web.order.viewmodel.BaseMediaOrderListQueryViewmodel;
 import com.meibo.web.order.viewmodel.NewsMediaCommitOrderViewmodel;
+import com.meibo.web.system.dao.SystemParamsInfoDAO;
 import com.meibo.web.system.model.ConsumeTransModel;
 import com.meibo.web.system.service.TradeCenterService;
+import com.meibo.web.utils.constants.ConstantsForSystemParams;
 
 public class NewsMediaOrderServiceImpl implements NewsMediaOrderService {
 
@@ -60,14 +62,21 @@ public class NewsMediaOrderServiceImpl implements NewsMediaOrderService {
 	@Autowired
 	private NewsMediaOrderSplitDAO newsMediaOrderSplitDao;
 	
+	@Autowired
+	private SystemParamsInfoDAO systemParamsInfoDao;
+	
 	@Override
 	public Integer commitNewsMediaOrder( NewsMediaCommitOrderViewmodel viewmodel ) throws Exception {
 		
 		// init orderCode
 		String orderCode = orderInfoService.buildOrderCode( 1, viewmodel.getMemberId() );
 		
+		// rate
+		String rate = systemParamsInfoDao.selectSystemParamsInfoByKey( ConstantsForSystemParams.MEIBO_STAGE_RATE );
+		
 		// get transAmount by newsMediaId
 		BigDecimal transAmount = newsMediaService.getOrderAmountById( viewmodel.getNewsMediaId() );
+		transAmount = transAmount.add( transAmount.multiply( new BigDecimal( rate ) ) );
 		
 		// insert order_info
 		Date nowDate = new Date();
@@ -97,7 +106,7 @@ public class NewsMediaOrderServiceImpl implements NewsMediaOrderService {
 			orderSplit.setNewsMediaId( newsMediaDto.getNewsMediaId() );
 			orderSplit.setOrderId( orderId );
 			orderSplit.setOrderStatus( 1 );
-			orderSplit.setTransAmount( newsMediaDto.getTransAmount() );
+			orderSplit.setTransAmount( newsMediaDto.getTransAmount().add( newsMediaDto.getTransAmount().multiply( new BigDecimal( rate ) ) ) );
 			
 			newsMediaOrderDao.insertOrderNewsSplit( orderSplit );
 			
@@ -287,7 +296,7 @@ public class NewsMediaOrderServiceImpl implements NewsMediaOrderService {
 	}
 
 	@Override
-	public Boolean editNewsMediaOrderSplitStatus( Integer orderSplitId, Integer procType ) throws Exception {
+	public Boolean editNewsMediaOrderSplitStatus( Integer orderSplitId, Integer procType, String rejectMsg ) throws Exception {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		Integer orderStatus = null;
@@ -303,6 +312,7 @@ public class NewsMediaOrderServiceImpl implements NewsMediaOrderService {
 			// 拒绝
 			orderStatus = 7;
 			params.put( "rejectDate", new Date() );
+			params.put( "rejectMsg", rejectMsg );
 		
 		} else if ( procType == 3 ) {
 			
@@ -354,6 +364,7 @@ public class NewsMediaOrderServiceImpl implements NewsMediaOrderService {
 		orderStatusDetail.setOrderDate( orderInfo.getOrderDate() );
 		orderStatusDetail.setOrderStatus( orderSplit.getOrderStatus() );
 		orderStatusDetail.setRejectDate( orderSplit.getRejectDate() );
+		orderStatusDetail.setRejectMsg( orderSplit.getRejectMsg() );
 		
 		return orderStatusDetail;
 		

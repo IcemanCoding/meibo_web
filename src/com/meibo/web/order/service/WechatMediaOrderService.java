@@ -18,7 +18,7 @@ public interface WechatMediaOrderService {
 
 	BaseMediaOrderStatusDetailDTO getOrderSplitStatusDetail( Integer orderSplitId );
 
-	Boolean editWechatMediaOrderSplitStatus( Integer orderSplitId, Integer procType );
+	Boolean editWechatMediaOrderSplitStatus( Integer orderSplitId, Integer procType, String rejectMsg );
 
 	Boolean editWechatMediaOrderLaunch( Integer orderSplitId, String launchUrl, Date launchDate );
 

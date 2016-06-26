@@ -26,6 +26,11 @@
     	<typeAlias type="com.meibo.web.member.dto.MemberAccountDTO" alias="memberAccount" />
     	<typeAlias type="com.meibo.web.member.entity.MemberInfoEntity" alias="memberInfo"/>
     	<typeAlias type="com.meibo.web.member.entity.MemberAccountEntity" alias="accountEntity"/>
+    	<typeAlias type="com.meibo.web.member.entity.MemberCompanyEntity" alias="memberCompanyEntity"/>
+    	<typeAlias type="com.meibo.web.member.entity.MemberDetailEntity" alias="memberDetailEntity"/>
+    	<typeAlias type="com.meibo.web.member.viewmodel.AuthCompanyViewmodel" alias="authCompanyParams"/>
+    	<typeAlias type="com.meibo.web.member.viewmodel.CompanyListViewmodel" alias="companyListParams"/>
+    	<typeAlias type="com.meibo.web.member.dto.CompanyInfoDTO" alias="companyInfoDto"/>
     	
     	<typeAlias type="com.meibo.web.media.entity.FlowMediaInfoEntity" alias="flowInfoEntity"/>
     	
@@ -83,13 +88,17 @@
     	<typeAlias type="com.meibo.web.order.dto.FlowMediaOrderDTO" alias="flowOrderListDto"/>
     	<typeAlias type="com.meibo.web.order.dto.FlowMediaOrderDetailDTO" alias="flowOrderDetailDto"/>
     	
+    	<typeAlias type="com.meibo.web.order.entity.RechargeOrderEntity" alias="rechargeOrderEntity"/>
+    	<typeAlias type="com.meibo.web.order.dto.RechargeOfflineDTO" alias="rechargeOfflineDto"/>
+    	
     </typeAliases>
 
     <mappers>
     
+    	<mapper resource="com/meibo/web/member/dao/memberCompanyMapper.xml"/>
     	<mapper resource="com/meibo/web/member/dao/memberInfoMapper.xml"/>
     	<mapper resource="com/meibo/web/member/dao/memberAccountMapper.xml"/>
-    	
+    	<mapper resource="com/meibo/web/member/dao/memberDetailMapper.xml"/>
     	<mapper resource="com/meibo/web/media/dao/flowMediaInfoMapper.xml"/>
     	
     	<mapper resource="com/meibo/web/media/dao/newsMediaMapper.xml"/>
@@ -122,6 +131,8 @@
     	<mapper resource="com/meibo/web/order/dao/flowMediaOrderMapper.xml"/>
     	<mapper resource="com/meibo/web/order/dao/flowMediaOrderSplitMapper.xml"/>
     	<mapper resource="com/meibo/web/order/dao/flowMediaOrderDetailMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/order/dao/rechargeOrderMapper.xml"/>
     	
     </mappers>
 

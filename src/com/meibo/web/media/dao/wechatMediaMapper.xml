@@ -151,9 +151,16 @@
 				SELECT
 					a.channel_id 				channelId,
 					a.wechat_media_id 			wechatMediaId,
+					<if test="rate != null and rate != ''">
+					a.first_price + a.first_price * #{rate} 				firstPrice,
+					a.second_price + a.second_price * #{rate}				secondPrice,
+					a.other_price + a.other_price * #{rate}					otherPrice,
+					</if>
+					<if test="rate == null or rate == ''">
 					a.first_price 				firstPrice,
 					a.second_price				secondPrice,
 					a.other_price				otherPrice,
+					</if>
 					a.area_id 					areaId,
 					a.remark 					remark,
 					a.created_date				createdate
@@ -177,21 +184,37 @@
 		and
 			b.nickname like CONCAT('%',#{mediaName},'%' )
 		</if>
-		<if test="minPrice != null and maxPrice != null">
+		<if test="minPrice != null">
 <![CDATA[
 		and
-			g.firstPrice > #{minPrice}
-		and
-			g.firstPrice < #{maxPrice}
+			g.firstPrice >= #{minPrice}
 ]]>	
 		</if>
-		<if test="minFansCount != null and maxFansCount != null">
+		<if test="maxPrice != null">
+<![CDATA[
+		and
+			g.firstPrice <= #{maxPrice}
+]]>	
+		</if>
+		<if test="minFansCount != null">
 <![CDATA[	
 		and
-			b.fansCount > #{minFansCount}
-		and
-			b.fansCount < #{maxFansCount}
+			b.fansCount >= #{minFansCount}
 ]]>		
+		</if>
+		<if test="maxFansCount != null">
+<![CDATA[	
+		and
+			b.fansCount <= #{maxFansCount}
+]]>		
+		</if>
+		<if test="areaId != null">
+		and
+			g.areaId = #{areaId}
+		</if>
+		<if test="typeId != null">
+		and
+			b.type_id = #{typeId}
 		</if>
 		ORDER BY g.createdate desc
 		<if test="isLimit != null and isLimit == 1">
@@ -232,21 +255,37 @@
 		and
 			b.nickname like CONCAT('%',#{mediaName},'%' )
 		</if>
-		<if test="minPrice != null and maxPrice != null">
+		<if test="minPrice != null">
 <![CDATA[
 		and
 			g.firstPrice >= #{minPrice}
+]]>	
+		</if>
+		<if test="maxPrice != null">
+<![CDATA[
 		and
 			g.firstPrice <= #{maxPrice}
 ]]>	
 		</if>
-		<if test="minFansCount != null and maxFansCount != null">
+		<if test="minFansCount != null">
 <![CDATA[	
 		and
 			b.fansCount >= #{minFansCount}
+]]>		
+		</if>
+		<if test="maxFansCount != null">
+<![CDATA[	
 		and
 			b.fansCount <= #{maxFansCount}
 ]]>		
+		</if>
+		<if test="areaId != null">
+		and
+			g.areaId = #{areaId}
+		</if>
+		<if test="typeId != null">
+		and
+			b.type_id = #{typeId}
 		</if>
 	</select>
 	

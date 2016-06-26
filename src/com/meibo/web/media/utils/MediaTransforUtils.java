@@ -234,8 +234,8 @@ public class MediaTransforUtils {
 		} else {
 			viewmodel.setPageRecorders( 10 );
 		}
-		if ( requestJson.getString( "typeIds" ) != null && !"".equals( requestJson.getString( "typeIds" ) ) ) {
-			viewmodel.setTypeIds( requestJson.getString( "typeIds" ) );
+		if ( requestJson.getString( "typeId" ) != null && !"".equals( requestJson.getString( "typeId" ) ) ) {
+			viewmodel.setTypeId( requestJson.getInteger( "typeId" ) );
 		}
 		if ( requestJson.getString( "channelName" ) != null && !"".equals( requestJson.getString( "channelName" ) ) ) {
 			viewmodel.setMediaName( requestJson.getString( "channelName" ) );
@@ -252,8 +252,8 @@ public class MediaTransforUtils {
 		if ( requestJson.getInteger( "maxFansCount" ) != null ) {
 			viewmodel.setMaxFansCount( requestJson.getInteger( "maxFansCount" ) );
 		}
-		if ( requestJson.getString( "areaIds" ) != null && !"".equals( requestJson.getString( "areaIds" ) ) ) {
-			viewmodel.setAreaIds( requestJson.getString( "areaIds" ) );
+		if ( requestJson.getString( "areaId" ) != null && !"".equals( requestJson.getString( "areaId" ) ) ) {
+			viewmodel.setAreaId( requestJson.getInteger( "areaId" ) );
 		}
 		
 		return viewmodel;
@@ -277,8 +277,11 @@ public class MediaTransforUtils {
 		} else {
 			viewmodel.setPageRecorders( 10 );
 		}
-		if ( requestJson.getString( "typeIds" ) != null && !"".equals( requestJson.getString( "typeIds" ) ) ) {
-			viewmodel.setTypeIds( requestJson.getString( "typeIds" ) );
+		if ( requestJson.getInteger( "typeId" ) != null ) {
+			viewmodel.setTypeId( requestJson.getInteger( "typeId" ) );
+		}
+		if ( requestJson.getInteger( "areaId" ) != null ) {
+			viewmodel.setAreaId( requestJson.getInteger( "areaId" ) );
 		}
 		if ( requestJson.getString( "channelName" ) != null && !"".equals( requestJson.getString( "channelName" ) ) ) {
 			viewmodel.setMediaName( requestJson.getString( "channelName" ) );
@@ -294,9 +297,6 @@ public class MediaTransforUtils {
 		}
 		if ( requestJson.getInteger( "maxFansCount" ) != null && !"".equals( requestJson.getInteger( "maxFansCount" ) ) ) {
 			viewmodel.setMaxFansCount( requestJson.getInteger( "maxFansCount" ) );
-		}
-		if ( requestJson.getString( "areaIds" ) != null && !"".equals( requestJson.getString( "areaIds" ) ) ) {
-			viewmodel.setAreaIds( requestJson.getString( "areaIds" ) );
 		}
 		
 		return viewmodel;

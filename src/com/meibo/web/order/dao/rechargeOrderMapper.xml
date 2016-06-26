@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.order.dao.RechargeOrderDAO">
+	
+   <insert id="insertRechargeOrder" parameterType="rechargeOrderEntity">
+   		insert into
+   			order_recharge_info
+   		( order_code, member_id, trans_amount, order_status, platform_id, trans_type, order_date, created_date,
+   		voucher_num )
+   		values
+   		( #{orderCode}, #{memberId}, #{transAmount}, #{orderStatus}, #{platformId}, #{transType}, #{orderDate}, #{createDate},
+   		#{voucherNum} )
+   </insert>
+   
+   <select id="selectRechargeOrderByOrderId" parameterType="Integer" resultType="rechargeOrderEntity">
+   		select
+   			order_id		orderId,
+   			order_code		orderCode,
+   			member_id		memberId,
+   			trans_amount	transAmount,
+   			order_status	orderStatus,
+   			platform_id		platformId,
+   			trans_type		transType,
+   			audit_msg		auditMsg,
+   			edit_msg		editMsg,
+   			audit_user		auditUser,
+   			order_date		orderDate,
+   			created_date	createDate,
+   			finish_date		finishDate,
+   			voucher_num		voucherNum
+   		from
+   			order_recharge_info
+   		where
+   			order_id = #{orderId}
+   </select>
+   
+   <select id="selectRechargeOrderByVoucherNum" parameterType="String" resultType="rechargeOrderEntity">
+   		select
+   			order_id		orderId,
+   			order_code		orderCode,
+   			member_id		memberId,
+   			trans_amount	transAmount,
+   			order_status	orderStatus,
+   			platform_id		platformId,
+   			trans_type		transType,
+   			audit_msg		auditMsg,
+   			edit_msg		editMsg,
+   			audit_user		auditUser,
+   			order_date		orderDate,
+   			created_date	createDate,
+   			finish_date		finishDate,
+   			voucher_num		voucherNum
+   		from
+   			order_recharge_info
+   		where
+   			voucher_num = #{voucherNum}
+   		limit 0,1
+   </select>
+   
+   <update id="updateRechargeOrder" parameterType="rechargeOrderEntity">
+   		update
+   			order_recharge_info
+   		<set>
+   			<if test="transAmount != null">
+   				trans_amount = #{transAmount},
+   			</if>
+   			<if test="orderStatus != null">
+   				order_status = #{orderStatus},
+   			</if>
+   			<if test="auditMsg != null and auditMsg != ''">
+   				audit_msg = #{auditMsg},
+   			</if>
+   			<if test="editMsg != null and editMsg != ''">
+   				edit_msg = #{editMsg},
+   			</if>
+   			<if test="auditUser != null">
+   				audit_user = #{auditUser},
+   			</if>
+   			<if test="finishDate != null">
+   				finish_date = #{finishDate}
+   			</if>
+   		</set>
+   		where
+   			order_id = #{orderId}
+   </update>
+   
+   <select id="selectRechargeOrderListByConditions" parameterType="java.util.Map" resultType="rechargeOfflineDto">
+   		select
+   			a.order_id		orderId,
+   			a.order_code	orderCode,
+   			b.login_name	memberName,
+   			a.trans_amount	transAmount,
+   			a.order_status	orderStatus,
+   			c.platform_name	platformName,
+   			a.platform_id	platformId,
+   			a.edit_msg		editMsg,
+   			a.audit_msg		auditMsg,
+   			a.created_date	createDate,
+   			a.finish_date	finishDate
+   		from
+   			order_recharge_info a,
+   			member_info b,
+   			system_platform_info c
+   		where
+   			a.member_id = b.member_id
+   		and
+   			a.platform_id = c.platform_id
+   		and
+   			a.trans_type = #{transType}
+   		<if test="orderStatus != null">
+   		and
+   			a.order_status = #{orderStatus}
+   		</if>
+   		<if test="memberId != null">
+   		and
+   			a.member_id = #{memberId}
+   		</if>
+   		order by a.created_date desc
+   		limit #{beginLimit}, #{endLimit}
+   </select>
+   
+   <select id="selectRechargeOrderListCountByConditions" parameterType="java.util.Map" resultType="Integer">
+   		select
+   			count( a.order_id )
+   		from
+   			order_recharge_info a
+   		where
+   			a.trans_type = #{transType}
+   		<if test="orderStatus != null">
+   		and
+   			a.order_status = #{orderStatus}
+   		</if>
+   		<if test="memberId != null">
+   		and
+   			a.member_id = #{memberId}
+   		</if>
+   </select>
+   
+</mapper>

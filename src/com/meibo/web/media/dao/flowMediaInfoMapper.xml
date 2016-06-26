@@ -25,7 +25,7 @@
 		</foreach>
    </update>
    
-   <select id="selectFlowPackageDto" parameterType="Integer" resultType="flowInfoDto">
+   <select id="selectFlowPackageDto" parameterType="java.util.Map" resultType="flowInfoDto">
    		select
    			package_id		packageId,
    			package_name	packageName,
@@ -96,6 +96,7 @@
 		AND 
 			t.`status` = #{status}
 		ORDER BY ABS( t.price - #{price} )
+		limit 0, 1
    </select>
    
 </mapper>

@@ -18,7 +18,7 @@ public interface BlogMediaOrderService {
 
 	BaseMediaOrderStatusDetailDTO getOrderSplitStatusDetail( Integer orderSplitId );
 
-	Boolean editBlogMediaOrderSplitStatus( Integer orderSplitId, Integer procType );
+	Boolean editBlogMediaOrderSplitStatus( Integer orderSplitId, Integer procType, String rejectMsg );
 
 	Boolean editBlogMediaOrderLaunch( Integer orderSplitId, String launchUrl, Date launchDate );
 

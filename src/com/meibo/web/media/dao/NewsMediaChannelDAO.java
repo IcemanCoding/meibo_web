@@ -12,6 +12,8 @@ public interface NewsMediaChannelDAO {
 	
 	void updateNewsMediaChannelStatus( NewsMediaChannelEntity newsMediaChannelEntity );
 	
+	void updateNewsMediaChannelByChannelId( NewsMediaChannelEntity newsMediaChannelEntity );
+	
 	Integer selectNewsMediaChannelId( NewsMediaChannelEntity newsMediaChannelEntity );
 	
 	void insertNewsMediaChannel( NewsMediaChannelEntity newsMediaChannelEntity );

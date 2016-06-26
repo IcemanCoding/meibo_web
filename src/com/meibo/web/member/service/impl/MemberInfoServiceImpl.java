@@ -43,4 +43,31 @@ public class MemberInfoServiceImpl implements MemberInfoService {
 		
 	}
 
+	@Override
+	public Integer editLoginPassword( Integer memberId, String oriPwd, String newPwd ) throws Exception {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put( "memberId", memberId );
+		MemberInfoDTO memberInfo = memberInfoDao.selectMemberInfoByConditions( params );
+		
+		if ( memberInfo == null ) {
+			// 账户异常，请重新登录
+			return -2;
+		}
+		
+		oriPwd = MD5Utils.encode( oriPwd );
+		
+		// check ori password
+		if ( !memberInfo.getLoginPwd().equals( oriPwd ) ) {
+			// 原密码错误
+			return -3;
+		}
+		
+		memberInfo.setLoginPwd( MD5Utils.encode( newPwd ) );
+		memberInfoDao.updateMemberInfo( memberInfo );
+		
+		return 1;
+		
+	}
+
 }

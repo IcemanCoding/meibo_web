@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.member.dao.MemberCompanyDAO">
+	
+	<select id="selectCompanyIdByConditions" parameterType="java.util.Map" resultType="Integer">
+		select
+			member_company_id
+		from
+			member_company
+		<where>
+			<if test="memberId != null">
+				member_id = #{memberId}
+			</if>
+			<if test="bizLicense != null and bizLicense != ''">
+				and 
+					biz_license = #{bizLicense}
+			</if>
+			<if test="status != null">
+				and
+					`status` = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertMemberCompany" parameterType="memberCompanyEntity">
+		insert into
+			member_company
+		( member_id, company_name, biz_license, company_tel, company_addr, legal_person_name, 
+		legal_person_tel, biz_charge_name, biz_charge_tel, tech_charge_name, tech_charge_tel, 
+		website_url, `status` )
+		values
+		( #{memberId}, #{companyName}, #{bizLicense}, #{companyTel}, #{companyAddr}, #{legalPersonName},
+		#{legalPersonTel}, #{bizChargeName}, #{bizChargeTel}, #{techChargeName}, #{techChargeTel},
+		#{websiteUrl}, #{status} )
+	</insert>
+	
+	<select id="selectMemberCompanyByMemberId" parameterType="Integer" resultType="memberCompanyEntity">
+		select
+			member_company_id		memberCompanyId,
+			member_id				memberId,
+			company_name			companyName,
+			biz_license				bizLicense,
+			company_tel				companyTel,
+			company_addr			companyAddr,
+			legal_person_name		legalPersonName,
+			legal_person_tel		legalPersonTel,
+			biz_charge_name			bizChargeName,
+			biz_charge_tel			bizChargeTel,
+			tech_charge_name		techChargeName,
+			tech_charge_tel			techChargeTel,
+			website_url				websiteUrl,
+			`status`				`status`
+		from
+			member_company
+		where
+			member_id = #{memberId}
+	</select>
+	
+	<select id="selectMemberCompanyById" parameterType="Integer" resultType="memberCompanyEntity">
+		select
+			member_company_id		memberCompanyId,
+			member_id				memberId,
+			company_name			companyName,
+			biz_license				bizLicense,
+			company_tel				companyTel,
+			company_addr			companyAddr,
+			legal_person_name		legalPersonName,
+			legal_person_tel		legalPersonTel,
+			biz_charge_name			bizChargeName,
+			biz_charge_tel			bizChargeTel,
+			tech_charge_name		techChargeName,
+			tech_charge_tel			techChargeTel,
+			website_url				websiteUrl,
+			`status`				`status`
+		from
+			member_company
+		where
+			member_company_id = #{companyId}
+	</select>
+	
+	<update id="updateMemberCompany" parameterType="authCompanyParams">
+		update
+			member_company
+		<set>
+			<if test="companyName != null and companyName != ''">
+				company_name = #{companyName},
+			</if>
+			<if test="bizLicense != null and bizLicense != ''">
+				biz_license = #{bizLicense},
+			</if>
+			<if test="companyTel != null and companyTel != ''">
+				company_tel = #{companyTel},
+			</if>
+			<if test="companyAddr != null and companyAddr != ''">
+				company_addr = #{companyAddr},
+			</if>
+			<if test="legalPersonName != null and legalPersonName != ''">
+				legal_person_name = #{legalPersonName},
+			</if>
+			<if test="legalPersonTel != null and legalPersonTel != ''">
+				legal_person_tel = #{legalPersonTel},
+			</if>
+			<if test="bizChargeName != null and bizChargeName != ''">
+				biz_charge_name = #{bizChargeName},
+			</if>
+			<if test="bizChargeTel != null and bizChargeTel != ''">
+				biz_charge_tel = #{bizChargeTel},
+			</if>
+			<if test="techChargeName != null and techChargeName != ''">
+				tech_charge_name = #{techChargeName},
+			</if>
+			<if test="techChargeTel != null and techChargeTel != ''">
+				tech_charge_tel = #{techChargeTel},
+			</if>
+			<if test="websiteUrl != null and websiteUrl != ''">
+				website_url = #{websiteUrl},
+			</if>
+		</set>
+		where
+			member_id = #{memberId}
+	</update>
+	
+	<update id="authMemberCompany" parameterType="memberCompanyEntity">
+		update
+			member_company
+		<set>
+			<if test="status != null">
+				`status` = #{status},
+			</if>
+			<if test="auditUser != null">
+				audit_user = #{auditUser},
+			</if>
+			<if test="auditDate != null">
+				audit_date = #{auditDate},
+			</if>
+			<if test="auditMsg != null and auditMsg != ''">
+				audit_msg = #{auditMsg}
+			</if>
+		</set>
+		where
+			member_company_id = #{memberCompanyId}
+	</update>
+	
+	<select id="selectCompanyList" parameterType="companyListParams" resultType="companyInfoDto">
+		select
+			a.company_name		companyName,
+			a.biz_license		bizLicense,
+			a.`status`			`status`,
+			a.created_date		createDate,
+			b.login_name		memberName
+		from
+			member_company a,
+			member_info b
+		where
+			a.member_id = b.member_id
+		<if test="auditStatus != null">
+		and
+			a.`status` = #{auditStatus}
+		</if>
+		limit #{beginLimit}, #{endLimit}
+	</select>
+	
+	<select id="selectCompanyListByCount" parameterType="companyListParams" resultType="Integer">
+		select
+			count( a.member_company_id )
+		from
+			member_company a
+		<if test="auditStatus != null">
+		and
+			a.`status` = #{auditStatus}
+		</if>
+	</select>
+   
+</mapper>

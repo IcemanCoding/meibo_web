@@ -11,4 +11,6 @@ public interface MemberInfoDAO {
 	
 	void insertMemberInfo( MemberInfoEntity memberInfoEntity );
 
+	void updateMemberInfo( MemberInfoDTO memberInfo );
+
 }

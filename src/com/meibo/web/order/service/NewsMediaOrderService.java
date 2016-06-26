@@ -16,7 +16,7 @@ public interface NewsMediaOrderService {
 
 	NewsMediaOrderDetailDTO getNewsMediaOrderDetail( Integer orderId ) throws Exception;
 	
-	Boolean editNewsMediaOrderSplitStatus( Integer orderSplitId, Integer procType ) throws Exception;
+	Boolean editNewsMediaOrderSplitStatus( Integer orderSplitId, Integer procType, String rejectMsg ) throws Exception;
 	
 	Boolean editNewsMediaOrderLaunch( Integer orderSplitId, String launchUrl, Date launchDate ) throws Exception;
 	

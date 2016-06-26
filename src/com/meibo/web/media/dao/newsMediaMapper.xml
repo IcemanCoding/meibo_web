@@ -147,7 +147,12 @@
 					a.column_id columnId,
 					a.news_media_id newsMediaId,
 					a.created_user createdUser,
+					<if test="rate != null and rate != ''">
+					a.quote_price + a.quote_price * #{rate} quotePrice,
+					</if>
+					<if test="rate == null or rate == ''">
 					a.quote_price quotePrice,
+					</if>
 					a.title title,
 					a.area_id areaId,
 					a.allow_link allowLink,
@@ -177,6 +182,26 @@
 		AND e.area_id = g.areaId
 		<if test="channelName != null and '' != channelName">
 		AND b.channel_name like CONCAT('%',#{channelName},'%' )
+		</if>
+		<if test="maxPrice != null">
+<![CDATA[
+		and
+			g.quotePrice <= #{maxPrice}
+]]>	
+		</if>
+		<if test="minPrice != null">
+<![CDATA[
+		and
+			g.quotePrice >= #{minPrice}
+]]>	
+		</if>
+		<if test="areaId != null">
+		and
+			g.areaId = #{areaId}
+		</if>
+		<if test="typeId != null">
+		and
+			b.news_type = #{typeId}
 		</if>
 		ORDER BY g.createdate desc
 		<if test="isLimit != null and isLimit == 1">
@@ -222,6 +247,26 @@
 		AND g.columnId = d.news_column_id
 		<if test="channelName != null and '' != channelName">
 		AND b.channel_name like CONCAT('%',#{channelName},'%' )
+		</if>
+		<if test="maxPrice != null">
+<![CDATA[
+		and
+			g.quotePrice <= #{maxPrice}
+]]>	
+		</if>
+		<if test="minPrice != null">
+<![CDATA[
+		and
+			g.quotePrice >= #{minPrice}
+]]>	
+		</if>
+		<if test="areaId != null">
+		and
+			g.areaId = #{areaId}
+		</if>
+		<if test="typeId != null">
+		and
+			b.news_type = #{typeId}
 		</if>
 	</select>
 	

@@ -30,8 +30,10 @@ import com.meibo.web.order.service.BlogMediaOrderService;
 import com.meibo.web.order.service.OrderInfoService;
 import com.meibo.web.order.viewmodel.BaseMediaOrderListQueryViewmodel;
 import com.meibo.web.order.viewmodel.BlogMediaCommitOrderViewmodel;
+import com.meibo.web.system.dao.SystemParamsInfoDAO;
 import com.meibo.web.system.model.ConsumeTransModel;
 import com.meibo.web.system.service.TradeCenterService;
+import com.meibo.web.utils.constants.ConstantsForSystemParams;
 
 public class BlogMediaOrderServiceImpl implements BlogMediaOrderService {
 
@@ -56,14 +58,21 @@ public class BlogMediaOrderServiceImpl implements BlogMediaOrderService {
 	@Autowired
 	private BlogMediaOrderSplitDAO blogMediaOrderSplitDao;
 	
+	@Autowired
+	private SystemParamsInfoDAO systemParamsInfoDao;
+	
 	@Override
 	public Integer commitBlogMediaOrder( BlogMediaCommitOrderViewmodel viewmodel ) throws Exception {
 		
 		// init orderCode
 		String orderCode = orderInfoService.buildOrderCode( 2, viewmodel.getMemberId() );
 		
+		// rate
+		String rate = systemParamsInfoDao.selectSystemParamsInfoByKey( ConstantsForSystemParams.MEIBO_STAGE_RATE );
+		
 		// get transAmount by blogMediaId
 		BigDecimal transAmount = blogMediaService.getOrderAmountById( viewmodel.getBlogMediaId(), viewmodel.getSelectedId() );
+		transAmount = transAmount.add( transAmount.multiply( new BigDecimal( rate ) ) );
 		
 		// insert order_info
 		Date nowDate = new Date();
@@ -93,7 +102,7 @@ public class BlogMediaOrderServiceImpl implements BlogMediaOrderService {
 			orderSplit.setBlogMediaId( blogMediaDto.getBlogMediaId() );
 			orderSplit.setOrderId( orderId );
 			orderSplit.setOrderStatus( 1 );
-			orderSplit.setTransAmount( blogMediaDto.getTransAmount() );
+			orderSplit.setTransAmount( blogMediaDto.getTransAmount().add( blogMediaDto.getTransAmount().multiply( new BigDecimal( rate ) ) ) );
 			orderSplit.setPriceType( blogMediaDto.getPriceType() );
 			
 			blogMediaOrderDao.insertOrderBlogSplit( orderSplit );
@@ -296,13 +305,14 @@ public class BlogMediaOrderServiceImpl implements BlogMediaOrderService {
 		orderStatusDetail.setOrderDate( orderInfo.getOrderDate() );
 		orderStatusDetail.setOrderStatus( orderSplit.getOrderStatus() );
 		orderStatusDetail.setRejectDate( orderSplit.getRejectDate() );
+		orderStatusDetail.setRejectMsg( orderSplit.getRejectMsg() );
 		
 		return orderStatusDetail;
 		
 	}
 
 	@Override
-	public Boolean editBlogMediaOrderSplitStatus( Integer orderSplitId, Integer procType ) {
+	public Boolean editBlogMediaOrderSplitStatus( Integer orderSplitId, Integer procType, String rejectMsg ) {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		Integer orderStatus = null;
@@ -318,6 +328,7 @@ public class BlogMediaOrderServiceImpl implements BlogMediaOrderService {
 			// 拒绝
 			orderStatus = 7;
 			params.put( "rejectDate", new Date() );
+			params.put( "rejectMsg", rejectMsg );
 		
 		} else if ( procType == 3 ) {
 			

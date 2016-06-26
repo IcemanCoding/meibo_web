@@ -13,4 +13,6 @@ public interface MemberAccountDAO {
 	
 	void consumeMemberAccount( Map<String, Object> params );
 
+	void rechargeMemberAccount( Map<String, Object> params );
+
 }

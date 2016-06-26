@@ -30,8 +30,10 @@ import com.meibo.web.order.service.OrderInfoService;
 import com.meibo.web.order.service.WechatMediaOrderService;
 import com.meibo.web.order.viewmodel.BaseMediaOrderListQueryViewmodel;
 import com.meibo.web.order.viewmodel.WechatMediaCommitOrderViewmodel;
+import com.meibo.web.system.dao.SystemParamsInfoDAO;
 import com.meibo.web.system.model.ConsumeTransModel;
 import com.meibo.web.system.service.TradeCenterService;
+import com.meibo.web.utils.constants.ConstantsForSystemParams;
 
 public class WechatMediaOrderServiceImpl implements WechatMediaOrderService {
 
@@ -56,14 +58,21 @@ public class WechatMediaOrderServiceImpl implements WechatMediaOrderService {
 	@Autowired
 	private WechatMediaOrderSplitDAO wechatMediaOrderSplitDao;
 	
+	@Autowired
+	private SystemParamsInfoDAO systemParamsInfoDao;
+	
 	@Override
 	public Integer commitWechatMediaOrder( WechatMediaCommitOrderViewmodel viewmodel ) throws Exception {
 		
 		// init orderCode
 		String orderCode = orderInfoService.buildOrderCode( 3, viewmodel.getMemberId() );
 		
+		// rate
+		String rate = systemParamsInfoDao.selectSystemParamsInfoByKey( ConstantsForSystemParams.MEIBO_STAGE_RATE );
+		
 		// get transAmount by wechatMediaId
 		BigDecimal transAmount = wechatMediaService.getOrderAmountById( viewmodel.getWechatMediaId(), viewmodel.getSelectedId() );
+		transAmount = transAmount.add( transAmount.multiply( new BigDecimal( rate ) ) );
 		
 		// insert order_info
 		Date nowDate = new Date();
@@ -93,7 +102,7 @@ public class WechatMediaOrderServiceImpl implements WechatMediaOrderService {
 			orderSplit.setWechatMediaId( wechatMediaDto.getWechatMediaId() );
 			orderSplit.setOrderId( orderId );
 			orderSplit.setOrderStatus( 1 );
-			orderSplit.setTransAmount( wechatMediaDto.getTransAmount() );
+			orderSplit.setTransAmount( wechatMediaDto.getTransAmount().add( wechatMediaDto.getTransAmount().multiply( new BigDecimal( rate ) ) ) );
 			orderSplit.setPriceType( wechatMediaDto.getPriceType() );
 			
 			wechatMediaOrderDao.insertWechatBlogSplit( orderSplit );
@@ -300,13 +309,14 @@ public class WechatMediaOrderServiceImpl implements WechatMediaOrderService {
 		orderStatusDetail.setOrderDate( orderInfo.getOrderDate() );
 		orderStatusDetail.setOrderStatus( orderSplit.getOrderStatus() );
 		orderStatusDetail.setRejectDate( orderSplit.getRejectDate() );
+		orderStatusDetail.setRejectMsg( orderSplit.getRejectMsg() );
 		
 		return orderStatusDetail;
 		
 	}
 
 	@Override
-	public Boolean editWechatMediaOrderSplitStatus( Integer orderSplitId, Integer procType ) {
+	public Boolean editWechatMediaOrderSplitStatus( Integer orderSplitId, Integer procType, String rejectMsg ) {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		Integer orderStatus = null;
@@ -322,6 +332,7 @@ public class WechatMediaOrderServiceImpl implements WechatMediaOrderService {
 			// 拒绝
 			orderStatus = 7;
 			params.put( "rejectDate", new Date() );
+			params.put( "rejectMsg", rejectMsg );
 		
 		} else if ( procType == 3 ) {
 			

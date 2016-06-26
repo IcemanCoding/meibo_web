@@ -30,6 +30,8 @@ import com.meibo.web.media.viewmodel.MemberBlogMediaListQueryViewmodel;
 import com.meibo.web.member.dao.MemberInfoDAO;
 import com.meibo.web.member.dto.MemberInfoDTO;
 import com.meibo.web.order.dto.BlogMediaOrderSplitDTO;
+import com.meibo.web.system.dao.SystemParamsInfoDAO;
+import com.meibo.web.utils.constants.ConstantsForSystemParams;
 
 public class BlogMediaServiceImpl implements BlogMediaService {
 	
@@ -44,6 +46,9 @@ public class BlogMediaServiceImpl implements BlogMediaService {
 	
 	@Autowired
 	private MemberInfoDAO memberInfoDao;
+	
+	@Autowired
+	private SystemParamsInfoDAO systemParamsInfoDao;
 	
 	@Autowired
 	private BlogMediaTypeService blogMediaTypeService;
@@ -204,10 +209,14 @@ public class BlogMediaServiceImpl implements BlogMediaService {
 			viewmodel.setIsLimit( 1 );
 		}
 		
+		String rate = systemParamsInfoDao.selectSystemParamsInfoByKey( ConstantsForSystemParams.MEIBO_STAGE_RATE );
+		viewmodel.setRate( rate );
+		
 		List<BaseBlogMediaListDTO> memberBlogMediaList = blogMediaDao.selectBlogMediaListByMember( viewmodel );
 		if ( memberBlogMediaList == null || memberBlogMediaList.size() == 0 ) {
 			return null;
 		}
+		
 		Integer totalPages = 0;
 		Integer totalRows = blogMediaDao.selectBlogMediaListByMemberCount( viewmodel );
 		if ( recorders != null && recorders != 0 ) {
@@ -239,45 +248,71 @@ public class BlogMediaServiceImpl implements BlogMediaService {
 			typeId = blogMediaTypeService.getOrAddBlogMediaTypeId( viewmodel.getTypeName() );
 		}
 		
+		FileItem image = viewmodel.getFile();
+		String headImage = "";
+		if ( image != null ) {
+			headImage = UploadUtils.uploadFile( image, 3, rootDirProject );
+		}
+		
+		image = viewmodel.getQrCode();
+		String qrCode = "";
+		if ( image != null ) {
+			qrCode = UploadUtils.uploadFile( image, 5, rootDirProject );
+		}
+		
+		BlogMediaInfoEntity _blogMediaInfo = blogMediaDao.selectBlogMediaInfoById( viewmodel.getBlogMediaId() );
+		BlogMediaChannelEntity _blogMediaChannel = blogMediaChannelDao.selectBlogMediaChannelById( _blogMediaInfo.getChannelId() );
+		if ( viewmodel.getFansCount() != null ) {
+			_blogMediaChannel.setFansCount( viewmodel.getFansCount() );
+		}
+		if ( !headImage.isEmpty() ) {
+			_blogMediaChannel.setHeadImage( headImage );
+		}
+		if ( !qrCode.isEmpty() ) {
+			_blogMediaChannel.setQrCode( qrCode );
+		}
+		if ( viewmodel.getRegisterDate() != null && !viewmodel.getRegisterDate().isEmpty() ) {
+			_blogMediaChannel.setRegisterDate( viewmodel.getRegisterDate() );
+		}
+		if ( viewmodel.getAuthType() != null ) {
+			_blogMediaChannel.setAuthType( viewmodel.getAuthType() );
+		}
+		if ( viewmodel.getAuthInfo() != null && !viewmodel.getAuthInfo().isEmpty() ) {
+			_blogMediaChannel.setAuthInfo( viewmodel.getAuthInfo() );
+		}
+		if ( viewmodel.getDesc() != null && !viewmodel.getDesc().isEmpty() ) {
+			_blogMediaChannel.setDesc( viewmodel.getDesc() );
+		}
+		if ( viewmodel.getNickname() != null && !viewmodel.getNickname().isEmpty() ) {
+			_blogMediaChannel.setNickname( viewmodel.getNickname() );
+		}
+		if ( typeId != null ) {
+			_blogMediaChannel.setTypeId( typeId );
+		}
+		
 		// get channelId
 		Integer channelId = null;
 		if ( viewmodel.getNickname() != null && !"".equals( viewmodel.getNickname() ) ) {
 			
 			BlogMediaChannelEntity blogMediaChannel = blogMediaChannelDao.selectBlogMediaChannelByName( viewmodel.getNickname() );
 			if ( blogMediaChannel == null ) {
+				// insert
+				_blogMediaChannel.setStatus( 1 );
+				channelId = blogMediaChannelService.getOrAddBlogMediaChannelId( _blogMediaChannel );
 				
-				blogMediaChannel = new BlogMediaChannelEntity();
-				
-				FileItem image = viewmodel.getFile();
-				String headImage = "";
-				if ( image != null ) {
-					headImage = UploadUtils.uploadFile( image, 3, rootDirProject );
-				}
-				
-				image = viewmodel.getQrCode();
-				String qrCode = "";
-				if ( image != null ) {
-					qrCode = UploadUtils.uploadFile( image, 5, rootDirProject );
-				}
-				
-				blogMediaChannel.setAuthInfo( viewmodel.getAuthInfo() );
-				blogMediaChannel.setAuthType( viewmodel.getAuthType() );
-				blogMediaChannel.setChannelId( channelId );
-				blogMediaChannel.setDesc( viewmodel.getDesc() );
-				blogMediaChannel.setFansCount( viewmodel.getFansCount() );
-				blogMediaChannel.setHeadImage( headImage );
-				blogMediaChannel.setNickname( viewmodel.getNickname() );
-				blogMediaChannel.setQrCode( qrCode );
-				blogMediaChannel.setStatus( 1 );
-				blogMediaChannel.setTypeId( typeId );
-				blogMediaChannel.setRegisterDate( viewmodel.getRegisterDate() );
-				
-				channelId = blogMediaChannelService.getOrAddBlogMediaChannelId( blogMediaChannel );
-				
+				_blogMediaChannel.setChannelId( null );
 			} else {
-				channelId = blogMediaChannel.getChannelId();
+				channelId = _blogMediaChannel.getChannelId();
 			}
 			
+		} else {
+			channelId = _blogMediaChannel.getChannelId();
+		}
+		
+		if ( _blogMediaChannel.getChannelId() != null ) {
+			
+			// update blog_media_channel
+			blogMediaChannelDao.updateBlogMediaChannelByChannelId( _blogMediaChannel );
 		}
 		
 		// update blog_media_info

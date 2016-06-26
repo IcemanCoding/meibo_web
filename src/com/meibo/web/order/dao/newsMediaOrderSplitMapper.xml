@@ -23,7 +23,10 @@
 			finish_date = #{finishDate},
 		</if>
 		<if test="launchUrl != null and launchUrl != ''">
-			launch_url = #{launchUrl}
+			launch_url = #{launchUrl},
+		</if>
+		<if test="rejectMsg != null and rejectMsg != ''">
+			reject_msg = #{rejectMsg}
 		</if>
 		</set>
 		where
@@ -43,7 +46,8 @@
 			reject_date			rejectDate,
 			launch_date			launchDate,
 			finish_date			finishDate,
-			created_date		createDate
+			created_date		createDate,
+			reject_msg			rejectMsg
 		from
 			order_news_split
 		where

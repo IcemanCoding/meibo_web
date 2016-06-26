@@ -18,6 +18,7 @@ public class WechatMediaOrderSplitEntity {
 	private Date launchDate;
 	private Date finishDate;
 	private String launchUrl;
+	private String rejectMsg;
 	
 	public Date getAcceptDate() {
 		return acceptDate;
@@ -102,6 +103,18 @@ public class WechatMediaOrderSplitEntity {
 	 */
 	public void setWechatMediaId(Integer wechatMediaId) {
 		this.wechatMediaId = wechatMediaId;
+	}
+	/**
+	 * @return the rejectMsg
+	 */
+	public String getRejectMsg() {
+		return rejectMsg;
+	}
+	/**
+	 * @param rejectMsg the rejectMsg to set
+	 */
+	public void setRejectMsg(String rejectMsg) {
+		this.rejectMsg = rejectMsg;
 	}
 	
 }

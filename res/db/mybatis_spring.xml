@@ -26,6 +26,11 @@
 	</bean>
 		
 	<!-- member -->
+	<bean id="memberCompanyDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.member.dao.MemberCompanyDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
 	<bean id="memberInfoDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.meibo.web.member.dao.MemberInfoDAO" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
@@ -33,6 +38,11 @@
 	
 	<bean id="memberAccountDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.meibo.web.member.dao.MemberAccountDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="memberDetailDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.member.dao.MemberDetailDAO" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
 	
@@ -155,6 +165,11 @@
 	
 	<bean id="flowMediaOrderDetailDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.meibo.web.order.dao.FlowMediaOrderDetailDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="rechargeOrderDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.order.dao.RechargeOrderDAO" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
 
