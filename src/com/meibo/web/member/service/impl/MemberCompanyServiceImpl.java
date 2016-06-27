@@ -168,4 +168,9 @@ public class MemberCompanyServiceImpl implements MemberCompanyService {
 		
 	}
 
+	@Override
+	public MemberCompanyEntity getMemberCompany( Integer memberId ) throws Exception {
+		return memberCompanyDao.selectMemberCompanyByMemberId( memberId );		
+	}
+
 }

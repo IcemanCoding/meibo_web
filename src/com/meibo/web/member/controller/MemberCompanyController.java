@@ -17,6 +17,7 @@ import com.meibo.web.common.utils.ContainerUtils;
 import com.meibo.web.common.utils.RequestParseUtils;
 import com.meibo.web.common.viewmodel.BaseViewModel;
 import com.meibo.web.member.dto.CompanyListDTO;
+import com.meibo.web.member.entity.MemberCompanyEntity;
 import com.meibo.web.member.service.MemberCompanyService;
 import com.meibo.web.member.utils.MemberTransforUtils;
 import com.meibo.web.member.utils.MemberValidateUtils;
@@ -158,6 +159,20 @@ public class MemberCompanyController extends BaseController {
 		}
 		
 		return ContainerUtils.buildResSuccessMap( resData );
+
+	}
+	
+	@RequestMapping ( value = "/info", method = RequestMethod.POST )
+	@ResponseBody
+	public Map<String, Object> info( BaseViewModel _viewModel ) {
+
+		try {
+			MemberCompanyEntity memberCompany = memberCompanyService.getMemberCompany( _viewModel.getMemberId() );
+			return ContainerUtils.buildResSuccessMap( memberCompany );
+		} catch ( Exception e ) {
+			logger.error( "查询公司信息失败!" + e );
+			return ContainerUtils.buildResFailMap( "查询公司信息失败!" );
+		}
 
 	}
 
