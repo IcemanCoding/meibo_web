@@ -116,5 +116,17 @@ public class DictionaryController {
 		return ContainerUtils.buildResSuccessMap( resData );
 
 	}
+	
+	@RequestMapping ( value = "/orderType", method = RequestMethod.POST )
+	@ResponseBody
+	public Map<String, Object> orderType( BaseViewModel viewModel ) {
+
+		Map<String, Object> resData = new HashMap<String, Object>();
+		try {
+		} catch ( Exception e ) {
+		}
+		return ContainerUtils.buildResSuccessMap( resData );
+
+	}
 
 }

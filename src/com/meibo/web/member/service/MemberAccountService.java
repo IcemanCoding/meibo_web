@@ -2,7 +2,9 @@ package com.meibo.web.member.service;
 
 import java.math.BigDecimal;
 
+import com.meibo.web.member.dto.AccountDetailListDTO;
 import com.meibo.web.member.dto.MemberAccountDTO;
+import com.meibo.web.member.viewmodel.AccountDetailQueryViewmodel;
 
 public interface MemberAccountService {
 	
@@ -13,5 +15,7 @@ public interface MemberAccountService {
 	Boolean cosumeMemberAccount( Integer memberId, BigDecimal transAmount );
 
 	Boolean rechargeMemberAccount( Integer memberId, BigDecimal transAmount );
+
+	AccountDetailListDTO getMemberAccountDetail( AccountDetailQueryViewmodel viewmodel );
 
 }

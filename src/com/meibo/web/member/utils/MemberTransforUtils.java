@@ -2,6 +2,7 @@ package com.meibo.web.member.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.meibo.web.member.entity.MemberCompanyEntity;
+import com.meibo.web.member.viewmodel.AccountDetailQueryViewmodel;
 import com.meibo.web.member.viewmodel.AuditCompanyViewmodel;
 import com.meibo.web.member.viewmodel.AuthCompanyViewmodel;
 import com.meibo.web.member.viewmodel.CompanyListViewmodel;
@@ -24,6 +25,29 @@ public class MemberTransforUtils {
 		viewmodel.setTechChargeName( requestJson.getString( "techChargeName" ) );
 		viewmodel.setTechChargeTel( requestJson.getString( "techChargeTel" ) );
 		viewmodel.setWebsiteUrl( requestJson.getString( "websiteUrl" ) );
+		
+		return viewmodel;
+		
+	}
+	
+	public static AccountDetailQueryViewmodel transAccountDetailQueryByJson( JSONObject requestJson ) {
+		
+		AccountDetailQueryViewmodel viewmodel = new AccountDetailQueryViewmodel();
+		
+		viewmodel.setBeginDate( requestJson.getDate( "beginDate" ) );
+		viewmodel.setEndDate( requestJson.getDate( "endDate" ) );
+		viewmodel.setMemberId( requestJson.getInteger( "memberId" ) );
+		viewmodel.setOrderType( requestJson.getInteger( "orderType" ) );
+		if ( requestJson.getInteger( "pageNum" ) == null ) {
+			viewmodel.setPageNum( 1 );
+		} else {
+			viewmodel.setPageNum( requestJson.getInteger( "pageNum" ) );
+		}
+		if ( requestJson.getInteger( "pageRecorders" ) == null ) {
+			viewmodel.setPageRecorders( 10 );
+		} else {
+			viewmodel.setPageRecorders( requestJson.getInteger( "pageRecorders" ) );
+		}
 		
 		return viewmodel;
 		

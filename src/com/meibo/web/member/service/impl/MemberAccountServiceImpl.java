@@ -7,9 +7,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.meibo.web.member.dao.MemberAccountDAO;
+import com.meibo.web.member.dto.AccountDetailListDTO;
 import com.meibo.web.member.dto.MemberAccountDTO;
 import com.meibo.web.member.entity.MemberAccountEntity;
 import com.meibo.web.member.service.MemberAccountService;
+import com.meibo.web.member.viewmodel.AccountDetailQueryViewmodel;
 
 public class MemberAccountServiceImpl implements MemberAccountService {
 
@@ -75,6 +77,13 @@ public class MemberAccountServiceImpl implements MemberAccountService {
 		
 		return true;
 		
+	}
+
+	@Override
+	public AccountDetailListDTO getMemberAccountDetail( AccountDetailQueryViewmodel viewmodel ) {
+		
+		return null;
+	
 	}
 
 }
