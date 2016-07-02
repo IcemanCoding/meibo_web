@@ -50,7 +50,11 @@
 			tech_charge_name		techChargeName,
 			tech_charge_tel			techChargeTel,
 			website_url				websiteUrl,
-			`status`				`status`
+			`status`				`status`,
+			created_date			createDate,
+			audit_date				auditDate,
+			audit_user				auditUser,
+			audit_msg				auditMsg
 		from
 			member_company
 		where
@@ -148,7 +152,8 @@
 			a.biz_license		bizLicense,
 			a.`status`			`status`,
 			a.created_date		createDate,
-			b.login_name		memberName
+			b.login_name		memberName,
+			a.member_company_id	companyId
 		from
 			member_company a,
 			member_info b
@@ -167,7 +172,7 @@
 		from
 			member_company a
 		<if test="auditStatus != null">
-		and
+		where
 			a.`status` = #{auditStatus}
 		</if>
 	</select>

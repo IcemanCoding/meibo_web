@@ -53,7 +53,7 @@ public static String validateAuthCompanyInputsByJson( JSONObject requestJson ) {
 			msg = "请选择审核状态!";
 		} else {
 			Integer auditStatus = requestJson.getInteger( "auditStatus" );
-			if ( auditStatus != 1 || auditStatus != 2 ) {
+			if ( auditStatus != 1 && auditStatus != 2 ) {
 				msg = "审核状态错误!";
 			}
 		}

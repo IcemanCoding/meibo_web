@@ -100,6 +100,10 @@ public class MemberCompanyServiceImpl implements MemberCompanyService {
 		
 		List<CompanyInfoDTO> companyInfo = memberCompanyDao.selectCompanyList( viewmodel );
 		
+		if ( companyInfo == null || companyInfo.size() == 0 ) {
+			return null;
+		}
+		
 		Integer totalPages = 0;
 		Integer totalRows = memberCompanyDao.selectCompanyListByCount( viewmodel );
 		if ( recorders != null && recorders != 0 ) {
@@ -171,6 +175,11 @@ public class MemberCompanyServiceImpl implements MemberCompanyService {
 	@Override
 	public MemberCompanyEntity getMemberCompany( Integer memberId ) throws Exception {
 		return memberCompanyDao.selectMemberCompanyByMemberId( memberId );		
+	}
+
+	@Override
+	public MemberCompanyEntity getMemberCompanyByCompanyId( Integer companyId ) throws Exception {
+		return memberCompanyDao.selectMemberCompanyById( companyId );
 	}
 
 }

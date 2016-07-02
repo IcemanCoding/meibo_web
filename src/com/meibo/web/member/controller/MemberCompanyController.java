@@ -162,6 +162,26 @@ public class MemberCompanyController extends BaseController {
 
 	}
 	
+	@RequestMapping ( value = "/detail", method = RequestMethod.POST )
+	@ResponseBody
+	public Map<String, Object> detail( BaseViewModel _viewModel ) {
+
+		JSONObject requestJson = RequestParseUtils.loadPostRequest( _viewModel.getRequest() );
+		if ( requestJson == null || requestJson.isEmpty() ) {
+			return ContainerUtils.buildResFailMap( "请输入参数!" );
+		}
+		Integer companyId = requestJson.getInteger( "companyId" );
+		
+		try {
+			MemberCompanyEntity memberCompany = memberCompanyService.getMemberCompanyByCompanyId( companyId );
+			return ContainerUtils.buildResSuccessMap( memberCompany );
+		} catch ( Exception e ) {
+			logger.error( "查询公司信息失败!" + e );
+			return ContainerUtils.buildResFailMap( "查询公司信息失败!" );
+		}
+
+	}
+	
 	@RequestMapping ( value = "/info", method = RequestMethod.POST )
 	@ResponseBody
 	public Map<String, Object> info( BaseViewModel _viewModel ) {

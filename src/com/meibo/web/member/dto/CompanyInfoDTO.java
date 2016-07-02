@@ -7,7 +7,7 @@ public class CompanyInfoDTO {
 	private String memberName;
 	private String companyName;
 	private String bizLicense;
-	private Integer stauts;
+	private Integer status;
 	private Date createDate;
 	private Integer companyId;
 	
@@ -29,12 +29,6 @@ public class CompanyInfoDTO {
 	public void setBizLicense(String bizLicense) {
 		this.bizLicense = bizLicense;
 	}
-	public Integer getStauts() {
-		return stauts;
-	}
-	public void setStauts(Integer stauts) {
-		this.stauts = stauts;
-	}
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -52,6 +46,18 @@ public class CompanyInfoDTO {
 	 */
 	public void setCompanyId(Integer companyId) {
 		this.companyId = companyId;
+	}
+	/**
+	 * @return the status
+	 */
+	public Integer getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	
 }

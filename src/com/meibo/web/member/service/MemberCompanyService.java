@@ -22,4 +22,6 @@ public interface MemberCompanyService {
 
 	MemberCompanyEntity getMemberCompany( Integer memberId ) throws Exception;
 
+	MemberCompanyEntity getMemberCompanyByCompanyId( Integer companyId ) throws Exception;
+
 }
