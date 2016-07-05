@@ -28,5 +28,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="D:/SoftWare/Redis/tomcat-redis-session-manager-1.2-tomcat-7-java-7-1.7.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
