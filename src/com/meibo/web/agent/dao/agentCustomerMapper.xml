@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meibo.web.agent.dao.AgentCustomerDAO">
+	
+	<insert id="addAgentCustomer" parameterType="agentCustomerEntity">
+		insert int
+			agent_customer
+		( member_id, customer_name, agent_rate, agent_member_id, `status` )
+		values
+		( #{memberId}, #{customerName}, #{agentRate}, #{agentMemberId}, #{status} )
+	</insert>
+	
+	<select id="selectAgentCustomerList" parameterType="Integer" resultType="agentCustomerEntity">
+		select
+			agent_customer_id	agentCustomerId,
+			member_id			memberId,
+			customer_name		customerName,
+			agent_rate			agentRate,
+			total_consume		totalConsume,
+			total_income		totalIncome,
+			agent_member_id		agentMemberId,
+			`status`			`status`,
+			created_date		createDate
+		from
+			agent_customer
+		where
+			`status` = 1
+		<if test="agentMemberId != null">
+		and
+			agent_member_id = #{agentMemberId}
+		</if>
+	</select>
+   
+</mapper>

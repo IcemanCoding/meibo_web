@@ -20,6 +20,8 @@
 
     <typeAliases>
     
+    	<typeAlias type="com.meibo.web.agent.entity.AgentCustomerEntity" alias="agentCustomerEntity"/>
+    
     	<typeAlias type="com.meibo.web.media.dto.FlowMediaInfoDTO" alias="flowInfoDto"/>
     	
     	<typeAlias type="com.meibo.web.member.dto.MemberInfoDTO" alias="memberDto" />
@@ -94,6 +96,8 @@
     </typeAliases>
 
     <mappers>
+    
+    	<mapper resource="com/meibo/web/agent/dao/agentCustomerMapper.xml"/>
     
     	<mapper resource="com/meibo/web/member/dao/memberCompanyMapper.xml"/>
     	<mapper resource="com/meibo/web/member/dao/memberInfoMapper.xml"/>

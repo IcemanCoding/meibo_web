@@ -25,6 +25,11 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 		
+	<bean id="agentCustomerDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.meibo.web.agent.dao.AgentCustomerDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+		
 	<!-- member -->
 	<bean id="memberCompanyDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.meibo.web.member.dao.MemberCompanyDAO" />
