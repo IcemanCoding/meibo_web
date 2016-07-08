@@ -31,5 +31,29 @@
 			agent_member_id = #{agentMemberId}
 		</if>
 	</select>
+	
+	<update id="updateAgentCustomer" parameterType="agentCustomerEntity">
+		update
+			agent_customer
+		<set>
+			<if test="customerName != null and customerName != ''">
+				customer_name = #{customerName},
+			</if>
+			<if test="agentRate != null">
+				agent_rate = #{agentRate},
+			</if>
+			<if test="totalConsume != null">
+				total_consume = #{totalConsume},
+			</if>
+			<if test="totalIncome != null">
+				total_income = #{totalIncome},
+			</if>
+			<if test="status != null">
+				`status` = #{status}
+			</if>
+		</set>
+		where
+			agent_customer_id = #{agentCustomerId}
+	</update>
    
 </mapper>

@@ -9,5 +9,7 @@ public interface AgentCustomerDAO {
 	void insertAgentCustomer( AgentCustomerEntity entity );
 	
 	List<AgentCustomerEntity> selectAgentCustomerList( Integer agentMemberId );
+	
+	void updateAgentCustomer( AgentCustomerEntity entity );
 
 }
