@@ -29,5 +29,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="D:/SoftWare/Redis/tomcat-redis-session-manager-1.2-tomcat-7-java-7-1.7.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/Java/jdk1.8.0_66/lib/base64decoder-1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
