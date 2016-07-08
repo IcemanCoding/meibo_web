@@ -9,6 +9,8 @@ public interface MemberInfoDAO {
 	
 	MemberInfoDTO selectMemberInfoByConditions( Map<String, Object> params );
 	
+	Integer selectMemberIdByLoginName( String loginName );
+	
 	void insertMemberInfo( MemberInfoEntity memberInfoEntity );
 
 	void updateMemberInfo( MemberInfoDTO memberInfo );

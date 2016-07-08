@@ -55,5 +55,44 @@
 		where
 			agent_customer_id = #{agentCustomerId}
 	</update>
+	
+	<select id="countAgentCustomerByAgent" parameterType="Integer" resultType="Integer">
+		select
+			count(agent_customer_id)
+		from
+			agent_customer
+		where
+			`status` = 1
+		<if test="agentMemberId != null">
+		and
+			agent_member_id = #{agentMemberId}
+		</if>
+	</select>
+	
+	<select id="totalConsumeByAgent" parameterType="Integer" resultType="java.math.BigDecimal">
+		select
+			sum(total_consume)
+		from
+			agent_customer
+		where
+			`status` = 1
+		<if test="agentMemberId != null">
+		and
+			agent_member_id = #{agentMemberId}
+		</if>
+	</select>
+	
+	<select id="totalIncomeByAgent" parameterType="Integer" resultType="java.math.BigDecimal">
+		select
+			sum(total_income)
+		from
+			agent_customer
+		where
+			`status` = 1
+		<if test="agentMemberId != null">
+		and
+			agent_member_id = #{agentMemberId}
+		</if>
+	</select>
    
 </mapper>

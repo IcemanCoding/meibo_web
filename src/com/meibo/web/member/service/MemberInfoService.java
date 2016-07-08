@@ -10,5 +10,7 @@ public interface MemberInfoService {
 	Integer addMemberInfo( MemberInfoEntity memberInfo ) throws Exception;
 
 	Integer editLoginPassword( Integer memberId, String oriPwd, String newPwd ) throws Exception;
+	
+	Boolean isMemberExist( String loginName ) throws Exception;
 
 }

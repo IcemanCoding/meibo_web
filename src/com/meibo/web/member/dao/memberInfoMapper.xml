@@ -53,5 +53,16 @@
     	where
     		member_id = #{memberId}
     </update>
+    
+    <select id="selectMemberIdByLoginName" parameterType="String" resultType="Integer">
+    	select
+    		member_id
+    	from
+    		member_info
+    	where
+    		login_name = #{loginName}
+    	or
+    		mobile_num = #{loginName}
+    </select>
    
 </mapper>
