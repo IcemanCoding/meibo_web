@@ -15,167 +15,20 @@
 
 	<bean name="txManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"></property>
+		<property name="dataSource" ref="dataSource"/>
 	</bean>
-
 	<tx:annotation-driven transaction-manager="txManager" />
 
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="configLocation" value="classpath:orm/sqlMapConfig.xml"></property>
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-		
-	<bean id="agentCustomerDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.agent.dao.AgentCustomerDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-		
-	<!-- member -->
-	<bean id="memberCompanyDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.member.dao.MemberCompanyDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="memberInfoDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.member.dao.MemberInfoDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="memberAccountDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.member.dao.MemberAccountDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="memberDetailDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.member.dao.MemberDetailDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<!-- media -->
-	<bean id="flowMediaDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.FlowMediaInfoDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	
-	<bean id="newsMediaDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.NewsMediaDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="newsMediaTypeDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.NewsMediaTypeDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="newsMediaChannelDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.NewsMediaChannelDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="newsMediaColumnDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.NewsMediaColumnDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="wechatMediaDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.WechatMediaDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="wechatMediaChannelDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.WechatMediaChannelDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="wechatMediaTypeDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.WechatMediaTypeDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="blogMediaDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.BlogMediaDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="blogMediaTypeDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.BlogMediaTypeDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="blogMediaChannelDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.media.dao.BlogMediaChannelDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="dictionaryDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.system.dao.DictionaryDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="areaInfoDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.system.dao.AreaInfoDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="transDtlDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.system.dao.SystemTransDtlDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="systemParamsDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.system.dao.SystemParamsInfoDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="newsMediaOrderDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.order.dao.NewsMediaOrderDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="newsMediaOrderSplitDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.order.dao.NewsMediaOrderSplitDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="blogMediaOrderDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.order.dao.BlogMediaOrderDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="blogMediaOrderSplitDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.order.dao.BlogMediaOrderSplitDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="wechatMediaOrderDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.order.dao.WechatMediaOrderDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="wechatMediaOrderSplitDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.order.dao.WechatMediaOrderSplitDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="flowMediaOrderDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.order.dao.FlowMediaOrderDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="flowMediaOrderSplitDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.order.dao.FlowMediaOrderSplitDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="flowMediaOrderDetailDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.order.dao.FlowMediaOrderDetailDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
-	<bean id="rechargeOrderDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.meibo.web.order.dao.RechargeOrderDAO" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	<!-- spring与mybatis整合配置，扫描所有dao，在单数据源的情况下可以不写sqlSessionFactoryBeanName -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.meibo.web.system.dao,com.meibo.web.agent.dao,com.meibo.web.media.dao,com.meibo.web.member.dao,com.meibo.web.order.dao"/>
 	</bean>
 
+	<!-- mybatis文件配置，扫描所有mapper文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:orm/sqlMapConfig.xml"/>
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mapperLocations" value="classpath:com/meibo/web/*/mapper/*Mapper.xml"/>
+	</bean>
+	
 </beans>
