@@ -18,7 +18,7 @@ public class AgentCustomerServiceImpl implements AgentCustomerService {
 			return false;
 		}
 		
-		return null;
+		return true;
 		
 	}
 
