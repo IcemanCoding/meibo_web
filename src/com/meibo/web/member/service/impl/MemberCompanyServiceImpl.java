@@ -79,7 +79,7 @@ public class MemberCompanyServiceImpl implements MemberCompanyService {
 		params.put( "bizLicense", viewmodel.getBizLicense() );
 		params.put( "status", 1 );
 		Integer companyId = memberCompanyDao.selectCompanyIdByConditions( params );
-		if ( companyId != null && companyId != memberCompany.getMemberCompanyId() ) {
+		if ( companyId != null && !companyId.equals( memberCompany.getMemberCompanyId() ) ) {
 			// 该公司营业执照号已被认证
 			return -3;
 		}

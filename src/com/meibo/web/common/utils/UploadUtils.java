@@ -21,28 +21,28 @@ public class UploadUtils {
 				return null;
 			}
 
-			if ( fileType == ConstantsForUpload.NEWS_MEDIA_IMAGE_TYPE ) {
+			if ( fileType.equals( ConstantsForUpload.NEWS_MEDIA_IMAGE_TYPE ) ) {
 				dirPath += ConstantsForUpload.NEWS_MEDIA_IMAGE_DIR;
 				saveFilePath = ConstantsForUpload.NEWS_MEDIA_IMAGE_DIR;
-			} else if ( fileType == ConstantsForUpload.WECHAT_MEDIA_IMAGE_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.WECHAT_MEDIA_IMAGE_TYPE ) ) {
 				dirPath += ConstantsForUpload.WECHAT_MEDIA_IMAGE_DIR;
 				saveFilePath = ConstantsForUpload.WECHAT_MEDIA_IMAGE_DIR;
-			} else if ( fileType == ConstantsForUpload.BLOG_MEDIA_IMAGE_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.BLOG_MEDIA_IMAGE_TYPE ) ) {
 				dirPath += ConstantsForUpload.BLOG_MEDIA_IMAGE_DIR;
 				saveFilePath = ConstantsForUpload.BLOG_MEDIA_IMAGE_DIR;
-			} else if ( fileType == ConstantsForUpload.WECHAT_QRCODE_IMAGE_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.WECHAT_QRCODE_IMAGE_TYPE ) ) {
 				dirPath += ConstantsForUpload.WECHAT_QRCODE_IMAGE_DIR;
 				saveFilePath = ConstantsForUpload.WECHAT_QRCODE_IMAGE_DIR;
-			} else if ( fileType == ConstantsForUpload.BLOG_QRCODE_IMAGE_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.BLOG_QRCODE_IMAGE_TYPE ) ) {
 				dirPath += ConstantsForUpload.BLOGQRCODE_IMAGE_DIR;
 				saveFilePath = ConstantsForUpload.BLOGQRCODE_IMAGE_DIR;
-			} else if ( fileType == ConstantsForUpload.ORDER_BLOG_UPLOAD_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.ORDER_BLOG_UPLOAD_TYPE ) ) {
 				dirPath += ConstantsForUpload.ORDER_BLOG_UPLOAD_DIR;
 				saveFilePath = ConstantsForUpload.ORDER_BLOG_UPLOAD_DIR;
-			} else if ( fileType == ConstantsForUpload.ORDER_NEWS_UPLOAD_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.ORDER_NEWS_UPLOAD_TYPE ) ) {
 				dirPath += ConstantsForUpload.ORDER_NEWS_UPLOAD_DIR;
 				saveFilePath = ConstantsForUpload.ORDER_NEWS_UPLOAD_DIR;
-			} else if ( fileType == ConstantsForUpload.ORDER_WECHAT_UPLOAD_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.ORDER_WECHAT_UPLOAD_TYPE ) ) {
 				dirPath += ConstantsForUpload.ORDER_WECHAT_UPLOAD_DIR;
 				saveFilePath = ConstantsForUpload.ORDER_WECHAT_UPLOAD_DIR;
 			}
@@ -75,39 +75,39 @@ public class UploadUtils {
 	private static Boolean checkContentType( String fileName, Integer fileType ) {
 		
 		try {
-			if ( fileType == ConstantsForUpload.NEWS_MEDIA_IMAGE_TYPE ) {
+			if ( fileType.equals( ConstantsForUpload.NEWS_MEDIA_IMAGE_TYPE )  ) {
 				String filterType = ConstantsForUpload.MEDIA_IMAGE_FILTER;
 				String contentType = fileName.split( "\\." )[1];
 				if ( filterType.contains( contentType.toUpperCase() ) ) {
 					return true;
 				}
-			} else if ( fileType == ConstantsForUpload.WECHAT_MEDIA_IMAGE_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.WECHAT_MEDIA_IMAGE_TYPE ) ) {
 				String filterType = ConstantsForUpload.MEDIA_IMAGE_FILTER;
 				String contentType = fileName.split( "\\." )[1];
 				if ( filterType.contains( contentType.toUpperCase() ) ) {
 					return true;
 				}
-			} else if ( fileType == ConstantsForUpload.BLOG_MEDIA_IMAGE_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.BLOG_MEDIA_IMAGE_TYPE ) ) {
 				String filterType = ConstantsForUpload.MEDIA_IMAGE_FILTER;
 				String contentType = fileName.split( "\\." )[1];
 				if ( filterType.contains( contentType.toUpperCase() ) ) {
 					return true;
 				}
-			} else if ( fileType == ConstantsForUpload.WECHAT_QRCODE_IMAGE_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.WECHAT_QRCODE_IMAGE_TYPE ) ) {
 				String filterType = ConstantsForUpload.MEDIA_IMAGE_FILTER;
 				String contentType = fileName.split( "\\." )[1];
 				if ( filterType.contains( contentType.toUpperCase() ) ) {
 					return true;
 				}
-			} else if ( fileType == ConstantsForUpload.BLOG_QRCODE_IMAGE_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.BLOG_QRCODE_IMAGE_TYPE ) ) {
 				String filterType = ConstantsForUpload.MEDIA_IMAGE_FILTER;
 				String contentType = fileName.split( "\\." )[1];
 				if ( filterType.contains( contentType.toUpperCase() ) ) {
 					return true;
 				}
-			} else if ( fileType == ConstantsForUpload.ORDER_BLOG_UPLOAD_TYPE
-					|| fileType == ConstantsForUpload.ORDER_WECHAT_UPLOAD_TYPE 
-					|| fileType == ConstantsForUpload.ORDER_NEWS_UPLOAD_TYPE ) {
+			} else if ( fileType.equals( ConstantsForUpload.ORDER_BLOG_UPLOAD_TYPE ) 
+					|| fileType.equals( ConstantsForUpload.ORDER_WECHAT_UPLOAD_TYPE ) 
+					|| fileType.equals( ConstantsForUpload.ORDER_NEWS_UPLOAD_TYPE ) ) {
 				return true;
 			}
 		} catch ( Exception e ) {

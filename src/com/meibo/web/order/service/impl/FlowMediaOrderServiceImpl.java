@@ -77,7 +77,7 @@ public class FlowMediaOrderServiceImpl implements FlowMediaOrderService {
 		FlowMediaInfoEntity flowMediaInfo = flowMediaInfoDao.selectFlowMediaInfoByPackageId( viewmodel.getPackageId() );
 		Integer carrierType = FlowMediaUtils.checkMobileCarrier( viewmodel.getMobile() );
 		// 运营商类型：1-电信 2-联通 3-移动
-		if ( carrierType != flowMediaInfo.getCarrierType() ) {
+		if ( !carrierType.equals( flowMediaInfo.getCarrierType() ) ) {
 			// 套餐不匹配
 			return -3;
 		}
@@ -383,7 +383,7 @@ public class FlowMediaOrderServiceImpl implements FlowMediaOrderService {
 			// 订单已完成，请勿重复支付!
 			return -6;
 		}
-		if ( flowOrderInfo.getMemberId() != viewmodel.getMemberId() ) {
+		if ( !flowOrderInfo.getMemberId().equals( viewmodel.getMemberId() ) ) {
 			// 非法操作
 			return -7;
 		}

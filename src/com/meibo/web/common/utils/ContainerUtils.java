@@ -16,7 +16,6 @@ public class ContainerUtils {
 	
 	public static Map<String, Object> buildHeadMap( Map res, Integer flag, String msg, String responseCode ) {
 		
-		Map<String, Map> resHead = new HashMap<String, Map>();
 		res.put( "flag", flag );
 		res.put( "msg", msg );
 		res.put( "responseCode", responseCode );
@@ -118,7 +117,7 @@ public class ContainerUtils {
             for ( int i = 0; i < propertyDescriptors.length; i++ ) {
                 PropertyDescriptor descriptor = propertyDescriptors[i];
                 String propertyName = descriptor.getName();
-                if ( !propertyName.equals( "class" ) ) {
+                if ( propertyName != null && !propertyName.equals( "class" ) ) {
                     Method readMethod = descriptor.getReadMethod();
                     Object result = null;
                     result = readMethod.invoke( bean, new Object[0] );

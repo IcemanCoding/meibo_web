@@ -70,4 +70,14 @@ public class MemberInfoServiceImpl implements MemberInfoService {
 		
 	}
 
+	@Override
+	public Boolean isMemberExist( String loginName ) throws Exception {
+		
+		Integer memberId = memberInfoDao.selectMemberIdByLoginName( loginName );
+		if ( memberId == null || memberId == 0 ) {
+			return false;
+		}
+		return true;
+	}
+
 }

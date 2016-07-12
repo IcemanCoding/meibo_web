@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 这个配置使全局的映射器启用或禁用缓存 -->
+        <setting name="cacheEnabled" value="true"/>
+        <!-- 允许 JDBC 支持生成的键。需要适合的驱动。如果设置为 true 则这个设置强制生成的键被使用，尽管一些驱动拒绝兼容但仍然有效（比如
+            Derby） -->
+        <setting name="useGeneratedKeys" value="true"/>
+        <!-- 配置默认的执行器。SIMPLE 执行器没有什么特别之处。REUSE 执行器重用预处理语句。BATCH 执行器重用语句和批量更新 -->
+        <setting name="defaultExecutorType" value="REUSE"/>
+        <!-- 全局启用或禁用延迟加载。当禁用时，所有关联对象都会即时加载。 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!-- 设置超时时间，它决定驱动等待一个数据库响应的时间。 -->
+        <setting name="defaultStatementTimeout" value="25000"/>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <typeAliases>
+    
+    	<typeAlias type="com.meibo.web.agent.entity.AgentCustomerEntity" alias="agentCustomerEntity"/>
+    
+    	<typeAlias type="com.meibo.web.media.dto.FlowMediaInfoDTO" alias="flowInfoDto"/>
+    	
+    	<typeAlias type="com.meibo.web.member.dto.MemberInfoDTO" alias="memberDto" />
+    	<typeAlias type="com.meibo.web.member.dto.MemberAccountDTO" alias="memberAccount" />
+    	<typeAlias type="com.meibo.web.member.entity.MemberInfoEntity" alias="memberInfo"/>
+    	<typeAlias type="com.meibo.web.member.entity.MemberAccountEntity" alias="accountEntity"/>
+    	<typeAlias type="com.meibo.web.member.entity.MemberCompanyEntity" alias="memberCompanyEntity"/>
+    	<typeAlias type="com.meibo.web.member.entity.MemberDetailEntity" alias="memberDetailEntity"/>
+    	<typeAlias type="com.meibo.web.member.viewmodel.AuthCompanyViewmodel" alias="authCompanyParams"/>
+    	<typeAlias type="com.meibo.web.member.viewmodel.CompanyListViewmodel" alias="companyListParams"/>
+    	<typeAlias type="com.meibo.web.member.dto.CompanyInfoDTO" alias="companyInfoDto"/>
+    	
+    	<typeAlias type="com.meibo.web.media.entity.FlowMediaInfoEntity" alias="flowInfoEntity"/>
+    	
+    	<typeAlias type="com.meibo.web.media.entity.NewsMediaChannelEntity" alias="newsMediaChannel"/>
+    	<typeAlias type="com.meibo.web.media.entity.NewsMediaEntity" alias="newsMedia"/>
+    	<typeAlias type="com.meibo.web.media.entity.NewsMediaTypeEntity" alias="newsMediaType"/>
+    	<typeAlias type="com.meibo.web.media.entity.NewsMediaColumnEntity" alias="newsMediaColumn"/>
+    	<typeAlias type="com.meibo.web.media.dto.AdminNewsMediaListDTO" alias="adminNewsListDto"/>
+    	<typeAlias type="com.meibo.web.media.dto.BaseNewsMediaListDTO" alias="baseNewsListDto"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.NewsMediaListQueryParams" alias="newsMediaQuery"/>
+    	
+    	<typeAlias type="com.meibo.web.media.entity.WechatMediaChannelEntity" alias="wechatMediaChannel"/>
+    	<typeAlias type="com.meibo.web.media.entity.WechatMediaInfoEntity" alias="wechatMediaInfo"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.AdminWechatMediaListQueryViewmodel" alias="adminWechatMediaQuery"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.MemberWechatMediaListQueryViewmodel" alias="memberWechatMediaQuery"/>
+    	<typeAlias type="com.meibo.web.media.dto.AdminWechatMediaListDTO" alias="adminWechatMediaListDto"/>
+    	<typeAlias type="com.meibo.web.media.dto.BaseWechatMediaListDTO" alias="baseWechatMediaListDto"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.WechatMediaUpdateViewmodel" alias="wechatMediaUpdate"/>
+    	
+    	<typeAlias type="com.meibo.web.media.entity.BlogMediaChannelEntity" alias="blogMediaChannel"/>
+    	<typeAlias type="com.meibo.web.media.entity.BlogMediaInfoEntity" alias="blogMediaInfo"/>
+    	<typeAlias type="com.meibo.web.media.dto.AdminBlogMediaListDTO" alias="adminBlogMediaListDto"/>
+    	<typeAlias type="com.meibo.web.media.dto.BaseBlogMediaListDTO" alias="baseBlogMediaListDto"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.AdminBlogMediaListQueryViewmodel" alias="adminBlogMediaQuery"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.MemberBlogMediaListQueryViewmodel" alias="memberBlogMediaQuery"/>
+    	<typeAlias type="com.meibo.web.media.viewmodel.BlogMediaUpdateViewmodel" alias="blogMediaUpdate"/>
+    	
+    	<typeAlias type="com.meibo.web.system.dto.SystemAreaInfoDTO" alias="areaDto"/>
+    	<typeAlias type="com.meibo.web.system.dto.BaseAreaInfoDTO" alias="baseAreaDto"/>
+    	<typeAlias type="com.meibo.web.system.dto.ProvinceAreaInfoDTO" alias="provinceDto"/>
+    	<typeAlias type="com.meibo.web.system.dto.CityAreaInfoDTO" alias="cityDto"/>
+    	<typeAlias type="com.meibo.web.system.entity.SystemTransDtlEntity" alias="transdtlEntity"/>
+    	
+    	
+    	<typeAlias type="com.meibo.web.order.dto.BaseMediaOrderListDTO" alias="baseMediaOrderListDto"/>
+    	<typeAlias type="com.meibo.web.order.entity.OrderInfoEntity" alias="orderInfo"/>
+    	<typeAlias type="com.meibo.web.order.entity.MediaOrderLaunchDetailEntity" alias="launchDetail"/>
+    	<typeAlias type="com.meibo.web.order.viewmodel.BaseMediaOrderListQueryViewmodel" alias="baseMediaOrderListViewmodel"/>
+    	
+    	<typeAlias type="com.meibo.web.order.entity.NewsMediaOrderSplitEntity" alias="newsOrderSplit"/>
+    	<typeAlias type="com.meibo.web.order.entity.NewsMediaOrderDetailEntity" alias="newsOrderDetail"/>
+    	<typeAlias type="com.meibo.web.order.dto.NewsMediaOrderSplitDTO" alias="newsOrderSplitDto"/>
+    	
+    	<typeAlias type="com.meibo.web.order.dto.BlogMediaOrderSplitDTO" alias="blogOrderSplitDto"/>
+    	<typeAlias type="com.meibo.web.order.entity.BlogMediaOrderSplitEntity" alias="blogOrderSplit"/>
+    	<typeAlias type="com.meibo.web.order.entity.BlogMediaOrderDetailEntity" alias="blogOrderDetail"/>
+    	
+    	<typeAlias type="com.meibo.web.order.dto.WechatMediaOrderSplitDTO" alias="wechatOrderSplitDto"/>
+    	<typeAlias type="com.meibo.web.order.entity.WechatMediaOrderSplitEntity" alias="wechatOrderSplit"/>
+    	<typeAlias type="com.meibo.web.order.entity.WechatMediaOrderDetailEntity" alias="wechatOrderDetail"/>
+    	
+    	<typeAlias type="com.meibo.web.order.entity.FlowMediaOrderEntity" alias="flowOrderInfo"/>
+    	<typeAlias type="com.meibo.web.order.entity.FlowMediaOrderSplitEntity" alias="flowOrderSplit"/>
+    	<typeAlias type="com.meibo.web.order.entity.FlowMediaOrderDetailEntity" alias="flowOrderDetail"/>
+    	<typeAlias type="com.meibo.web.order.dto.FlowMediaOrderDTO" alias="flowOrderListDto"/>
+    	<typeAlias type="com.meibo.web.order.dto.FlowMediaOrderDetailDTO" alias="flowOrderDetailDto"/>
+    	
+    	<typeAlias type="com.meibo.web.order.entity.RechargeOrderEntity" alias="rechargeOrderEntity"/>
+    	<typeAlias type="com.meibo.web.order.dto.RechargeOfflineDTO" alias="rechargeOfflineDto"/>
+    	
+    </typeAliases>
+
+    <mappers>
+    
+    	<!--  
+    	<mapper resource="com/meibo/web/agent/dao/agentCustomerMapper.xml"/>
+    
+    	<mapper resource="com/meibo/web/member/dao/memberCompanyMapper.xml"/>
+    	<mapper resource="com/meibo/web/member/dao/memberInfoMapper.xml"/>
+    	<mapper resource="com/meibo/web/member/dao/memberAccountMapper.xml"/>
+    	<mapper resource="com/meibo/web/member/dao/memberDetailMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/flowMediaInfoMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/media/dao/newsMediaMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/newsMediaChannelMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/newsMediaTypeMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/newsMediaColumnMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/media/dao/wechatMediaMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/wechatMediaChannelMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/wechatMediaTypeMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/media/dao/blogMediaMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/blogMediaChannelMapper.xml"/>
+    	<mapper resource="com/meibo/web/media/dao/blogMediaTypeMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/system/dao/dictionaryMapper.xml"/>
+    	<mapper resource="com/meibo/web/system/dao/areaInfoMapper.xml"/>
+    	<mapper resource="com/meibo/web/system/dao/systemTransDtlMapper.xml"/>
+    	<mapper resource="com/meibo/web/system/dao/systemParamsInfoMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/order/dao/newsMediaOrderMapper.xml"/>
+    	<mapper resource="com/meibo/web/order/dao/newsMediaOrderSplitMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/order/dao/blogMediaOrderMapper.xml"/>
+    	<mapper resource="com/meibo/web/order/dao/blogMediaOrderSplitMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/order/dao/wechatMediaOrderMapper.xml"/>
+    	<mapper resource="com/meibo/web/order/dao/wechatMediaOrderSplitMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/order/dao/flowMediaOrderMapper.xml"/>
+    	<mapper resource="com/meibo/web/order/dao/flowMediaOrderSplitMapper.xml"/>
+    	<mapper resource="com/meibo/web/order/dao/flowMediaOrderDetailMapper.xml"/>
+    	
+    	<mapper resource="com/meibo/web/order/dao/rechargeOrderMapper.xml"/>
+    	-->
+    </mappers>
+
+</configuration> 

@@ -66,7 +66,7 @@ public class FlowMediaServiceImpl implements FlowMediaService {
 	@Override
 	public Boolean flowRecharge( String mobile, Integer dxPackageId, Integer ltPackageId, Integer ydPackageId ) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		return true;
 	}
 
 }
