@@ -27,9 +27,6 @@
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
-		<accessrules>
-			<accessrule kind="accessible" pattern="**"/>
-		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="D:/Project/meibo_web/libs/tomcat_redis_session_manager-1.7.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
